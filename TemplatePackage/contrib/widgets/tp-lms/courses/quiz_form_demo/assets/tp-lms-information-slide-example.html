@@ -1,0 +1,31 @@
+<div>
+  <p>
+    In this example, we are decided that we needed a bit more
+    flexibility than loading in simple text, so I have gone ahead
+    and made an html file and placed the content you currently
+    see in it. I then set the 'includePath' property to the location
+    of this file and... viola!
+    <img src="{{assetsPath}}/images/research.jpg" alt="placeholder image" style="float:right;">
+  </p>
+  <p>This method allows developers to use the TPLMS while
+  still having ultimate control over the vast majority of the user
+  experience.</p>
+
+  <p>Let's say for example that you want to load in a video. No
+  problem, just include standard template package markup and
+  you'll get a video like this:</p>
+
+  <div class="youtube">
+    <iframe width="560" height="320" src="http://www.youtube.com/embed/iLqTS8vn8Eo?cc_load_policy=1&wmode=opaque" allowfullscreen="allowfullscreen"></iframe>
+    <p><a>View Transcript [PDF - 123 KB]</a></p>
+    <noscript>
+    <a href="http://www.youtube.com/embed/iLqTS8vn8Eo?cc_load_policy=1" target="_blank">Demo Video</a>
+    </noscript>
+  </div>
+
+<p>Its as simple as that, and TemplatePackage compliant HTML can be implemented in this system with little or no adjustment.</p>
+
+  <!-- The following include is for the Youtube fitvid libraries used on this page -->
+  <!-- include virtual="/TemplatePackage/3.0/includes/video.html" -->
+
+</div>

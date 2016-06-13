@@ -1,0 +1,13 @@
+﻿<div class="row">
+	<div class="col-md-12">
+		<a href="#" data-ng-click="main.$back(); main.logInteraction({ module: 'Page View', sport: '{{main.embedParams.cdcSport}}', theme: '{{main.embedParams.cdcTheme}}', mediaId: {{detail.mediaId}}, action: 'Back button click' })"><span class="fa fa-angle-left"></span> Return Home</a>
+	</div><!--col-md-12-->
+</div><!--row-->
+
+<div class="row">
+	<div class="">
+		
+		<div class="cdc-content cdc-content-{{detail.mediaId}}" data-ng-bind-html="detail.media | unsafe"></div>
+
+	</div><!--col-md-12-->
+</div><!--row-->

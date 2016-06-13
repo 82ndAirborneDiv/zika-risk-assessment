@@ -1,0 +1,26 @@
+<!-- ADMIN / DEBUG DISPLAY -->
+<div data-ng-if="debug.enabled">
+    <div data-ng-if="debug.show.ui" class="row">
+        <div class="col-sm-12">
+            <hr />
+            <h4>ui</h4> ui.show.slide.text() : {{ui.show.slide.text()}}
+            <br /> ui.show.slide.options() : {{ui.show.slide.options()}}
+            <br /> ui.show.controls.prev() : {{ui.show.controls.prev()}}
+            <br /> ui.show.controls.next() : {{ui.show.controls.next()}}
+            <br /> ui.disable.slide.options() : {{ui.disable.slide.options()}}
+            <br />
+        </div>
+    </div>
+    <div data-ng-if="debug.show.slide" class="row">
+        <div class="col-sm-12">
+            <hr />
+            <h4>objCurrentSlide ($scope.objCurrentSlide)</h4>
+            <table>
+                <tr data-ng-repeat="(key, value) in objCurrentSlide">
+                    <td><strong>{{key}}</strong></td>
+                    <td>{{value}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="/TemplatePackage/contrib/widgets/tp-lms/core/css/course-home.css" />
+<link rel="stylesheet" href="/TemplatePackage/contrib/widgets/tp-lms/core/css/layouts/quiz-module.css" />
+
+<div id="quiz-module-top" class="{{course.theme}}">
+
+	<!-- QUIZ HEADING data-ng-click="course.debug.enabled = !course.debug.enabled" -->
+	<h3>
+		<span data-ng-show="course.header.show.courseId"> {{course.courseId}} : </span>
+		<span data-ng-show="course.header.show.courseTitle">{{course.courseTitle}}</span>
+		<!--<span data-ng-show="course.header.show.courseReviewIndicator && progress.courseCompleted">(Review Mode)</span>-->
+	</h3>
+	<!-- /QUIZ HEADING -->
+
+	<div class="row" data-ng-if="progress.courseCompleted">
+		<div class="col-md-12 text-center">
+
+			<!-- COURSE COMPLETION TEXT -->
+			<h5>{{course.completionText}}</h5>
+			<!-- /COURSE COMPLETION TEXT -->
+
+			<!-- COURSE SCORING(IF ENABLED) -->
+			<h5 data-ng-if="course.completionShowScore && course.scoring">Your Score: {{course.scoring.correct}} of {{course.scoring.count}}  ({{course.scoring.score | number:0}}%)</h5>
+			<!-- /COURSE SCORING(IF ENABLED) -->
+
+		</div>
+	</div>
+
+	<div class="row" data-ng-if="progress.courseCompleted">
+		<div class="col-md-12">
+
+			<!-- LEARN MORE SECTION -->
+			<strong>{{course.learnMore.title}}</strong>
+			<p>{{course.learnMore.text}}</p>
+			<ul>
+				<li data-ng-repeat="link in course.learnMore.links"><a href="{{link}}" target="_blank">{{link}}</a></li>
+			</ul>
+			<!-- /LEARN MORE SECTION -->
+
+		</div>
+	</div>
+
+	<!-- QUESTION LOOP / COURSE CONTENT WRAP-->
+	<div data-ng-if="!progress.courseCompleted" data-ng-repeat="(slideIdx, objSlide) in courseData">
+
+		<!-- QUESTION DIRECTIVE -->
+		<div data-ng-if="slideIdx > 0" data-slide-display="{{slideIdx}}"></div>
+		<!-- /QUESTION DIRECTIVE -->
+
+	</div>
+	<!-- QUESTION LOOP / COURSE CONTENT WRAP -->
+
+	<!-- CONTROLS (COURSE FOOTER) -->
+	<div class="row" data-ng-if="!progress.courseCompleted && course.useMultiState">
+		<div class="col-md-12 text-right">
+			<div data-ng-if="!progress.courseCompleted">
+				<button class="pull-left btn" data-ng-if="form.show.prev()" data-ng-class="buttonClasses[form.highlight.prev()]" data-ng-click="form.events.prev()" data-ng-disabled="form.highlight.prev() === false" data-ng-bind-html="form.labels.prev()"></button>
+				<button class="btn" data-ng-if="form.show.next()" data-ng-class="buttonClasses[form.highlight.next()]" data-ng-click="form.events.next()" data-ng-disabled="form.highlight.next() === false" data-ng-bind-html="form.labels.next()"></button>
+			</div>
+			&nbsp;
+		</div>
+	</div>
+	<!-- /CONTROLS -->
+
+	<!-- REVIEW BUTTON (IF ENABLED) -->
+	<div class="row" data-ng-if="progress.courseCompleted && course.reviewMode.enabled">
+		<div class="col-md-12 text-right">
+      		<hr />
+			<button class="btn btn-primary" data-ng-click="restartCourse()">{{course.reviewMode.label}}</button>
+      	</div>
+      </div>
+      <!-- /REVIEW BUTTON (IF ENABLED) -->
+
+	<!-- ADMIN / DEBUG DISPLAY -->
+	<div data-ng-if="course.debug.enabled" data-ng-include="'./core/html/debug-global.html'"></div>
+	<!-- /ADMIN / DEBUG DISPLAY -->
+</div>

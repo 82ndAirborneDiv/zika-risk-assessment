@@ -1,0 +1,21 @@
+<div class="container-fluid animate" ng-class="{true: 'fadeIn'}[fadeCheck]">
+    <section class="header">
+        <h1><span id="widget-title">{{widgetConfig.widgetTitle}}</span></h1>
+    </section>
+    <section data-ng-if="widgetConfig.tabsEnabled" class="view-selection">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-news" data-ng-class="tabButtonClasses[currentView === 'news']" data-ng-click="setView('news')">News</button>
+            <button type="button" class="btn btn-photos" data-ng-class="tabButtonClasses[currentView === 'photos']" data-ng-click="setView('photos')">Photos</button>
+        </div>
+    </section>
+    <div data-ng-include="subView"></div>
+    <section class="footer-controls">
+        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <a class="btn btn-primary" href="" role="button" data-ng-click="setPath('/embed/')">Embed</a>
+            <a class="btn btn-primary disclaimer" href="" role="button" data-ng-click="setPath('/disclaimer/')">Disclaimer</a>
+            <a class="btn btn-primary" href="" role="button" data-ng-click="setPath('/info/')">Info</a>
+        </div>
+        <div data-ng-include="'./html/logo.html'"></div>
+    </section>
+</div>
+<!-- /container -->

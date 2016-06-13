@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]>      <html class="no-js nav theme-green lt-ie10 lt-ie9 lt-ie8" lang="en-us"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js nav theme-green lt-ie10 lt-ie9" lang="en-us"> <![endif]-->
+<!--[if IE 9]>         <html class="no-js nav theme-green lt-ie10" lang="en-us"> <![endif]-->
+<!--[if !IE]><!-->     <html class="no-js nav theme-green" lang="en-us"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8" />
+		<title>Widget Inclusion|Features Gallery|WCMS RWD Templates|CDC</title>
+
+		<meta name="description" content="CDC - WCMS Responsive Web Design Features Gallery" />
+		<meta name="keywords" content="CDC, RWD, WCMS, Templates" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link rel="shortcut icon" href="/TemplatePackage/3.0/images/favicon.ico" />
+		<link rel="apple-touch-icon" href="/TemplatePackage/3.0/images/cdc-touch-icon.png" />
+
+		<meta name="robots" content="index,follow" />
+		<!-- CDC Template Version -->
+		<meta property="cdc:template_version" content="3.0" />
+		<!-- Facebook Metadata -->
+		<meta property="og:title" content="" />
+		<meta property="og:image" content="" />
+		<meta property="og:site_name" content="" />
+		<meta property="og:description" content="" />
+		<!--#include virtual="/TemplatePackage/3.0/includes/head.html" -->
+
+		<!-- Local CSS reference to allow overrides for the page/site -->
+		<link rel="stylesheet" href="/TemplatePackage/3.0/modules/local/css/moduleGallery.css" />
+	</head>
+	<body>
+		<!--#include virtual="/TemplatePackage/3.0/includes/skipMenuNav.html" -->
+		<div id="wrapper">
+			<!--#include virtual="/TemplatePackage/3.0/includes/chromeFrame.html" -->
+			<header id="header">
+				<div class="container">
+					<!-- header -->
+					<div class="row">
+						<!-- cdc -->
+						<div id="logo" class="span14">
+							<!--#include virtual="/TemplatePackage/3.0/includes/logo.html" -->
+						</div>
+						<!-- search -->
+						<div id="searchArea" class="span10 hidden-one hidden-two">
+							<!--#include virtual="/TemplatePackage/3.0/includes/search.html" -->
+							<!--include virtual="/TemplatePackage/3.0/modules/local/includes/localSearch.html" -->
+							<div class="a2z-button pull-right hidden-one hidden-two"><a href="#" id="azTab">CDC A-Z Index <span class="icon-angle-down"></span></a></div>
+						</div>
+					</div>
+					<!--#include virtual="/TemplatePackage/3.0/includes/menu.html" -->
+					<div class="a2z-bar hide">
+						<!--#include virtual="/TemplatePackage/3.0/includes/a2z.html" -->
+					</div>
+					<div id="searchArea-two-column" class="span24 searchbar hide hidden-three hidden-four">
+						<!--#include virtual="/TemplatePackage/3.0/includes/search.html" -->
+						<!--include virtual="/TemplatePackage/3.0/modules/local/includes/localSearch.html" -->
+					</div>
+					<!--#include virtual="/TemplatePackage/3.0/includes/emergency.html" -->
+					<!-- /header -->
+					<div class="titlebar">
+						<h2>Developers Reference for CDC Widgets</h2>
+					</div>
+					<!--#include virtual="/TemplatePackage/3.0/includes/noscript.html" -->
+				</div>
+			</header>
+			<div class="container">
+				<div id="content">
+					<div class="row">
+
+						<div class="breadcrumbs hidden-one span24">
+							<!--#include virtual="/TemplatePackage/3.0/modules/local/includes/breadcrumb.html" -->
+						</div>
+						<div class="span24 pagetitle">
+							<h1>News And Photos Widget - News Only Mode</h1>
+						</div>
+
+						<!-- body -->
+						<div id="body" class="span24">
+							<div id="contentArea">
+								<div class="row">
+									<div class="span24">
+										<section class="module">
+											<div>
+												<div data-cdc-widget="NewsAndPhotos" data-news-feed="//tools.cdc.gov/api/v2/resources/media/132036.rss"></div>
+											</div>
+											<!-- <h3>Example Code</h3>
+											<div>
+												<textarea class="form-control" style="width:100%" rows="5"><div data-cdc-widget="NewsAndPhotos" data-news-feed="/TemplatePackage/contrib/widgets/newsAndPhotos/news.xml"></div></textarea>
+											</div> -->
+										</section>
+									</div>
+								</div>
+
+								<!--<script src="https://tools.cdc.gov/1M1B"></script>-->
+								<script src="/TemplatePackage/contrib/widgets/tp-widget-external-loader.js"></script>
+
+								<!-- /end editable -->
+								<!-- Related Nav Area -->
+								<div class="nav-related hidden-three hidden-four">
+									<!--#include virtual="/TemplatePackage/3.0/modules/local/includes/leftNavRelated.html" -->
+								</div>
+								<!-- /end Related Nav Area -->
+								<!-- Persistent Content Area -->
+								<div id="content-secondary">
+									<!-- begin editable -->
+									<!--  // This area is optional
+									// All content in the Right Column (except for Page Option links and GovD) will be moved to the Persistent Content Area upon migration
+									// This area will need to enabled if it is being used otherwise not included in the page build...
+									-->
+									<!-- /end editable -->
+								</div><!-- /end #content-secondary -->
+							</div><!-- /end #contentArea -->
+						</div><!-- /end #body -->
+					</div>
+
+					<div class="row">
+						<div class="span24 visible-one">
+							<!--BEGIN PAGE OPTIONS - FOR DEMO PURPOSES ONLY - REMOVE INCLUDES BEFORE TEMPLATE USE. The markup in this region for page format & languages will be generated by the CMS via editorial options. -->
+							<!--include virtual="/TemplatePackage/3.0/modules/local/includes/pageOptionsFormatBottom.html" -->
+							<!--include virtual="/TemplatePackage/3.0/modules/local/includes/pageOptionsLanguagesBottom.html" -->
+							<!-- END PAGE OPTIONS -->
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="span24">
+							<!--#include virtual="/TemplatePackage/3.0/includes/pluginsLegend.html" -->
+						</div>
+					</div>
+
+					<!-- date stamp -->
+					<div class="row" id="datestamp" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+						<div class="span24">
+							<ul>
+								<li class="last-reviewed">Page last reviewed:<span itemprop="lastReviewed">January 4, 2013</span></li>
+								<li class="last-updated">Page last updated:<span itemprop="dateModified">January 4, 2013</span></li>
+								<li class="content-source">Content source:
+									<ul>
+										<!--#include virtual="/TemplatePackage/3.0/includes/datestamp.html" -->
+										<!--#include virtual="/TemplatePackage/3.0/modules/local/includes/contentSource.html" -->
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div><!-- /end #content -->
+			</div><!-- / end .container -->
+
+			<!-- footer -->
+			<!--#include virtual="/TemplatePackage/3.0/includes/footerSlim.html" -->
+			<!-- /#footer -->
+			<div id="totop" class="off visible-one">TOP</div>
+		</div>
+		<!--#include virtual="/TemplatePackage/3.0/includes/js-core.html" -->
+		<!-- Global JS Settings Overrides should be placed here between the previous and following includes. -->
+		<!--#include virtual="/TemplatePackage/3.0/includes/js-modules.html" -->
+		<!-- Module Extension & Overrides should be placed here between the previous and following includes. -->
+		<!--#include virtual="/TemplatePackage/3.0/includes/js-app-init.html" -->
+		<!--#include virtual="/TemplatePackage/3.0/includes/survey.html" -->
+		<!-- The following include is for including any local JS code to the page -->
+		<!--#include virtual="/TemplatePackage/3.0/modules/local/includes/localJs.html" -->
+		<!--#include virtual="/TemplatePackage/3.0/includes/metricsTop.html" -->
+		<!-- The following include is where local metrics settings for SiteCatalyst and GA are made -->
+		<!--#include virtual="/TemplatePackage/3.0/modules/local/includes/metricsSettings.html" -->
+		<!--#include virtual="/TemplatePackage/3.0/includes/metricsBottom.html" -->
+		<!-- The following include is for overriding left nav rendering functionality -->
+		<!--#include virtual="/TemplatePackage/3.0/modules/local/includes/leftNavRender.html" -->
+	</body>
+</html>

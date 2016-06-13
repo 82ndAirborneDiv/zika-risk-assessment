@@ -1,0 +1,24 @@
+<section class="results-rss noselect">
+    <div class="scrollable">
+        <div class="content content-rss">
+            <div data-ng-if="newsList.length" data-ng-repeat="article in newsList">
+                <h2><a data-ng-href="{{article.link}}" target="_blank" ng-click="clickThrough(article.link)">{{article.title}}</a></h2>
+                <p>
+                    <em>{{article.pubDate | date : medium}}</em><br />
+                    {{article.description}}
+                </p>
+            </div>
+            <div data-ng-if="!newsList.length">No news articles could be found</div>
+        </div>
+    </div>
+</section>
+
+<!-- FORMAT REFERENCE
+artice : {
+    "title": "National Influenza Vaccination Week",
+    "description": "The Centers for Disease Control and Prevention (CDC) will soon announce dates for National Influenza Vaccination Week. This event is designed to highlight the importance of continuing influenza (flu) vaccination, as well as foster greater use of flu vaccine through the months of December, January and beyond.",
+    "link": "http://www2c.cdc.gov/podcasts/download.asp?af=h&f=367189",
+    "guid": "http://www2c.cdc.gov/podcasts/download.asp?af=h&f=367189",
+    "pubDate": "Thu, 19 Nov 2009 16:00:00 EST"
+}
+-->

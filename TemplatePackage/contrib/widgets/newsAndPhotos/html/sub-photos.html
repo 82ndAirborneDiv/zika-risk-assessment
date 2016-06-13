@@ -1,0 +1,39 @@
+<section class="results-media noselect">
+
+	<div class="content content-media">
+		<div data-ng-if="photosList.length" data-ng-repeat="(idx, photo) in photosList" aria-live="assertive">
+			<div class="photo-box" data-ng-id="image-{{idx}}" data-ng-show="idx === currentImage" data-ng-class="{true:'active', false:''}[blnCaption]" data-ng-click="captionToggle($event)"><!--aria-label="{{ariaMoreLess}}"-->
+				<img data-ng-src="{{photo.enclosure._url}}" alt="{{photo.title}}" data-resize-on-load="{{idx === currentImage}}" />
+				<span class="btn-more" aria-label="More Information">More <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span></span>
+				<div class="img-caption">
+					<p><span class="btn-less" data-ng-click="captionOff($event)" aria-label="Less Information">Less <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span></span></p>
+					<p><strong>Description: </strong><span data-ng-bind-html="photo.description"></span></p>
+					<p><strong>Published: </strong><em class="img-publish-date">{{photo.pubDate | date : medium}}</em></p>
+					<a class="btn btn-primary btn-block" data-ng-href="{{photo.link}}" target="_blank" data-ng-click="clickThrough(photo.link); $event.stopPropagation()">More Information</a>
+				</div>
+			</div>
+		</div>
+		<div data-ng-if="!photosList.length"><p>No photos could be found</p></div>
+	</div>
+
+	<div data-ng-if="photosList.length" class="media-controls btn-group btn-group-justified" role="group" aria-label="Image Controls">
+		<div class="btn-group" role="group"><button type="button" class="btn btn-default btn-prev" ng-click="prevImage()" data-ng-class="imgButtonClasses[currentImage > 0]" aria-label="Previous Image"><span class="glyphicon glyphicon-triangle-left" aria-label="Previous Image"></span></button></div>
+		<div class="btn-group" role="group"><span class="btn btn-default disabled" aria-label="Current Image Indicator">{{currentImage + 1}} of {{photosList.length}}</span></div>
+		<div class="btn-group" role="group"><button type="button" class="btn btn-default btn-next" ng-click="nextImage()" data-ng-class="imgButtonClasses[currentImage < (photosList.length - 1)]" aria-label="Next Image"><span class="glyphicon glyphicon-triangle-right" aria-label="Next Image"></span></button></div>
+	</div>
+</section>
+
+<!-- FORMAT REFERENCE
+ photo : {
+		"title": "Preparedness 101: Zombie Apocalypse",
+		"label": "Preparedness 101: Zombie Apocalypse",
+		"description": "If you’re ready for a zombie apocalypse, then you’re ready for any emergency",
+		"link": "http://blogs.cdc.gov/publichealthmatters/2011/05/preparedness-101-zombie-apocalypse/",
+		"pubDate": "Published on 18, October 2012",
+		"enclosure": {
+				"_url": "_img/17.jpg",
+				"_length": "0",
+				"_type": "image/jpg"
+		}
+}
+-->

@@ -1,0 +1,187 @@
+<!-- CONTROLS (COURSE HEADER) -->
+<h3 class="brfss-control-header brfss-control-header-top clearfix">
+    <span data-ng-show="header.show.courseTitle">{{courseTitle}}</span>
+    <div class="pull-right">
+        <button class="btn " data-ng-if="ui.show.controls.prev()" data-ng-class="buttonClasses[ui.highlight.controls.prev()]" data-ng-click="ui.events.prev()">&lt;</button>
+        <button class="btn " data-ng-if="ui.show.controls.next()" data-ng-class="buttonClasses[ui.highlight.controls.next()]" data-ng-click="ui.events.next()">&gt;</button>
+        <span data-ng-if="slideIndex > 0">{{slideIndex}} of {{courseLength}}</span>
+    </div>
+  </h3>
+<!-- /CONTROLS -->
+
+<!-- COURSE CONTENT DISPLAY BY SLIDE TYPE-->
+<div class="clearfix" data-ng-switch="objCurrentSlide.type">
+
+    <!-- QUESTION TYPE : MULTIPLE CHOICE -->
+    <div data-ng-switch-when="question-multiple-choice">
+
+        <!-- QUESTION WRAPPER -->
+        <div class="lms-question {{objCurrentSlide.slideAlignment}}  {{objCurrentSlide.columnClassList}}">
+
+            <!-- QUESTION HEADER ROW -->
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <!-- QuestionQUIZ HEADING -->
+                    <h4 data-ng-if="objCurrentSlide.heading.length" class="lms-quiz-header">{{objCurrentSlide.heading}}</h4>
+
+                </div>
+
+            </div>
+            <!-- /QUESTION HEADER ROW -->
+
+            <!-- QUESTION CONTENT ROW -->
+            <div class="row">
+
+                <!-- LEFT SECTION (DYNAMIC INTENRAL OR EXTERNAL INCLUDE - RESPONSIVE) -->
+                <div data-ng-if="objCurrentSlide.hasInclude" class="col-md-6 col-sm-6 col-xs-12">
+
+                    <!-- INCLUDE TEMPLATE -->
+                    <div data-ng-if="objCurrentSlide.hasIncludeExt" data-ng-include="objCurrentSlide.includePath"></div>
+
+                    <!-- INCLUDE HTML -->
+                    <div data-ng-if="objCurrentSlide.hasIncludeInt" data-ng-bind-html="objCurrentSlide.includeHtml"></div>
+
+                </div>
+                <!-- /LEFT SECTION (DYNAMIC INTENRAL OR EXTERNAL INCLUDE - RESPONSIVE) -->
+
+                <!-- RIGHT SECTION (RESPONSIVE) -->
+                <div data-ng-class="questionTextClasses[objCurrentSlide.hasInclude]">
+
+                    <!-- QUESTION TEXT -->
+                    <div class="lms-question-text" data-ng-if="ui.show.slide.text()">{{objCurrentSlide.question}}</div>
+
+                    <!--  OPTION DISPLAY -->
+                    <div class="lms-question-options" data-ng-if="ui.show.slide.options()" data-ng-switch="objCurrentSlide.optionDisplay">
+
+                        <!-- RADIO LIST -->
+                        <div data-ng-switch-when="radioList">
+                            <div class="lms-options-radio-list text-left">
+                                <div data-ng-repeat="(optIdx, option) in objCurrentSlide.options">
+                                    <label data-ng-class="radioClasses[ui.optionSelected(slideIdx,optIdx)]" for="option-{{optIdx}}">
+                                        <input class="pull-left" data-ng-attr-id="option-{{optIdx}}" type="radio" data-ng-checked="ui.highlight.controls.option(optIdx)" data-ng-click="selectAnswer(optIdx)" data-ng-value="optIdx" data-ng-disabled="ui.disable.slide.options()" /> &nbsp; <span data-ng-bind-html="option.text || option.value"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /RADIO LIST -->
+
+                        <!-- CHECKBOXES -->
+                        <div data-ng-switch-when="checkboxes">
+                            <div class="lms-options-checkboxes text-left">
+                                <div data-ng-repeat="(optIdx, option) in objCurrentSlide.options">
+                                    <label>
+                                        <input data-ng-attr-id="option-{{optIdx}}" type="checkbox" name="selectedOptions[]" value="{{option.value || option.text}}" data-ng-checked="ui.highlight.controls.option(optIdx)" data-ng-click="selectAnswer(optIdx)" /> &nbsp; <span data-ng-bind-html="option.text || option.value"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /CHECKBOXES -->
+
+                        <!-- BUTTON LIST (DEFAULT) -->
+                        <div class="lms-options-default" data-ng-switch-default="">
+                            <div data-ng-repeat="(optIdx, option) in objCurrentSlide.options">
+                                <div data-question-option="option" data-index="optIdx"></div>
+                                <label class="lms-option" data-ng-click="selectAnswer(optIdx)">
+                                    <button class="btn" data-ng-class="buttonClasses[ui.highlight.controls.option(optIdx)]">{{choiceLabels[optIdx]}}</button> <span data-ng-bind-html="option.text || option.value"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- /BUTTON LIST (DEFAULT) -->
+
+                    </div>
+                    <!-- /OPTION DISPLAY -->
+
+                    <!-- USER SELECTION DISPLAY -->
+                    <div data-ng-if="ui.show.slide.response()">
+                        <strong>Your Answer: </strong> {{ui.display.response()}}
+
+                        <!-- REPONSE DISPLAY -->
+                        <div class="lms-question-response" data-ng-if="objCurrentSlide.responseText.length > 0">
+                            <div class="{{responseClass().section}}">
+                                <div class="{{responseClass().text}}">
+                                    <div class="lms-response-label lms-response-correct">{{labelCorrect}}</div>
+                                    <div class="lms-response-label lms-response-incorrect ">{{labelIncorrect}}</div>
+                                    <div data-ng-bind-html="objCurrentSlide.responseText"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /REPONSE DISPLAY -->
+                    </div>
+                    <!-- /USER SELECTION DISPLAY -->
+
+                </div>
+                <!-- /RIGHT SECTION (RESPONSIVE) -->
+
+            </div>
+            <!-- /QUESTION CONTENT ROW -->
+
+        </div>
+        <!-- /QUESTION WRAPPER -->
+
+    </div>
+    <!-- /QUESTION TYPE : MULTIPLE CHOICE -->
+
+    <!-- GENERIC SLIDE : DEFAULT DISPLAY-->
+    <div data-ng-switch-default="">
+
+        <!-- QUESTION HEADER ROW -->
+        <div class="row">
+
+            <div class="col-md-12">
+
+                <!-- QuestionQUIZ HEADING -->
+                <h4 data-ng-if="objCurrentSlide.heading.length" class="lms-quiz-header">{{objCurrentSlide.heading}}</h4>
+
+            </div>
+
+        </div>
+        <!-- /QUESTION HEADER ROW -->
+
+        <!-- SLIDE WRAPPER-->
+        <div class="{{objCurrentSlide.slideAlignment}} row">
+
+            <!-- LOAD HTML (INTERNAL OR EXTERNAL HTML IF APPLICABLE -->
+            <div data-ng-if="objCurrentSlide.includePath.length || objCurrentSlide.includeHtml.length" class="col-lg-12">
+
+                <!-- INCLUDE TEMPLATE -->
+                <div data-ng-include="objCurrentSlide.includePath"></div>
+
+                <!-- INCLUDE HTML -->
+                <div data-ng-bind-html="objCurrentSlide.includeHtml"></div>
+
+            </div>
+            <!-- /LOAD HTML (INTERNAL OR EXTERNAL HTML IF APPLICABLE -->
+
+            <!-- LOAD LOCAL TEXT IF NO EXTRNAL HTML IS PRESENT -->
+            <div data-ng-if="!objCurrentSlide.hasExternalInclude" class="col-lg-12">
+
+                <div>{{objCurrentSlide.text}}</div>
+
+            </div>
+            <!-- /LOAD LOCAL TEXT IF NO EXTRNAL HTML IS PRESENT -->
+
+        </div>
+        <!-- /SLIDE WRAPPER-->
+
+    </div>
+    <!-- /GENERIC SLIDE : DEFAULT DISPLAY-->
+
+</div>
+<!-- /COURSE CONTENT DISPLAY -->
+
+<!-- CONTROLS (COURSE HEADER) -->
+<h3 class="brfss-control-header brfss-control-header-bottom clearfix">
+    <span data-ng-show="header.show.courseTitle" data-ng-click="debug.enabled = !debug.enabled">{{courseTitle}}</span>
+    <div class="pull-right">
+        <button class="btn " data-ng-if="ui.show.controls.prev()" data-ng-class="buttonClasses[ui.highlight.controls.prev()]" data-ng-click="ui.events.prev()">&lt;</button>
+        <button class="btn " data-ng-if="ui.show.controls.next()" data-ng-class="buttonClasses[ui.highlight.controls.next()]" data-ng-click="ui.events.next()">&gt;</button>
+        <span data-ng-if="slideIndex > 0">{{slideIndex}} of {{courseLength}}</span>
+    </div>
+</h3>
+<!-- /CONTROLS -->
+
+<!-- ADMIN / DEBUG DISPLAY -->
+<div data-ng-if="debug.enabled" data-ng-include="'./core/html/debug-slide.html'"></div>
+<!-- /ADMIN / DEBUG DISPLAY -->

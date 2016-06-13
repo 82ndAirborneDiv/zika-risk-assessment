@@ -1,0 +1,25 @@
+#lms-top .lms-question .lms-options-standard .btn {
+    margin: 0 3px;
+}
+
+#lms-top .lms-question .lms-options-default .btn {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-bottom: 5px;
+}
+
+#lms-top .lms-question .lms-question-text,
+#lms-top .lms-question .lms-question-options,
+#lms-top .lms-question .lms-question-response {
+    margin-bottom: 15px;
+}
+
+#lms-top .lms-question .lms-center-options .lms-question-options {
+    float: left;
+    position: relative; left: 50%;
+}
+
+#lms-top .lms-question .lms-center-options [class*="lms-options-"] {
+    float: left;
+    position: relative; left: -50%;
+}

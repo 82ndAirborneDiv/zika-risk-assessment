@@ -1,0 +1,9 @@
+<h2>Please Select a Course</h2>
+<hr />
+<div class="text-left">
+  <ul>
+    <li data-ng-repeat="(courseIndex, course) in courseList | filter: { hidden : false }">
+        <a href="#{{course.courseId}}/content/1/">{{course.courseTitle}}</a>
+    </li>
+  </ul>
+</div>

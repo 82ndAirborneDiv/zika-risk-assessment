@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="/TemplatePackage/contrib/widgets/tp-lms/core/css/course-home.css" />
+<link rel="stylesheet" href="/TemplatePackage/contrib/widgets/tp-lms/core/css/layouts/quiz-module.css" />
+
+<div id="quiz-module-top" class="{{course.theme}} completed">
+    <!-- QUIZ HEADING data-ng-click="course.debug.enabled = !course.debug.enabled" -->
+    <h3>
+      <span data-ng-show="course.header.show.courseId"> {{course.courseId}} : </span>
+      <span data-ng-show="course.header.show.courseTitle">{{course.courseTitle}}</span>
+      <!--<span data-ng-show="course.header.show.courseReviewIndicator && progress.courseCompleted">(Review Mode)</span>-->
+    </h3>
+    <!-- /QUIZ HEADING -->
+    <!-- COURSE COMPLETION -->
+    <div class="row" data-ng-if="progress.courseCompleted">
+        <div class="col-md-12 text-center">
+            <h5>{{course.completionText}}</h5>
+            <h5 data-ng-if="course.completionShowScore && course.scoring">Your Score: {{course.scoring.correct}} of {{course.scoring.count}}  ({{course.scoring.score | number:0}}%)</h5>
+        </div>
+    </div>
+    <div data-ng-if="course.completionLinkRoute.length">
+        <div class="{{course.defaultColumnClassList}} text-center">
+            <button class="btn btn-primary" data-ng-click="goToPath(course.completionLinkRoute)">{{course.completionLinkLabel}}</button>
+        </div>
+    </div>
+    <!-- /COURSE COMPLETION -->
+    <!-- /COURSE SCORING(IF ENABLED) -->
+    <div class="row">
+        <div class="col-md-12 text-left">
+            <!-- LEARN MORE SECTION -->
+            <strong>{{course.learnMore.title}}</strong>
+            <p>{{course.learnMore.text}}</p>
+            <ul>
+                <li data-ng-repeat="link in course.learnMore.links"><a href="{{link}}" target="_blank">{{link}}</a></li>
+            </ul>
+            <!-- /LEARN MORE SECTION -->
+            <!-- COURSE COMPLETION LINK (COURSE CHAINING) -->
+            <div data-ng-if="course.completionLinkRoute.length">
+                <div class="{{course.defaultColumnClassList}} text-center">
+                    <button class="btn btn-primary" data-ng-click="goToPath(course.completionLinkRoute)">{{course.completionLinkLabel}}</button>
+                </div>
+            </div>
+            <!-- /COURSE COMPLETION LINK (COURSE CHAINING) -->
+        </div>
+    </div>
+    <!-- REVIEW BUTTON (IF ENABLED) -->
+    <div data-ng-if="course.reviewMode.enabled">
+        <hr />
+        <div class="{{course.defaultColumnClassList}} text-right">
+            <button class="btn btn-primary" data-ng-click="restartCourse()">{{course.reviewMode.label}}</button>
+        </div>
+    </div>
+    <!-- /REVIEW BUTTON (IF ENABLED) -->
+</div>

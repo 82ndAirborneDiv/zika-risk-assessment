@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html ng-app="microsite" class="no-js nav theme-teal lt-ie10 lt-ie9 lt-ie8" lang="en" ng-controller="MainController as main"> <![endif]-->
+<!--[if IE 8]><html ng-app="microsite" class="no-js nav theme-teal lt-ie10 lt-ie9" lang="en" ng-controller="MainController as main"> <![endif]-->
+<!--[if IE 9]><html ng-app="microsite" class="no-js nav theme-teal lt-ie10" lang="en" ng-controller="MainController as main"> <![endif]-->
+<!--[if !IE]><!-->
+<html ng-app="microsite" ng-strict-di scroll class="no-js nav" lang="en-us" ng-controller="MainController as main">
+<!--<![endif]-->
+
+<head>
+
+    <meta http-equiv="x-ua-compatible" content="IE=Edge" />
+    <meta charset="utf-8" />
+    <meta name="robots" content="index,follow" />
+    <!-- CDC Template Version -->
+    <!--<meta property="cdc:template_version" content="3.0" />-->
+    <!-- Facebook Metadata -->
+    <meta property="og:title" content="" />
+    <meta property="og:image" content="" />
+    <meta property="og:site_name" content="" />
+    <meta property="og:description" content="" />
+
+    <title data-ng-bind="main.systemTitle"></title>
+
+    <meta name="description" content="CDC - Page with Navigation example description goes here" />
+    <meta name="keywords" content="CDC - Page with Navigation example keywords goes here" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="robots" content="index,follow" />
+    <meta property="cdc:template_version" content="3.0" />
+
+	<!--<link rel="stylesheet" href="//tools.cdc.gov/TemplatePackage/3.0/css/app.css">-->
+    <link href="css/libs/bootstrap/3.2.0/bootstrap.min.css" rel="stylesheet" />
+	<link href="css/libs/font-awesome/4.1.0/font-awesome.min.css" rel="stylesheet" />
+
+    <!-- Local CSS reference to allow overrides for the page/site -->
+    <link rel="stylesheet" href="css/_bundle.css?1449145637542" />
+
+</head>
+
+<body class="cdc-microsite {{main.embedParams.cdcTheme}} cdc-microsite-sport-{{main.embedParams.cdcSport}}">
+
+	<div ng-if="main.demoMode" class="demoBar">
+		<form class="form-inline">
+			<div class="form-group">
+				Demo Mode:
+			</div><!--formgroup-->
+
+			<div class="form-group">
+				<div class="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+						<span ng-bind="main.embedParams.cdcSport || 'Select a Sport:'"></span>
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+						<li><a href="#" data-ng-click="main.embedParams.cdcSport='all'">General (all)</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcSport='baseball'">Baseball</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcSport='football'">Football</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcSport='hockey'">Ice Hockey</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcSport='basketball'">Basketball</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcSport='soccer'">Soccer</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcSport='softball'">Softball</a></li>
+					</ul>
+				</div>
+			</div><!--formgroup-->
+
+			<div class="form-group">
+				<div class="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" id="Button1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+						<span ng-bind="main.embedParams.cdcTheme || 'Select a Theme:'"></span>
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+						<li><a href="#" data-ng-click="main.embedParams.cdcTheme='theme1'">Theme 1 (grey)</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcTheme='theme2'">Theme 2 (teal)</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcTheme='theme3'">Theme 3 (orange)</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcTheme='theme4'">Theme 4 (blue)</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcTheme='theme5'">Theme 5 (green)</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcTheme='theme6'">Theme 6 (maroon)</a></li>
+						<li><a href="#" data-ng-click="main.embedParams.cdcTheme='theme7'">Theme 7 (purple)</a></li>
+					</ul>
+				</div>
+			</div><!--formgroup-->
+			
+		</form>
+	</div>
+
+    <div id="wrapper">
+       <div id="content" class="container-fluid">
+			<!-- Main Angular view -->
+            <div data-ng-view autoscroll="true"></div>
+
+        </div><!-- /end #content -->
+    </div><!--wrapper-->
+
+    <!-- 3rd party libraries -->
+	<script data-widget-script="./js/widget.js" src="/TemplatePackage/contrib/widgets/tp-widget-common.js"></script>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/libs/bootstrap/3.2.0/bootstrap.min.js"></script>
+	<script src="//tools.cdc.gov/TemplatePackage/3.0/js/libs/jquery-ui.js"></script>
+
+    <script src="js/libs/_bundle.js?1449145637543"></script>
+
+    <!-- app -->
+    <script src="app/_bundle.js?1449145637543"></script>
+
+</body>
+</html>

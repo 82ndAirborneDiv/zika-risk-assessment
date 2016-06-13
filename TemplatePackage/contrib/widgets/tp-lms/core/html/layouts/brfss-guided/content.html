@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/TemplatePackage/contrib/widgets/tp-lms/core/css/course-home.css" />
+<link rel="stylesheet" href="/TemplatePackage/contrib/widgets/tp-lms/core/css/layouts/brfss-guided.css" />
+
+<div id="lms-top">
+
+	<!-- COURSE CONTENT WRAP -->
+	<div>
+
+		<!-- QUESTION DIRECTIVE -->
+		<div data-slide-display="{{currentSlideNumber}}" data-user-answered="false"></div>
+		<!-- /QUESTION DIRECTIVE -->
+
+	</div>
+	<!-- /COURSE CONTENT WRAP -->
+
+	<!-- ADMIN / DEBUG DISPLAY -->
+	<div data-ng-if="course.debug.enabled" data-ng-include="'./core/html/debug-global.html'"></div>
+	<!-- /ADMIN / DEBUG DISPLAY -->
+</div>

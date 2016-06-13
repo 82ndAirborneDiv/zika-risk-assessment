@@ -1,0 +1,23 @@
+<section class="module-typeC text-left">
+  <h3>About this Question:</h3>
+  <div>
+    <p>To show you just how flexibililty the system can be, we have included this control panel to show the different question type / display option combinations:</p>
+
+    <div class="btn-group">
+      <label>Choice Display Options:</label>
+      <button class="btn" data-ng-class="{true: 'btn-primary'}[currentSlide.optionDisplay === 'radioList']" data-ng-click="currentSlide.optionDisplay = 'radioList'">Radios: List</button>
+      <button class="btn" data-ng-class="{true: 'btn-primary'}[currentSlide.optionDisplay === 'radioInline']" data-ng-click="currentSlide.optionDisplay = 'radioInline'">Radios: Inline</button>
+      <button class="btn" data-ng-class="{true: 'btn-primary'}[currentSlide.optionDisplay === 'bar']" data-ng-click="currentSlide.optionDisplay = 'bar'">Buttons: Bar</button>
+      <button class="btn" data-ng-class="{true: 'btn-primary'}[currentSlide.optionDisplay === 'standard']" data-ng-click="currentSlide.optionDisplay = 'standard'">Buttons: Inline</button>
+      <button class="btn" data-ng-class="{true: 'btn-primary'}[currentSlide.optionDisplay === 'default']" data-ng-click="currentSlide.optionDisplay = 'default'">Buttons: List</button>
+    </div>
+  </div>
+
+  <div class="btn-group">
+      <label>Choice Display Options:</label>
+      <button class="btn" data-ng-class="{true: 'btn-primary'}[currentSlide.required === false && currentSlide.requireCorrect === false]" data-ng-click="currentSlide.required = false; currentSlide.requireCorrect = false;">Optional</button>
+      <button class="btn" data-ng-class="{true: 'btn-primary'}[currentSlide.required === true && currentSlide.requireCorrect === false]" data-ng-click="currentSlide.required = true; currentSlide.requireCorrect = false;">Required (Allows One Choice)</button>
+      <button class="btn" data-ng-class="{true: 'btn-primary'}[currentSlide.required === true && currentSlide.requireCorrect === true]" data-ng-click="currentSlide.required = true; currentSlide.requireCorrect = true;">Correct Required (Choose Until Correct)</button>
+    </div>
+  </div>
+</section>

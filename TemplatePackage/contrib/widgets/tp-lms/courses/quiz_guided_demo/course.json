@@ -1,0 +1,112 @@
+
+{
+	"config" : {
+		"debug" : {
+			"enabled" : false,
+			"show" : {}
+		},
+		"header" : {
+			"show" : {
+				"courseId" : false,
+				"courseTitle" : true,
+				"courseReviewIndicator" : true
+			}
+		},
+		"reviewMode": {
+			"enabled" : true,
+			"answeringEnabled" : false,
+			"label" : "Take the Quiz Again"
+		},
+		"layout" : "quiz-guided",
+		"yourAnswerMode" : "text",
+		"roamMode": 1,
+		"useMultiState" : true,
+		"defaultColumnClassList" : "",
+		"defaultSlideAlignment" : "text-left",
+		"completionText": "You have completed the guided course demo.",
+		"completionShowScore" : true,
+		"checkAnswersLabel" : "Submit",
+		"labelCorrect" : "Correct!",
+		"labelIncorrect" : "Incorrect!",
+		"randomSlideOrder" : false,
+		"learnMore" : {
+			"title" : "Learn More",
+			"text" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.",
+			"links" : ["http://www.cdc.gov/flu","http://www.cdc.gov/vhf/ebola/"]
+		}
+	},
+	"content" : [
+		{
+			"type" : "question-multiple-choice",
+			"question" : "Lorem <strong>ipsum</strong> dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo?",
+			"includeHtml" : "<img class='img-responsive' alt='Picture of 5 children in a classroom setting' src='%assets%images/school-kids-group.png' />",
+			"optionDisplay" : "radioList",
+			"correctAnswerIndex" : 0,
+			"labelCorrect" : "Correct!",
+			"labelIncorrect" : "Incorrect",
+			"options" : [
+				{
+					"text" : "Choice 1",
+					"response" : "<strong><em>Correct!</em></strong> We can make the development of courseware and quizzes easy!"
+				},
+				{
+					"text" : "Choice 2",
+					"response" : "This response is <strong><em>incorrect</em></strong>. It is possible to make courseware development better!"
+				},
+				{
+					"text" : "Choice 3",
+					"response" : "This response is <strong><em>incorrect</em></strong>. It is possible to make courseware development better!"
+				}
+			]
+		},
+		{
+			"type" : "question-multiple-choice",
+			"question" : "Proin gravida dolor sit amet lacus accumsan et viverra justo commodo? (A + B = correct)",
+			"includeHtml" : "<img alt='Picture of 5 children in a classroom setting' src='%assets%images/school-kids-group.png' />",
+			"optionDisplay" : "checkboxes",
+			"correctAnswerIndex" : -1,
+			"responseDefaultCorrect" : "This is the <strong><em>correct</em></strong> response!",
+			"responseDefaultIncorrect" : "This response is <strong><em>incorrect</em></strong>.",
+			"options" : [
+				{
+					"text" : "Choice A",
+					"isCorrect" : true
+				},
+				{
+					"text" : "Choice B",
+					"isCorrect" : true
+				},
+				{
+					"text" : "Choice C"
+				}
+			]
+		},
+		{
+			"type" : "slide",
+			"heading" : "Slide Heading",
+			"includePath" : "",
+			"includeHtml" : "<img alt='Picture of 5 children in a classroom setting'  src='%assets%images/school-kids-group.png' />"
+		},
+		{
+			"type" : "question-multiple-choice",
+			"question" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+			"includeHtml" : "<img alt='Picture of 5 children in a classroom setting' src='%assets%images/school-kids-group.png' />",
+			"optionDisplay" : "radioList",
+			"correctAnswerIndex" : 0,
+			"options" : [
+				{
+					"text" : "Answer A",
+					"response" : "<strong><em>Correct!</em></strong> We can make the development of courseware and quizzes easy!"
+				},
+				{
+					"text" : "Answer B",
+					"response" : "This response is <strong><em>incorrect</em></strong>. It is possible to make courseware development better!"
+				},
+				{
+					"text" : "Answer C",
+					"response" : "This response is <strong><em>incorrect</em></strong>. It is possible to make courseware development better!"
+				}
+			]
+		}
+	]
+}

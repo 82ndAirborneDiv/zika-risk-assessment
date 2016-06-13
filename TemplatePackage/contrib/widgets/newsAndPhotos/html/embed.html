@@ -1,0 +1,16 @@
+<div class="container-fluid">
+    <section class="header">
+        <h1>
+            <span id="widget-title">{{widgetConfig.widgetTitle}}: Embed Code</span>
+        </h1>
+    </section>
+    <section class="embed-code">
+        <label for="embedCode"> Copy the code below and paste it into your web page</label>
+        <textarea id="embedCode" name="embedCode" class="form-control" rows="6" data-select-on-click="true">{{cdcCommon.runtime.embedCode}}</textarea>
+    </section>
+    <section class="footer-controls">
+        <button class="btn btn-primary btn-block" type="button" data-ng-click="setPath('/main/')">Return</button>
+        <div data-ng-include="'./html/logo.html'"></div>
+    </section>
+</div>
+<!-- /container -->

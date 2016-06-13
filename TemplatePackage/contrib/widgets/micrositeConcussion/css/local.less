@@ -1,0 +1,914 @@
+/*  Storefront variables  */
+@cdcBlue		: #075290;
+@theme1		: #666;		/* GRAY */
+@theme2		: #3fbfc4;	/* TEAL */
+@theme3		: #f17329;	/* ORANGE */
+@theme4		: #1072ba;	/* BLUE */
+@theme5		: #005620;	/* GREEN */
+@theme6		: #4e0303;	/* MAROON */
+@theme7		: #350e6b;	/* PURPLE */
+
+/* Responsive sheet */
+@import (less) "responsive.less";
+
+
+body.cdc-microsite {
+	text-align:center;
+	background-color:#fff;
+	padding-bottom:30px;
+}
+
+.cdc-microsite .cdc-content {margin-top:15px;}
+
+.cdc-microsite .demoBar {
+	text-align:center;
+	padding:8px 0;
+	margin-bottom:8px;
+	background-color:#333;
+	color:#fff;
+
+	.dropdown {margin:0 5px;}
+}
+
+.cdc-microsite .cdc-microsite-external {
+    background: url(//tools.cdc.gov/TemplatePackage/3.0/images/icon_out.png) center right no-repeat;
+    padding-right: 13px;
+}
+
+.cdc-microsite .loader {
+	min-width:100px;
+	min-height:100px;
+	background: url('../images/loader.gif') no-repeat center;
+	margin:0 auto;
+}
+
+.cdc-microsite .overlay {
+	position:absolute;
+	top:0; right:0; bottom:0; left:0;
+	z-index:9;
+	opacity: 0.65;
+}
+
+.cdc-microsite #wrapper {
+	max-width:760px;
+	margin:0 auto;
+	text-align:left;
+	background-color:#fff;
+}
+
+.cdc-microsite .mainBanner {
+	min-height:245px;
+	position:relative;
+	margin-bottom:15px;
+	background-size: 100%;
+	background-repeat:no-repeat;
+
+	.hedMain, .hedSub {position:absolute;}
+	.hedMain {top:120px; z-index:10;}
+	.hedSub {
+		top:184px;
+		z-index:9;
+		font-size:14pt;
+		padding:8px 14px;
+		color:#fff;
+	}
+
+	.headsUp-logo {
+		position:absolute;
+		top:8px;
+		left:6px;
+	}
+
+	h1 {
+		font-weight:normal;
+		font-size:20pt;
+		background-color:rgba(0,0,0,0.7);
+		display:inline-block;
+		padding:10px 14px;
+		color:#fff;
+	}
+	h1, .hedSub {padding-left:120px;}
+}
+
+.cdc-microsite .micrositeModule {
+	padding:0 10px 10px 10px;
+
+	ul {
+		padding:0;
+		margin:0;
+
+		li {
+			font-size:10pt;
+			margin:0 0 3px 20px;
+		}
+	}
+
+	h3 {
+		padding: 10px 0;
+		margin: 0;
+		font-size: 13pt !important;
+		text-transform: uppercase;
+		font-weight:bold !important;
+	}
+
+	.highlights {
+		margin-bottom:10px;
+		border-bottom:1px solid #ccc;
+		padding-bottom:8px;
+
+		li {
+			list-style-type:none;
+			margin:0 0 6px 2px;
+			clear:left;
+
+			.fa {
+				font-size:18pt;
+				width:16px;
+				vertical-align:middle;
+				margin:0 4px 5px 0;
+				text-align:center;
+				color:#666;
+				float:left;
+			}
+		}
+	}
+}
+
+.cdc-microsite .onlineTraining {
+	text-align:center;
+	margin-top:4px;
+}
+
+.cdc-microsite .micrositeDidYouKnow {
+	margin-bottom:10px;
+	padding:15px;
+	padding-top:10px;
+	position:relative;
+	overflow:hidden;
+
+	h3 {margin:0; padding-bottom:15px;}
+	a:link {text-decoration:underline;}
+
+	.fa-question-circle {
+		color:#999;
+		opacity:.2;
+		position:absolute;
+		top:-15px;
+		right:-50px;
+		font-size:200pt;
+		z-index:0;
+	}
+
+	p.tip {
+		font-size:9pt;
+		padding-top:10px;
+	}
+	p.fact {
+		padding:10px;
+		font-size:12pt;
+		border:1px solid #ccc;
+	}
+}
+
+.cdc-microsite .micrositeModuleSide {
+	margin-bottom:10px;
+
+	h3 {
+		margin:0;
+		padding:4px 8px;
+		font-size:16pt;
+		color:#fff;
+	}
+}
+
+.cdc-microsite .twitterModule {
+	h3 {
+		font-size:14pt !important;
+		font-weight:normal;
+		padding:8px 0 8px 15px !important;
+
+		span.fa {font-size:16pt !important;}
+	}
+
+	.twitterContent {
+		min-height:250px;
+		padding:6px 10px;
+		font-size:10pt;
+
+		ul {
+			margin:0; padding:0;
+
+			li {
+				padding:0;
+				list-style-type:none;
+				margin:0 0 10px 0;
+				font-size:10pt;
+				color:#666;
+
+				small {color:#999;}
+			}
+		}
+	}
+}
+
+.cdc-microsite .helmetSafety {
+	position:relative;
+	min-height:100px;
+	margin:15px 0;
+	display:block;
+	color:#fff;
+	background-size: 100%;
+	background-repeat:no-repeat;
+
+	.helmetSafetyTxt {
+		position:absolute;
+		top:15px;
+		left:20px;
+		z-index:10;
+
+		h3 {
+			color:#fff;
+			padding:0 0 4px 0;
+			margin:0;
+			font-size:18pt !important;
+			font-weight:normal !important;
+		}
+	}
+}
+
+.cdc-microsite .takeAction {
+	position:relative;
+	min-height:175px;
+	margin:15px 0;
+	display:block;
+	color:#fff;
+	background-size: 100%;
+	background-repeat:no-repeat;
+
+	.takeActionTxt {
+		position:absolute;
+		top:15px;
+		left:20px;
+		z-index:10;
+
+		h3 {
+			color:#fff;
+			padding:0 10px 4px 0;
+			margin:0;
+			font-size:16pt;
+			font-weight:normal !important;
+		}
+	}
+}
+
+.cdc-microsite .headsUpLinks {
+	margin:0;
+	padding:0;
+
+	li {
+		margin:0;
+		padding:0;
+		list-style-type:none;
+		text-align:center;
+	}
+}
+
+.cdc-microsite .rotatingText {
+	background-color:#efefef;
+	border:1px solid #ccc;
+	margin-bottom:15px;
+
+	ul[rn-carousel] {
+		width:100%;
+		height:130px;
+		margin:0;
+
+		> li {
+			padding:4px 30px;
+
+			em {text-decoration:underline;}
+
+			img.didyouknow-icon {margin:0 10px 10px 0;}
+
+			.fa.tip-icon {
+				font-size: 34pt;
+				vertical-align: bottom;
+				float: left;
+				margin: -4px 10px 20px 0;
+				color: #757575;
+			}
+		}
+	}
+}
+
+.cdc-microsite .mediaViewer {
+	ul, li {
+		margin:0;
+		padding:0;
+	}
+
+	ul[rn-carousel] {
+		width:100%;
+		height:285px;
+
+		> li {
+			padding:0;
+
+			img {width:100%;}
+
+			.mediaViewerVidContainer {
+				position: relative;
+				width: 100%;
+				height: 0;
+				padding-bottom: 56.25%;
+			}
+
+			.mediaViewerVid {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+		}
+	}
+
+	.rn-carousel-control {top: 45%;}
+}
+
+
+
+
+/* THEMING */
+
+.cdc-microsite.theme1 .mainBanner .hedSub,
+.cdc-microsite.theme1 .micrositeModuleSide h3,
+.cdc-microsite.theme1 .module-typeA h3,
+.cdc-microsite.theme1 .overlay, 
+.cdc-microsite.theme1 p.somemore,
+.cdc-microsite.theme1 .themespot_bg {background-color:@theme1;}
+.cdc-microsite.theme1 .micrositeModule,
+.cdc-microsite.theme1 .micrositeModuleSide,
+.cdc-microsite.theme1 .themespot_border {border:1px solid @theme1;}
+.cdc-microsite.theme1 .rotatingText h4,
+.cdc-microsite.theme1 .themespot {color:@theme1;}
+
+.cdc-microsite.theme2 .mainBanner .hedSub,
+.cdc-microsite.theme2 .micrositeModuleSide h3,
+.cdc-microsite.theme2 .module-typeA h3,
+.cdc-microsite.theme2 .overlay,
+.cdc-microsite.theme2 p.somemore,
+.cdc-microsite.theme2 .themespot_bg {background-color:@theme2;}
+.cdc-microsite.theme2 .micrositeModule,
+.cdc-microsite.theme2 .micrositeModuleSide,
+.cdc-microsite.theme2 .themespot_border {border:1px solid @theme2;}
+.cdc-microsite.theme2 .rotatingText h4,
+.cdc-microsite.theme2 .themespot {color:@theme2;}
+
+.cdc-microsite.theme3 .mainBanner .hedSub,
+.cdc-microsite.theme3 .micrositeModuleSide h3,
+.cdc-microsite.theme3 .module-typeA h3,
+.cdc-microsite.theme3 .overlay,
+.cdc-microsite.theme3 p.somemore,
+.cdc-microsite.theme3 .themespot_bg {background-color:@theme3;}
+.cdc-microsite.theme3 .micrositeModule,
+.cdc-microsite.theme3 .micrositeModuleSide,
+.cdc-microsite.theme3 .themespot_border {border:1px solid @theme3;}
+.cdc-microsite.theme3 .rotatingText h4,
+.cdc-microsite.theme3 .themespot {color:@theme3;}
+
+.cdc-microsite.theme4 .mainBanner .hedSub,
+.cdc-microsite.theme4 .micrositeModuleSide h3,
+.cdc-microsite.theme4 .module-typeA h3,
+.cdc-microsite.theme4 .overlay,
+.cdc-microsite.theme4 p.somemore,
+.cdc-microsite.theme4 .themespot_bg {background-color:@theme4;}
+.cdc-microsite.theme4 .micrositeModule,
+.cdc-microsite.theme4 .micrositeModuleSide,
+.cdc-microsite.theme4 .themespot_border {border:1px solid @theme4;}
+.cdc-microsite.theme4 .rotatingText h4,
+.cdc-microsite.theme4 .themespot {color:@theme4;}
+
+.cdc-microsite.theme5 .mainBanner .hedSub,
+.cdc-microsite.theme5 .micrositeModuleSide h3,
+.cdc-microsite.theme5 .module-typeA h3,
+.cdc-microsite.theme5 .overlay,
+.cdc-microsite.theme5 p.somemore,
+.cdc-microsite.theme5 .themespot_bg {background-color:@theme5;}
+.cdc-microsite.theme5 .micrositeModule,
+.cdc-microsite.theme5 .micrositeModuleSide,
+.cdc-microsite.theme5 .themespot_border {border:1px solid @theme5;}
+.cdc-microsite.theme5 .rotatingText h4,
+.cdc-microsite.theme5 .themespot {color:@theme5;}
+
+.cdc-microsite.theme6 .mainBanner .hedSub,
+.cdc-microsite.theme6 .micrositeModuleSide h3,
+.cdc-microsite.theme6 .module-typeA h3,
+.cdc-microsite.theme6 .overlay,
+.cdc-microsite.theme6 p.somemore,
+.cdc-microsite.theme6 .themespot_bg {background-color:@theme6;}
+.cdc-microsite.theme6 .micrositeModule,
+.cdc-microsite.theme6 .micrositeModuleSide,
+.cdc-microsite.theme6 .themespot_border {border:1px solid @theme6;}
+.cdc-microsite.theme6 .rotatingText h4,
+.cdc-microsite.theme6 .themespot {color:@theme6;}
+
+.cdc-microsite.theme7 .mainBanner .hedSub,
+.cdc-microsite.theme7 .micrositeModuleSide h3,
+.cdc-microsite.theme7 .module-typeA h3,
+.cdc-microsite.theme7 .overlay,
+.cdc-microsite.theme7 p.somemore,
+.cdc-microsite.theme7 .themespot_bg {background-color:@theme7;}
+.cdc-microsite.theme7 .micrositeModule,
+.cdc-microsite.theme7 .micrositeModuleSide,
+.cdc-microsite.theme7 .themespot_border {border:1px solid @theme7;}
+.cdc-microsite.theme7 .rotatingText h4,
+.cdc-microsite.theme7 .themespot {color:@theme7;}
+
+
+/* SPORTS GRAPHICS */
+
+/* All / none specified */
+.cdc-microsite.cdc-microsite-sport-all .helmetSafety,
+.cdc-microsite.cdc-microsite-sport- .helmetSafety {background-image:url(../images/banner-helmet-all.png);}
+.cdc-microsite.cdc-microsite-sport-all .takeAction,
+.cdc-microsite.cdc-microsite-sport- .takeAction {background-image:url(../images/banner-action-all.png);}
+.cdc-microsite.cdc-microsite-sport-all .mainBanner,
+.cdc-microsite.cdc-microsite-sport- .mainBanner {background-image:url(../images/banner-main-all.png);}
+
+/* hockey */
+.cdc-microsite.cdc-microsite-sport-hockey .helmetSafety {background-image:url(../images/banner-helmet-hockey.png);}
+.cdc-microsite.cdc-microsite-sport-hockey .takeAction {background-image:url(../images/banner-action-hockey.png);}
+.cdc-microsite.cdc-microsite-sport-hockey .mainBanner {background-image:url(../images/banner-main-hockey.png);}
+
+/* football */
+.cdc-microsite.cdc-microsite-sport-football .helmetSafety {background-image:url(../images/banner-helmet-football.png);}
+.cdc-microsite.cdc-microsite-sport-football .takeAction {background-image:url(../images/banner-action-football.png);}
+.cdc-microsite.cdc-microsite-sport-football .mainBanner {background-image:url(../images/banner-main-football.png);}
+
+/* soccer */
+.cdc-microsite.cdc-microsite-sport-soccer .helmetSafety {background-image:url(../images/banner-helmet-soccer.png);}
+.cdc-microsite.cdc-microsite-sport-soccer .takeAction {background-image:url(../images/banner-action-soccer.png);}
+.cdc-microsite.cdc-microsite-sport-soccer .mainBanner {background-image:url(../images/banner-main-soccer.png);}
+
+/* baseball */
+.cdc-microsite.cdc-microsite-sport-baseball .helmetSafety {background-image:url(../images/banner-helmet-baseball.png);}
+.cdc-microsite.cdc-microsite-sport-baseball .takeAction {background-image:url(../images/banner-action-baseball.png);}
+.cdc-microsite.cdc-microsite-sport-baseball .mainBanner {background-image:url(../images/banner-main-baseball.png);}
+
+/* softball */
+.cdc-microsite.cdc-microsite-sport-softball .helmetSafety {background-image:url(../images/banner-helmet-softball.png);}
+.cdc-microsite.cdc-microsite-sport-softball .takeAction {background-image:url(../images/banner-action-softball.png);}
+.cdc-microsite.cdc-microsite-sport-softball .mainBanner {background-image:url(../images/banner-main-softball.png);}
+
+/* basketball */
+.cdc-microsite.cdc-microsite-sport-basketball .helmetSafety {background-image:url(../images/banner-helmet-basketball.png);}
+.cdc-microsite.cdc-microsite-sport-basketball .takeAction {background-image:url(../images/banner-action-basketball.png);}
+.cdc-microsite.cdc-microsite-sport-basketball .mainBanner {background-image:url(../images/banner-main-basketball.png);}
+
+
+
+
+
+
+/* Bootstrap 2 styles for content pages */
+
+.cdc-microsite [class*="span"] {
+	float: left;
+	min-height: 1px;
+	margin-left: 20px;
+}
+.cdc-microsite .span24{width:950px}
+.cdc-microsite .span23{width:910px}
+.cdc-microsite .span22{width:870px}
+.cdc-microsite .span21{width:830px}
+.cdc-microsite .span20{width:790px}
+.cdc-microsite .span19{width:750px}
+.cdc-microsite .span18{width:710px}
+.cdc-microsite .span17{width:670px}
+.cdc-microsite .span16{width:630px}
+.cdc-microsite .span15{width:590px}
+.cdc-microsite .span14{width:550px}
+.cdc-microsite .span13{width:510px}
+.cdc-microsite .span12{width:470px}
+.cdc-microsite .span11{width:430px}
+.cdc-microsite .span10{width:390px}
+.cdc-microsite .span9{width:350px}
+.cdc-microsite .span8{width:310px}
+.cdc-microsite .span7{width:270px}
+.cdc-microsite .span6{width:230px}
+.cdc-microsite .span5{width:190px}
+.cdc-microsite .span4{width:150px}
+.cdc-microsite .span3{width:110px}
+.cdc-microsite .span2{width:70px}
+.cdc-microsite .span1{width:30px}
+
+/*
+@media (min-width: 1200px) {
+	.row {
+		margin-left: -15px;
+		padding: 0!important;
+	}
+	.row:before, .row:after {
+		display: table;
+		content: "";
+		line-height: 0;
+	}
+	.row:after {
+		clear: both;
+	}
+	.cdc-microsite [class*="span"] {
+		float: left;
+		min-height: 1px;
+		margin-left: 15px;
+	}
+	.cdc-microsite .pull-right {
+		float: right!important;
+	}
+	.cdc-microsite .span24{width:1185px}
+	.cdc-microsite .span23{width:1135px}
+	.cdc-microsite .span22{width:1085px}
+	.cdc-microsite .span21{width:1035px}
+	.cdc-microsite .span20{width:985px}
+	.cdc-microsite .span19{width:935px}
+	.cdc-microsite .span18{width:885px}
+	.cdc-microsite .span17{width:835px}
+	.cdc-microsite .span16{width:785px}
+	.cdc-microsite .span15{width:735px}
+	.cdc-microsite .span14{width:685px}
+	.cdc-microsite .span13{width:635px}
+	.cdc-microsite .span12{width:585px}
+	.cdc-microsite .span11{width:535px}
+	.cdc-microsite .span10{width:485px}
+	.cdc-microsite .span9{width:435px}
+	.cdc-microsite .span8{width:385px}
+	.cdc-microsite .span7{width:335px}
+	.cdc-microsite .span6{width:285px}
+	.cdc-microsite .span5{width:235px}
+	.cdc-microsite .span4{width:185px}
+	.cdc-microsite .span3{width:135px}
+	.cdc-microsite .span2{width:85px}
+	.cdc-microsite .span1{width:35px}
+}
+*/
+
+@media (min-width: 768px) and (max-width: 979px) {
+	.cdc-microsite [class*="span"] {
+		float: left;
+		min-height: 1px;
+		margin-left: 20px;
+	}
+	.cdc-microsite .pull-right {
+		float: right!important;
+	}
+	.cdc-microsite .span24{width:734px}
+	.cdc-microsite .span23{width:703px}
+	.cdc-microsite .span22{width:672px}
+	.cdc-microsite .span21{width:641px}
+	.cdc-microsite .span20{width:610px}
+	.cdc-microsite .span19{width:579px}
+	.cdc-microsite .span18{width:548px}
+	.cdc-microsite .span17{width:517px}
+	.cdc-microsite .span16{width:486px}
+	.cdc-microsite .span15{width:455px}
+	.cdc-microsite .span14{width:424px}
+	.cdc-microsite .span13{width:393px}
+	.cdc-microsite .span12{width:362px}
+	.cdc-microsite .span11{width:331px}
+	.cdc-microsite .span10{width:300px}
+	.cdc-microsite .span9{width:269px}
+	.cdc-microsite .span8{width:238px}
+	.cdc-microsite .span7{width:207px}
+	.cdc-microsite .span6{width:176px}
+	.cdc-microsite .span5{width:145px}
+	.cdc-microsite .span4{width:114px}
+	.cdc-microsite .span3{width:83px}
+	.cdc-microsite .span2{width:52px}
+	.cdc-microsite .span1{width:21px}
+}
+
+
+/* Angular Carousel */
+
+.cdc-microsite ul[rn-carousel] {
+	overflow:hidden;
+	padding:0;
+	white-space: nowrap;
+	position: relative;
+	perspective:1000px;
+	-ms-touch-action: pan-y;
+	touch-action: pan-y;
+
+	> li {
+		color:black;
+		backface-visibility: hidden;
+		overflow: visible;
+		vertical-align: top;
+		position:absolute;
+		left:0;
+		right:0;
+		white-space: normal;
+		margin:0;
+		list-style-type:none;
+		width:100%;
+		height:100%;
+		display:inline-block;
+	}
+}
+
+/* prevent flickering when moving buffer */
+.cdc-microsite ul[rn-carousel-buffered] > li {
+	display:none;
+}
+
+.cdc-microsite ul[rn-carousel-transition="hexagon"] {
+	overflow:visible;
+}
+
+/* indicators */
+.cdc-microsite div.rn-carousel-indicator {
+	background-color:#efefef;
+	padding:5px;
+	text-align:center;
+
+	span {
+		cursor:pointer;
+		font-size: 14pt;
+		color: #666;
+		margin:0 5px;
+
+		&.active {
+			color: #ccc
+		}
+	}
+}
+
+/* prev/next controls */
+.cdc-microsite .rn-carousel-control {
+	transition: opacity 0.2s ease-out;
+	font-size: 2rem;
+	position: absolute;
+	top: 35%;
+	opacity: 0.75;
+	cursor: pointer;
+	background-color:rgba(0,0,0,0.5);
+	padding:10px 9px;
+	color:#fff;
+
+	&:hover {
+		opacity: 1;
+	}
+
+	&.rn-carousel-control-prev {
+		left: 0.4em;
+		&:before {
+			content: "\f053";
+		}
+	}
+
+	&.rn-carousel-control-next {
+		right: 0.4em;
+		&:before {
+			content: "\f054";
+		}
+	}
+}
+
+
+/* Syndicated Content Styling */
+
+.syndicate {
+
+	h1 {
+		font-size: 20pt;
+		line-height: 30px;
+		margin-top: 0;
+		padding:0 0 15px 0;
+	}
+	h2 {font-size:18pt;}
+	h3 {font-size:15pt;}
+	h6 {font-weight:bold;}
+
+	.margin-top-ten {margin-top:10px;}
+	.margin-right-ten {margin-right:10px;}
+	.margin-left-ten {margin-left:10px;}
+	.margin-bottom-ten {margin-bottom:10px;}
+
+	.margin-top-five {margin-top: 5px!important;}
+	.margin-right-five {margin-right: 5px!important;}
+	.margin-bottom-five {margin-bottom: 5px!important;}
+	.margin-left-five {margin-left: 5px!important;}
+
+	div[id^="cdc_slider_"] {display:none;}
+
+	.tabs ul:first-child {display:none;}
+
+	.accordion h3 {
+		font-size: 12px!important;
+		font-weight: 700!important;
+		color: #000!important;
+	}
+	.ui-accordion .ui-accordion-header {
+		display: block;
+		cursor: pointer;
+		position: relative;
+		margin: 2px 0 0 0;
+		padding: .7em .7em .7em 2.0em;
+		min-height: 0;
+	}
+	.ui-accordion .ui-accordion-content .rx-row img {
+		float:right;
+		margin:0 0 10px 10px;
+	}
+
+	.row {
+		margin-left: -15px;
+		padding: 0!important;
+	}
+	.row:before, .row:after {
+		display: table;
+		content: "";
+		line-height: 0;
+	}
+	.row:after {
+		clear: both;
+	}
+
+	img {
+		max-width: 100%;
+		width: auto\9;
+		height: auto;
+		vertical-align: middle;
+		border: 0;
+		-ms-interpolation-mode: bicubic;
+	}
+
+	img.polaroid-left {
+		float: left;
+		padding: 10px;
+		border: 1px solid #e5e5e5;
+		margin-right: 10px;
+		margin-bottom: 10px;
+	}
+
+	[class*=module]>* {
+		padding: 0 15px 0 15px;
+
+		-ms-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+	[class*=module] {
+		-ms-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		margin-bottom: 20px;
+		padding-bottom: 10px;
+		overflow: hidden;
+	}
+
+	[class*=module] ul.list-block, #wrapper [class*=module] ol.list-block {
+		list-style: none;
+		display: block;
+	}
+
+	[class*=module]>h1, [class*=module]>h2, 
+	[class*=module]>h3, [class*=module]>h4, [class*=module] .title {
+		margin: 0;
+		border-bottom: 1px #e5e5e5 solid;
+		padding: 10px;
+		font-size: 18px;
+		margin-bottom: 10px;
+	}
+
+	[class*=module] ul.list-block li:first-child, 
+	[class*=module] ol.list-block li:first-child {
+		border: none;
+	}
+
+	[class*=module] ul.list-block li, [class*=module] ol.list-block li {
+		margin: 0;
+		border-top: 1px dotted silver;
+		display: inline-block;
+		width: 100%;
+		padding: 5px 0;
+	}
+
+	[class*=module]>div ul, [class*=module]>div ol {margin: 0;}
+	[class*=module]>div ul.list-bullet, [class*=module]>div ol.list-bullet {margin-left: 15px; padding:0;}
+
+	.module-typeA {
+		border:1px solid #e5e5e5;
+		padding-bottom: 10px;
+		
+		h3 {
+			color:#fff;
+			padding: 10px;
+			font-size: 18px;
+
+			a {color:#fff;}
+		}
+		p {padding:4px 10px;}
+	}
+
+	.module-typeB, .page-curl {
+		-webkit-box-shadow: 0 0 8px rgba(0,0,0,.13);
+		-moz-box-shadow: 0 0 8px rgba(0,0,0,.13);
+		box-shadow: 0 0 8px rgba(0,0,0,.13);
+
+		h3 {
+			a {color:#333;}
+		}
+	}
+
+	.module-typeC {
+		background: #efefef;
+		border:1px solid #e5e5e5;
+	}
+
+	.module-typeE {
+		background: #efefef;
+		margin-top: 10px;
+		margin-bottom: 20px;
+		margin-left: 10px;
+		padding-bottom: 10px;
+
+		h3 {
+			margin: 0;
+			border-bottom: 1px #e5e5e5 solid;
+			padding: 10px;
+			font-size: 18px;
+		}
+		p {padding:4px;}
+	}
+
+	.related h2, .module-typeH h2, 
+	.related h3, .module-typeH h3, .related h4, 
+	.module-typeH h4, .related h5, .module-typeH h5 {
+		background: #f0f0f0;
+		font-size: 14px !important;
+		font-weight: 700;
+	}
+
+	.module-typeH {
+		background: #fff;
+		border: 1px solid #e5e5e5;
+	}
+
+	p.somemore {
+		clear: both;
+		color: #ebf2f9;
+		float: right;
+		border-bottom: none;
+		color: #fff;
+		padding: 0 10px;
+		padding-bottom: 0;
+		margin-bottom: 0;
+		text-align: right;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		margin-right: 10px;
+		margin-top: 10px;
+
+		a {
+		    color: #fff;
+			clear: both;
+			display: inline-block;
+			font-weight: 700;
+			padding: 3px 7px;
+			text-align: right;
+			text-decoration: none!important;
+		}
+	}
+
+	.youtube iframe, .module-typeY iframe {
+		border: none;
+	}
+
+	.fluid-width-video-wrapper {
+		width: 100%;
+		position: relative;
+		padding: 0;
+	}
+
+	.fluid-width-video-wrapper iframe, 
+	.fluid-width-video-wrapper object, 
+	.fluid-width-video-wrapper embed {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}                                     
+
+}
+
+
+/* Specific content fixes for bad markup */
+/* Remove for future microsites */
+
+.cdc-microsite .cdc-content-132448 {.row.span19 {float:none !important;}}

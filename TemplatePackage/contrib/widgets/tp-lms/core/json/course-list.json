@@ -1,0 +1,67 @@
+[
+  {
+      "courseId": "quiz_guided_demo",
+      "courseTitle": "Quiz Module Demo (Guided Mode)"
+  },
+  {
+      "courseId": "quiz_form_demo",
+      "courseTitle": "Quiz Module Demo (Form Mode)"
+  },
+  {
+    "courseId": "TP_LMS_101",
+    "courseTitle": "TPLMS Feature Demonstration",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/tp_lms_101/",
+    "contentFile" : "course.json",
+    "hidden" : true
+  },
+  {
+    "courseId": "TP_LMS_101_evaluation",
+    "courseTitle": "TPLMS Knowledge Check",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/tp_lms_101_evaluation/",
+    "contentFile" : "course.json",
+    "hidden" : true
+  },
+  {
+    "courseId": "BRFSS_1",
+    "courseTitle": "BRFSS Section 1",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/BRFSS/section_1/"
+  },
+   {
+    "courseId": "BRFSS_1_QUIZ",
+    "courseTitle": "BRFSS Section 1: Quiz Yourself",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/BRFSS/section_1_quiz/"
+  },
+  {
+    "courseId": "BRFSS_2",
+    "courseTitle": "BRFSS Section 2",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/BRFSS/section_2/",
+    "contentFile" : "course.json"
+  },
+  {
+    "courseId": "BRFSS_2_QUIZ",
+    "courseTitle": "BRFSS Section 2: Quiz Yourself",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/BRFSS/section_2_quiz/"
+  },
+  {
+    "courseId": "BRFSS_3",
+    "courseTitle": "Section 3: The Interview Process",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/BRFSS/section_3/",
+    "contentFile" : "course.json"
+  },
+  {
+    "courseId": "BRFSS_3_QUIZ",
+    "courseTitle": "BRFSS Section 3: Quiz Yourself",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/BRFSS/section_3_quiz/"
+  },
+  {
+    "courseId": "BRFSS_4",
+    "courseTitle": "BRFSS Section 4",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/BRFSS/section_4/",
+    "contentFile" : "course.json"
+  },
+  {
+    "courseId": "BRFSS_4_QUIZ",
+    "courseTitle": "BRFSS Section 4: Quiz Yourself",
+    "contentPath" : "/TemplatePackage/contrib/widgets/tp-lms/courses/BRFSS/section_4_quiz/"
+  }
+]

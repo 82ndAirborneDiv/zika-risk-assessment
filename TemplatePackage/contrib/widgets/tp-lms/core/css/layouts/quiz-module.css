@@ -1,0 +1,147 @@
+/* ==========================================================================
+   RD Quiz Module Custom Styles
+   ========================================================================== */
+
+@charset "UTF-8";
+@font-face {
+  font-family: 'Lato';
+  src: url('/TemplatePackage/3.0/fonts/lato-regular-webfont.eot');
+  src: url('/TemplatePackage/3.0/fonts/lato-regular-webfont.eot?#iefix') format('embedded-opentype'), url('/TemplatePackage/3.0/fonts/lato-regular-webfont.woff') format('woff'), url('/TemplatePackage/3.0/fonts/lato-regular-webfont.ttf') format('truetype'), url('/TemplatePackage/3.0/fonts/lato-regular-webfont.svg#latoregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+#quiz-module-top {
+  border: 1px solid #EFEFEF;
+  margin: 0;
+  padding: 0;
+}
+
+#quiz-module-top h3 {
+  background-color: #075290;
+  color: #fff;
+  font-size: 18px;
+  line-height: 30px;
+  padding: 10px;
+}
+
+#quiz-module-top h4 {
+  background-color: #e5e5e5;
+  color: #000;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  padding: 5px;
+}
+
+#quiz-module-top > h3 {
+  margin: 0;
+}
+
+#quiz-module-top > div {
+  padding: 10px;
+}
+
+#quiz-module-top .col-sm-4 img,
+#quiz-module-top .col-sm-5 img,
+#quiz-module-top .col-sm-6 img {
+  max-width: 100%;
+}
+
+.lms-question-response .bg-success,
+.lms-question-response .bg-danger {
+  padding: 15px 10px;
+}
+
+.lms-question-response .lms-response-label {
+  display: none;
+  font-weight: bold;
+}
+
+.lms-question-response .bg-success .lms-response-label.lms-response-correct {
+  display: block;
+}
+
+.lms-question-response .bg-danger .lms-response-label.lms-response-incorrect {
+  display: block;
+}
+
+#quiz-module-top {
+  width: 1px;
+  min-width: 100%;
+  *width: 100%;
+  font-family: Lato,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  src: url('/TemplatePackage/3.0/fonts/lato-regular-webfont.eot');
+  src: url('/TemplatePackage/3.0/fonts/lato-regular-webfont.eot?#iefix') format('embedded-opentype'),
+     url('/TemplatePackage/3.0/fonts/lato-regular-webfont.woff') format('woff'),
+     url('/TemplatePackage/3.0/fonts/lato-regular-webfont.ttf') format('truetype'),
+     url('/TemplatePackage/3.0/fonts/lato-regular-webfont.svg#latoregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+#quiz-module-top h3,
+#quiz-module-top .btn-primary {
+    background: none;
+    background-color: #075290;
+    color: #fff;
+    border: none;
+}
+
+#quiz-module-top .btn-default {
+    background: none;
+    background-color: #E5E5E5;
+    color: #333;
+    border: none;
+}
+
+#quiz-module-top .btn-primary:hover,
+#quiz-module-top .btn-default:hover {
+  border: none;
+}
+
+#quiz-module-top.theme-green h3,
+#quiz-module-top.theme-green .btn-primary {
+  background-color: #085100;
+}
+
+#quiz-module-top.theme-rose h3,
+#quiz-module-top.theme-rose .btn-primary {
+  background-color: #621919;
+}
+
+#quiz-module-top.theme-teal h3,
+#quiz-module-top.theme-teal .btn-primary {
+  background-color: #084239;
+}
+
+#quiz-module-top.theme-orange h3,
+#quiz-module-top.theme-orange .btn-primary {
+  background-color: #612e1f;
+}
+
+#quiz-module-top.theme-purple h3,
+#quiz-module-top.theme-purple .btn-primary {
+  background-color: #3d316a;
+}
+
+#quiz-module-top.theme-tan h3,
+#quiz-module-top.theme-tan .btn-primary {
+  background-color: #503608;
+}
+
+#quiz-module-top .btn-disabled,
+#quiz-module-top .btn-disabled:hover {
+  color: #888;
+  cursor: not-allowed;
+  border: none;
+}
+
+#quiz-module-top img {
+  max-width: 100%;
+}
+
+#quiz-module-top .row.controls {
+  margin-top: 10px;
+}

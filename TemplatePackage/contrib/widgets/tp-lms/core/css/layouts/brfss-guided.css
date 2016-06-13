@@ -1,0 +1,93 @@
+#lms-top {
+  border: 1px solid #EFEFEF;
+  margin: 0;
+  padding: 0;
+}
+
+#lms-top h3 {
+  background-color: #075290;
+  color: #fff;
+  font-size: 18px;
+  line-height: 30px;
+  padding: 10px;
+}
+
+#lms-top h4 {
+  color: #000;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 20px;
+  text-align: left;
+  padding: 10px 0;
+}
+
+#lms-top.completed h4 {
+  background-color: #FFF;
+  color: #000;
+}
+
+#lms-top > h3 {
+  margin: 0;
+}
+
+#lms-top > div {
+  padding: 10px;
+}
+
+#lms-top .col-sm-4 img,
+#lms-top .col-sm-5 img,
+#lms-top .col-sm-6 img {
+  max-width: 100%;
+}
+
+.lms-question-response .bg-success,
+.lms-question-response .bg-danger {
+  padding: 15px 10px;
+}
+
+.lms-question-response .lms-response-label {
+  display: none;
+  font-weight: bold;
+}
+
+.lms-question-response .bg-success .lms-response-label.lms-response-correct {
+  display: block;
+}
+
+.lms-question-response .bg-danger .lms-response-label.lms-response-incorrect {
+  display: block;
+}
+
+h3.brfss-control-header {
+  margin: -10px;
+}
+
+h3.brfss-control-header-top {
+  margin-bottom: 0;
+}
+
+h3.brfss-control-header-bottom {
+  margin-top: 10px;
+}
+
+table.brfss-interactive td.bg-success {
+  color: #000;
+  font-weight: bold;
+}
+table.brfss-interactive td.bg-danger {
+  color: #EFEFEF;
+  background-color: inherit;
+  font-weight: normal;
+}
+table.brfss-interactive td.bg-default {
+}
+
+table.brfss-interactive td {
+  cursor: pointer;
+}
+
+table.brfss-interactive td.label-field {
+  font-weight: bold;
+  text-align: right;
+  cursor: default;
+}

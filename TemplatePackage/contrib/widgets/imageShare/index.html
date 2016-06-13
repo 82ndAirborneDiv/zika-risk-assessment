@@ -1,0 +1,32 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>CDC Image Share Widget</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="/TemplatePackage/3.0/images/favicon.ico" />
+        <link rel="stylesheet" href="./css/image.css" />
+    </head>
+    <body>
+        <div id="image-container" tab-index="1">
+            <img id="dynamic-image-target" tab-index="2" src="./img.png" alt="Default image placeholder, image should load shortly. Please wait" aria-live="polite" />
+            <div id="more-menu" tab-index="3"><div>
+                <a class="icon icon-more" href="#"><img src="./img/icon-more.png" alt="Click to see available interaction options." /></a>
+            </div></div>
+            <div id="icon-menu" tab-index="4"><div>
+                <a class="icon icon-embed" id="share-link" target="_blank" href="share.html"><img src="./img/icon-embed.png" alt="Get Embed Code" /></a>
+                <a class="icon icon-info" id="info-link" target="_blank" href="policy.html"><img src="./img/icon-info.png" alt="Discplaimer &amp; Privacy Policy" /></a>
+                <a class="hide icon icon-accessibility" id="accessibility-link" target="_blank"><img src="./img/icon-508.png" alt="508 Compliant Version" /></a>
+                <a class="hide icon icon-pdf" id="pdf-link" target="_blank"><img src="./img/icon-pdf.png" alt="Print Ready PDF" /></a>
+            </div></div>
+        </div>
+        <!--<script src="/TemplatePackage/contrib/libs/zepto/1.1.6/zepto.js"></script>-->
+        <script src="/TemplatePackage/contrib/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="/TemplatePackage/contrib/widgets/tp-widget-common.js"></script>
+    </body>
+</html>

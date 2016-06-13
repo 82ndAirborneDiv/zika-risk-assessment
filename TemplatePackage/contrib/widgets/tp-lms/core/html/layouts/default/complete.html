@@ -1,0 +1,43 @@
+<section class="module-typeA" id="quiz-module-top">
+  <h3><span data-ng-show="course.header.show.courseId"> {{course.courseId}} : </span> <span data-ng-show="course.header.show.courseTitle">{{course.courseTitle}}</span> <span data-ng-show="course.header.show.courseReviewIndicator && progress.courseCompleted">(Review Mode)</span></h3>
+
+  <!-- COURSE HEADER -->
+  <div>
+      <div class="{{course.defaultColumnClassList}} text-center">
+        <h1>Congratulations!</h1>
+        <p>{{course.completionText}}</p>
+      </div>
+  </div>
+  <!-- /COURSE HEADER -->
+
+  <!-- COURSE COMPLETION LINK (COURSE CHAINING) -->
+  <div data-ng-if="course.completionLinkRoute.length">
+      <div class="{{course.defaultColumnClassList}} text-center">
+        <button class="btn btn-primary" data-ng-click="goToPath(course.completionLinkRoute)">{{course.completionLinkLabel}}</button>
+      </div>
+  </div>
+  <!-- /COURSE COMPLETION LINK (COURSE CHAINING) -->
+
+  <!-- COURSE SCORING(IF ENABLED) -->
+  <div data-ng-if="course.completionShowScore">
+      <hr />
+      <div class="{{course.defaultColumnClassList}} text-center">
+          <h4>Your Score:</h4>
+          <strong>You answered {{course.scoring.correct}} out of {{course.scoring.count}} questions correctly.<br />
+          <strong>Overall Score:</strong> {{course.scoring.score | number:0}}%<br />
+      </div>
+  </div>
+  <!-- /COURSE SCORING(IF ENABLED) -->
+
+  <!-- REVIEW BUTTON (IF ENABLED) -->
+  <div data-ng-if="course.reviewMode.enabled">
+      <hr />
+      <div class="{{course.defaultColumnClassList}} text-center">
+        <button class="btn" data-ng-click="goToSlide(1)">{{course.reviewMode.label}}</button>
+        <button class="btn" data-ng-click="goToPath('/welcome/')">Return to Course Selection</button>
+      </div>
+  </div>
+  <!-- /REVIEW BUTTON (IF ENABLED) -->
+
+  <br />
+</section>

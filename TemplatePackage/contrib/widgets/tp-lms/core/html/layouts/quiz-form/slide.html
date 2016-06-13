@@ -1,0 +1,166 @@
+<!-- COURSE CONTENT DISPLAY BY SLIDE TYPE-->
+<div data-ng-switch="objCurrentSlide.type">
+
+    <!-- QUESTION TYPE : MULTIPLE CHOICE -->
+    <div data-ng-switch-when="question-multiple-choice">
+
+        <!-- QUESTION WRAPPER -->
+        <div class="lms-question {{objCurrentSlide.slideAlignment}}  {{objCurrentSlide.columnClassList}}">
+
+            <div class="row">
+
+                <div class="col-md-12">
+
+                    <!-- QUESTION HEADING OR QUESTION NUMBER -->
+                    <h4 data-ng-if="objCurrentSlide.heading && objCurrentSlide.heading.length" class="lms-quiz-header">{{objCurrentSlide.heading}}</h4>
+                    <h4 data-ng-if="!objCurrentSlide.heading" class="lms-quiz-header">Question {{objCurrentSlide.questionNumber}}</h4>
+                    <!-- /QUESTION HEADING OR QUESTION NUMBER -->
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <!-- LOAD HTML (INTERNAL OR EXTERNAL HTML IF APPLICABLE -->
+                <div data-ng-if="objCurrentSlide.hasInclude" class="col-md-6 col-sm-6 col-xs-12">
+
+                    <!-- INCLUDE HTML -->
+                    <div data-ng-if="objCurrentSlide.hasIncludeExt" data-ng-include="objCurrentSlide.includePath"></div>
+
+                    <!-- INCLUDE HTML -->
+                    <div data-ng-if="objCurrentSlide.hasIncludeInt" data-ng-include="objCurrentSlide.cacheTemplate"></div>
+
+                </div>
+                <!-- /LOAD HTML (INTERNAL OR EXTERNAL HTML IF APPLICABLE -->
+
+                <!-- RIGHT SECTION (RESPONSIVE) -->
+                <div data-ng-class="questionTextClasses[objCurrentSlide.hasInclude]">
+
+                    <!-- QUESTION TEXT -->
+                    <div class="lms-question-text" data-ng-if="ui.show.slide.text()" data-ng-bind-html="objCurrentSlide.question"></div>
+
+                    <!--  OPTION DISPLAY -->
+                    <div class="lms-question-options" data-ng-if="ui.show.slide.options()" data-ng-switch="objCurrentSlide.optionDisplay">
+
+                        <!-- RADIO LIST -->
+                        <div data-ng-switch-when="radioList">
+                            <div class="lms-options-radio-list {{objCurrentSlide.columnClassList}} text-left">
+                                <div data-ng-repeat="(optIdx, option) in objCurrentSlide.options">
+                                    <label data-ng-class="radioClasses[ui.optionSelected(slideIdx,optIdx)]" for="option-{{objCurrentSlide.questionNumber}}-{{optIdx}}">
+                                        <input data-ng-attr-name="question{{objCurrentSlide.questionNumber}}answer" class="pull-left" data-ng-attr-id="option-{{objCurrentSlide.questionNumber}}-{{optIdx}}" type="radio" data-ng-checked="ui.highlight.controls.option(optIdx)" data-ng-click="selectAnswer(optIdx)" data-ng-value="optIdx" data-ng-disabled="ui.disable.slide.options()" /> &nbsp; {{option.text || option.value}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /RADIO LIST -->
+
+                        <!-- CHECKBOXES -->
+                        <div data-ng-switch-when="checkboxes">
+                            <div class="lms-options-checkboxes {{objCurrentSlide.columnClassList}} text-left">
+                                <div data-ng-repeat="(optIdx, option) in objCurrentSlide.options">
+                                    <label>
+                                        <input data-ng-attr-name="question{{objCurrentSlide.questionNumber}}answer" data-ng-attr-id="option-{{objCurrentSlide.questionNumber}}-{{optIdx}}" type="checkbox" name="selectedOptions[]" value="{{option.value || option.text}}" data-ng-checked="ui.highlight.controls.option(optIdx)" data-ng-click="selectAnswer(optIdx)" /> &nbsp; {{option.text || option.value}}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /CHECKBOXES -->
+
+                        <!-- BUTTON LIST (DEFAULT) -->
+                        <div class="lms-options-default" data-ng-switch-default="">
+                            <div data-ng-repeat="(optIdx, option) in objCurrentSlide.options">
+                                <div data-question-option="option" data-index="optIdx"></div>
+                                <label class="{{objCurrentSlide.columnClassList}} lms-option" data-ng-click="selectAnswer(optIdx)">
+                                    <button data-ng-attr-name="question{{objCurrentSlide.questionNumber}}answer{{optIdx}}" class="btn" data-ng-class="buttonClasses[ui.highlight.controls.option(optIdx)]"><!--{{choiceLabels[optIdx]}}--> {{option.text || option.value}}</button>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- /BUTTON LIST (DEFAULT) -->
+
+                    </div>
+                    <!-- /OPTION DISPLAY -->
+
+                    <!-- USER SELECTION DISPLAY -->
+                    <div class="lms-response-element" data-ng-if="ui.show.slide.response()" role="status" aria-live="assertive">
+                        <strong aria-label="{{('Your Answer for question ' + (objCurrentSlide.questionNumber | numberAsWord))}}">Your Answer:</strong> {{ui.display.response()}}
+
+                        <!-- REPONSE DISPLAY -->
+                        <div class="lms-question-response" data-ng-if="objCurrentSlide.responseText.length > 0">
+                            <div class="{{objCurrentSlide.columnClassList}} {{responseClass().section}}">
+                                <div class="{{responseClass().text}}">
+                                    <div class="lms-response-label lms-response-correct">{{labelCorrect}}</div>
+                                    <div class="lms-response-label lms-response-incorrect ">{{labelIncorrect}}</div>
+                                    <span data-ng-bind-html="objCurrentSlide.responseText"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /REPONSE DISPLAY -->
+
+                    </div>
+                    <!-- /USER SELECTION DISPLAY -->
+
+                </div>
+                <!-- /RIGHT SECTION (RESPONSIVE) -->
+
+            </div>
+
+        </div>
+        <!-- /QUESTION WRAPPER -->
+
+    </div>
+    <!-- /QUESTION TYPE : MULTIPLE CHOICE -->
+
+    <!-- GENERIC SLIDE : DEFAULT DISPLAY-->
+    <div data-ng-switch-default="">
+
+        <div class="{{objCurrentSlide.slideAlignment}} {{objCurrentSlide.columnClassList}}">
+
+            <!-- SLIDE HEADING -->
+             <div class="row" data-ng-if="objCurrentSlide.heading && objCurrentSlide.heading.length">
+
+                <div class="col-md-12">
+
+                    <h4  class="lms-slide-header">{{objCurrentSlide.heading}}</h4>
+
+                </div>
+
+            </div>
+            <!-- /SLIDE HEADING -->
+
+            <!-- LOAD HTML (INTERNAL OR EXTERNAL HTML IF APPLICABLE -->
+
+            <div class="row" data-ng-if="objCurrentSlide.hasInclude">
+
+                <div class="col-lg-12">
+
+                    <!-- INCLUDE HTML -->
+                    <div data-ng-if="objCurrentSlide.hasIncludeExt" data-ng-include="objCurrentSlide.includePath"></div>
+
+                    <!-- INCLUDE HTML -->
+                    <div data-ng-if="objCurrentSlide.hasIncludeInt" data-ng-include="objCurrentSlide.cacheTemplate"></div>
+
+                </div>
+                <!-- /LOAD HTML (INTERNAL OR EXTERNAL HTML IF APPLICABLE -->
+
+            </div>
+
+            <!-- LOAD LOCAL TEXT -->
+            <div class="col-lg-12" data-ng-if="objCurrentSlide.text.length">
+
+                <div>{{objCurrentSlide.text}}</div>
+
+            </div>
+            <!-- /LOAD LOCAL TEXT -->
+
+        </div>
+
+    </div>
+    <!-- /GENERIC SLIDE : DEFAULT DISPLAY-->
+
+    <!-- ADMIN / DEBUG DISPLAY -->
+    <div data-ng-if="debug.enabled" data-ng-include="'./core/html/debug-slide.html'"></div>
+    <!-- /ADMIN / DEBUG DISPLAY -->
+
+</div>
+<!-- /COURSE CONTENT DISPLAY -->

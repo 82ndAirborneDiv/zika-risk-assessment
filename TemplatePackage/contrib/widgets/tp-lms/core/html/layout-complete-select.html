@@ -1,0 +1,10 @@
+
+<!-- LAYOUT SWITCHER FOR COMPLETION SCREEN -->
+<div data-ng-if="course.layout.length > 0">
+  <div data-ng-include="'/TemplatePackage/contrib/widgets/tp-lms/core/html/layouts/' + course.layout + '/complete.html'"></div>
+</div>
+<!-- /LAYOUT SWITCHER FOR COMPLETION SCREEN -->
+
+<!--TRIGGER RESIZE ON CONTENT LOAD / DIGEST -->
+{{resizeIframe(0)}}
+<!--/TRIGGER RESIZE ON CONTENT LOAD / DIGEST -->

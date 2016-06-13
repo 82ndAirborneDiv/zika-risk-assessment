@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/TemplatePackage/contrib/widgets/tp-lms/core/css/course-home.css" />
+<link rel="stylesheet" href="/TemplatePackage/contrib/widgets/tp-lms/core/css/layouts/default.css" />
+
+<div id="quiz-module-top">
+
+    <!-- QUIZ HEADING -->
+    <h3 data-ng-click="course.debug.enabled = !course.debug.enabled">
+        <span data-ng-show="course.header.show.courseId"> {{course.courseId}} : </span>
+        <span data-ng-show="course.header.show.courseTitle">{{course.courseTitle}}</span>
+        <span data-ng-show="course.header.show.courseReviewIndicator && progress.courseCompleted">(Review Mode)</span>
+        <span class="pull-right" data-ng-if="currentSlideNumber > 0">{{currentSlideNumber}} of {{courseLength}}</span>
+    </h3>
+
+    <!-- COURSE CONTENT WRAP -->
+    <div>
+
+        <!-- QUESTION DIRECTIVE -->
+        <div data-slide-display="{{currentSlideNumber}}" data-user-answered="false"></div>
+        <!-- /QUESTION DIRECTIVE -->
+
+    </div>
+    <!-- /COURSE CONTENT WRAP -->
+
+    <!-- ADMIN / DEBUG DISPLAY -->
+    <div data-ng-if="course.debug.enabled" data-ng-include="'./core/html/debug-global.html'"></div>
+    <!-- /ADMIN / DEBUG DISPLAY -->
+</div>

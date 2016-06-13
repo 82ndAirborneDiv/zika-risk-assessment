@@ -1,0 +1,161 @@
+body {
+  font-family: arial;
+}
+
+img#dynamic-image-target {
+    width:100%;
+    max-width:100%;
+}
+
+#image-container {
+  position: relative;
+}
+
+#more-menu,
+#icon-menu {
+  position: absolute;
+  top: 0; left: 0;
+  text-align: right;
+}
+
+#more-menu > div,
+#icon-menu > div{
+  margin:5px 5px 0 5px;
+}
+
+#icon-menu a {
+  margin: 0 5px;
+}
+
+#icon-menu a img{
+  width: 32px;
+}
+
+#more-menu img,
+#icon-menu a {
+  display: inline-block;
+}
+
+#more-menu a img,
+#icon-menu a img{
+  border:0;
+}
+
+#more-menu a:focus,
+#icon-menu a:focus {
+  outline:2px solid #ffa500;
+}
+
+#icon-menu.menu-vertical {
+  width: 32px;
+}
+
+#icon-menu {
+  display: none;
+  background: rgba(255, 255, 255, 0.4);
+}
+#more-menu {
+  display: block;
+}
+
+#image-container .icon-more,
+#image-container .icon-more {
+  display: inline-block;
+}
+
+a#accessibility-link.hide, a#pdf-link.hide {
+  display: none;
+}
+
+/* DIRECT PORT FROM BS3*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+}
+
+.hide {
+  display:none;
+}
+
+a {
+  font-size: 12px;
+  white-space: normal;
+}
+
+.embed-label-mobile {
+  display: none;
+}
+.embed-label {
+  display: inline;
+}
+
+/*@media (max-width: 250px) {
+  .embed-label-mobile {
+    display: inline;
+  }
+  .embed-label {
+    display: none;
+  }
+  #icon-menu.icon-count-3 a img{
+    width: 24px;
+    border:0;
+  }
+  #icon-menu.icon-count-4 a img{
+    width: 18px;
+    border:0;
+  }
+}*/
+
+/* VP1 SIZE IMAGE */
+#image-container.vp1 .embed-label-mobile {
+  display: inline;
+}
+#image-container.vp1 .embed-label {
+  display: none;
+}
+#image-container.vp1 #icon-menu.icon-count-3 a img {
+    width: 24px;
+    border:0;
+}
+#image-container.vp1 #icon-menu.icon-count-4 a img {
+    width: 18px;
+    border:0;
+}
+#image-container.vp1 #icon-menu a {
+  margin:0 5px;
+}
+
+/* MICRO SIZE IMAGE */
+#image-container.vpMicro .embed-label-mobile {
+  display: inline;
+}
+#image-container.vpMicro .embed-label {
+  display: none;
+}
+#image-container.vpMicro #icon-menu.icon-count-3 a img {
+    width: 24px;
+    border:0;
+}
+#image-container.vpMicro #icon-menu.icon-count-4 a img {
+    width: 18px;
+    border:0;
+}
+#image-container.vpMicro #icon-menu a {
+  margin:0;
+}

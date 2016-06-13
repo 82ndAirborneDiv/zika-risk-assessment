@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Daily Health Tip from CDC</title>
+    <description>An RSS Feed of a Daily Health Tip from the Centers for Disease Control and Prevention (CDC) home page.</description>
+    <link>http://www.cdc.gov/healthmarketing/</link>
+    <image>
+      <title>CDC Logo</title>
+      <url>http://www2a.cdc.gov/podcasts/images/cdclogo.gif</url>
+      <link>http://www.cdc.gov/</link>
+      <width>100</width>
+      <height>75</height>
+    </image>
+    <language>enus</language>
+    <webMaster>cdcweb@cdc.gov</webMaster>
+    <category>Health</category>
+    <category>Public Health</category>
+<item>
+      <title>CDC's Everyday Health Tip</title>
+      <label>CDC's Everyday Health Tip</label>
+      <description>Protect your Heart from Secondhand Smoke</description>
+      <link>http://www.cdc.gov/Features/Smoke-FreeAir/</link>
+      <pubDate>Published on 20, October 2012</pubDate>
+      <enclosure url="_img/19.jpg" length="0" type="image/jpg"></enclosure>
+</item>
+
+<item>
+      <title>CDC's Everyday Health Tip</title>
+      <label>CDC's Everyday Health Tip</label>
+      <description>National Mammography Day</description>
+      <link>http://www.cdc.gov/Features/breastcancerawareness/</link>
+      <pubDate>Published on 19, October 2012</pubDate>
+      <enclosure url="_img/16.jpg" length="0" type="image/jpg"></enclosure>
+</item>
+
+<item>
+      <title>Preparedness 101: Zombie Apocalypse</title>
+
+      <label>Preparedness 101: Zombie Apocalypse</label>
+      <description>If you’re ready for a zombie apocalypse, then you’re ready for any emergency</description>
+      <link>http://blogs.cdc.gov/publichealthmatters/2011/05/preparedness-101-zombie-apocalypse/</link>
+      <pubDate>Published on 18, October 2012</pubDate>
+      <enclosure url="_img/17.jpg" length="0" type="image/jpg"></enclosure>
+</item>
+
+<item>
+
+      <title>Preparedness 101: Zombie Apocalypse</title>
+      <label>Preparedness 101: Zombie Apocalypse</label>
+      <description>Get a Kit. Make a Plan. Be Prepared.</description>
+      <link>http://blogs.cdc.gov/publichealthmatters/2011/05/preparedness-101-zombie-apocalypse/</link>
+      <pubDate>Published on 17, October 2012</pubDate>
+      <enclosure url="_img/18.jpg" length="0" type="image/jpg"></enclosure>
+
+</item>
+
+<item>
+      <title>Hurricane Preparedness</title>
+      <label>Hurricane Preparedness</label>
+      <description>Be prepared before a hurricane strikes</description>
+      <link>http://emergency.cdc.gov/disasters/hurricanes/</link>
+      <pubDate>Published on 16, October 2012</pubDate>
+
+      <enclosure url="_img/19.jpg" length="0" type="image/jpg"></enclosure>
+</item>
+
+<item>
+      <title>Flood Readiness</title>
+      <label>Flood Readiness</label>
+      <description>Learn more about flood readiness</description>
+      <link>http://emergency.cdc.gov/disasters/floods/</link>
+    <pubDate>Published on 15, October 2012</pubDate>
+      <enclosure url="_img/20.jpg" length="0" type="image/jpg"></enclosure>
+</item>
+  </channel>
+</rss>
