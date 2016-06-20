@@ -1,12 +1,15 @@
+
+
 <!DOCTYPE html>
 <!--[if lt IE 8]>      <html class="no-js nav theme-blue lt-ie10 lt-ie9 lt-ie8  " lang="en-us"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js nav theme-blue lt-ie10 lt-ie9  " lang="en-us"> <![endif]-->
 <!--[if IE 9]>         <html class="no-js nav theme-blue lt-ie10  " lang="en-us"> <![endif]-->
 <!--[if !IE]><!-->     <html class="no-js nav theme-blue  " lang="en-us" > <!--<![endif]-->
-
 <head>
-    <meta charset="UTF-8">
-    <title>Zika Risk Assessment Tool</title>
+    <meta charset="utf-8" />
+    <title>Zika Risk Assessment | Zika virus |  CDC</title>
+
+    <meta name="description" content="<p>Information on Zika virus. Provided by the U.S. Centers for Disease Control and Prevention.</p>" />        <meta name="keywords" content="Zika virus, Zika, Tropical Africa, mosquitoes, avoid mosquito bites, Aedes, viral disease, Flaviviridae family" />		<meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/TemplatePackage/3.0/images/cdc-touch-icon-144x144.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/TemplatePackage/3.0/images/cdc-touch-icon-114x114.png" />
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/TemplatePackage/3.0/images/cdc-touch-icon-72x72.png" />
@@ -15,12 +18,12 @@
 
     <meta name="robots" content="index,follow" />
     <meta property="cdc:template_version" content="3.0" />
-    <meta property="cdc:content-id" content="723239"/>
-    <meta property="cdc:revision-id" content="2"/>
-
-    <!-- Internal Release Version # 3.6.3 -->
+    <meta property="cdc:content-id" content="1129264"/>
+    <meta property="cdc:revision-id" content="23"/>
+    <link rel="canonical" href="http://www.cdc.gov/zika/about/index.html"/>
+    <!-- Internal Release Version # 3.7 -->
     <link rel="stylesheet" href="/TemplatePackage/3.0/css/lib/bootstrap24.css" />
-    <link rel="stylesheet" href="/TemplatePackage/3.0/css/app.css?3.1.14.3" />
+    <link rel="stylesheet" href="/TemplatePackage/3.0/css/app.css?3.2.0.1" />
     <!--[if gt IE 9]><!--><!--<![endif]-->
     <!--[if IE 7]>
     <link rel="stylesheet" href="/TemplatePackage/3.0/css/lib/font-awesome-ie7.css" />
@@ -28,7 +31,7 @@
     <!--[if lt IE 9]>
     <link rel="stylesheet" href="/TemplatePackage/3.0/css/ie.css" />
     <![endif]-->
-    <link rel="stylesheet" media="print" href="/TemplatePackage/3.0/css/print.css?3.1.14.3" />
+    <link rel="stylesheet" media="print" href="/TemplatePackage/3.0/css/print.css?3.2.0.1" />
     <script src="/TemplatePackage/3.0/js/libs/modernizr-latest.js"></script>
     <script>
         if(!Date.now){Date.now=function now(){return new Date().getTime()}}
@@ -36,29 +39,29 @@
         page_timing.page_start = Date.now();
         function $$(e){if(window.$){e()}else{setTimeout(function(){$$(e)},50)}}
         // (function(){function e(e,t){var n=e.length;while(n--){if(e[n].indexOf(t)>-1){return e[n]}}return false}var t=e(document.getElementsByTagName("html")[0].className.split(" "),"theme-");if(t){var n=document.createElement("link");n.rel="stylesheet";n.type="text/css";n.media="screen";n.href="/TemplatePackage/3.0/css/themes/"+t+".css";document.getElementsByTagName("head")[0].appendChild(n)}})();
+
         var settings = {}, addthis = null;
     </script>
+
     <meta name="application-name" content="CDC.gov"/>
+    <meta property="cdc:template_version" content="3.2.0.1" />
     <meta name="msapplication-TileColor" content="#0061aa" />
     <meta name="msapplication-square70x70logo" content="/TemplatePackage/3.0/images/Win8_tile_70x70.png" />
     <meta name="msapplication-square150x150logo" content="/TemplatePackage/3.0/images/Win8_tile_150x150.png" />
     <meta name="msapplication-wide310x150logo" content="/TemplatePackage/3.0/images/Win8_tile_310x150.png" />
     <meta name="msapplication-square310x310logo" content="/TemplatePackage/3.0/images/Win8_tile_310x310.png" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
-    <style type="text/css">
-        #content-main a[href]:after {
-            content: " " !important;
-        }
-        .highlight {
-            font-weight: bold;
-            background-color:#c5bee1;
-        }
-        br.clear {
-            clear: both;
-        }
-    </style>
+    <link href="dist/css/select2.min.css" rel="stylesheet" />
+    <script src="dist/js/select2.min.js"></script>
+
+
 </head>
 <body>
+
+
+
+
 <div id="skipmenu">
     <a href="#searchTarget" class="skippy">Skip directly to search</a>
     <a href="#azTab" class="skippy">Skip directly to A to Z list</a>
@@ -72,7 +75,14 @@
         <div class="container">
             <div class="row">
                 <div id="logo" class="span14">
-                    <a href="http://www.cdc.gov"><img src="/TemplatePackage/3.0/images/masthead_subpage.svg" alt="CDC. Centers for Disease Control and Prevention. CDC 24/7: Saving Lives. Protecting People." class="hidden-one" /><img src="/TemplatePackage/3.0/images/masthead_1-col.svg" alt="CDC. Centers for Disease Control and Prevention. CDC 24/7: Saving Lives. Protecting People.&#8482;" class="visible-one" /></a>
+                    <!--iPad touch response and 508 voice reader issue currently under investigation -->
+                    <a href="http://www.cdc.gov" title="Centers for Disease Control and Prevention. CDC twenty four seven. Saving Lives, Protecting People">
+                        <img src="/TemplatePackage/3.0/images/masthead_subpage.svg" alt="Centers for Disease Control and Prevention. CDC twenty four seven. Saving Lives, Protecting People" class="hidden-one" />
+                        <img src="/TemplatePackage/3.0/images/masthead_1-col.svg" alt="Centers for Disease Control and Prevention. CDC twenty four seven. Saving Lives, Protecting People" class="visible-one" />
+                    </a>
+
+                    <!-- IOS9 iPad bug work around - make sure screen readers have a readable version of the logo to read -->
+                    <a class="tp-sr-only" href="http://www.cdc.gov">Centers for Disease Control and Prevention. CDC twenty four seven. Saving Lives, Protecting People</a>
                 </div>
                 <!-- search -->
                 <div id="searchArea" class="span10 hidden-one hidden-two">
@@ -163,25 +173,31 @@
                     </fieldset>
                 </form>					</div>
             <!--
-                See the noscript include for modifying the emergency message. DO NOT add it here.
-            -->
+See the noscript include for modifying the emergency message. DO NOT add it here.
+-->
             <script>if (typeof page_timing !== 'undefined') { page_timing.emergency_load = Date.now(); }</script>
             <div class="titlebar">
                 <h2>
-                    <a href="http://www.cdc.gov/nccdphp/dnpao/index.html">Division of Nutrition, Physical Activity, and Obesity</a>
+
+
+
+                    <a href="/zika/index.html">Zika Virus</a>
+
+
                 </h2>
             </div>
             <!-- emergency -->
             <div id="emergencyContainer">
                 <!--
                 <div class="alert alert-error en">
-                        <b>Attention!</b> Uncomment this section and place the emergency message here.
+                    <b>Attention!</b> Uncomment this section and place the emergency message here.
                 </div>
                 <div class="alert alert-error esp">
-                        <b>¡Atención!</b> Elimine el comentario de esta sección y colocar el mensaje de emergencia aquí.
-                    </div>
+                    <b>&#161;Atenci&#243;n!</b> Elimine el comentario de esta secci&#243;n y colocar el mensaje de emergencia aqu&#237;.
+                </div>
                 -->
             </div>
+
             <!-- no script -->
             <noscript>
                 <div class="alert alert-block"> Note: Javascript is disabled or is not supported by your browser. For this reason, some items on this page will be unavailable. For more information about this message, please visit this page: <a href="//www.cdc.gov/other/about_cdcgov.html">About CDC.gov</a>.</div>
@@ -196,27 +212,245 @@
                 <div id="nav-container" class="hidden-one hidden-two span5">
                     <nav id="left" class="hidden-one hidden-two">
 
-                        <!-- please note that th DNPAO link is located in the link folder --><h3><a href="/nccdphp/dnpao/index.html">DNPAO Home</a></h3><ul id="nav-primary"><li><a href="/nccdphp/dnpao/division-information/index.htm">Division Information </a></li><li><a href="/nutrition/index.html">Nutrition</a></li><li><a href="/physicalactivity/index.html">Physical Activity</a></li><li><a href="/obesity/index.html">Overweight and Obesity</a></li><li><a href="/healthyweight/index.html">Healthy Weight</a> <ul><li><a href="/healthyweight/assessing/index.html">Assessing Your Weight</a> <ul><li><a href="/healthyweight/assessing/bmi/index.html">Body Mass Index (BMI)</a></li><li><a href="/healthyweight/assessing/bmi/adult_bmi/index.html">About Adult BMI</a></li><li><a href="/healthyweight/assessing/bmi/adult_bmi/english_bmi_calculator/bmi_calculator.html">Adult BMI Calculator</a> <ul><li><a href="/healthyweight/assessing/bmi/adult_bmi/metric_bmi_calculator/bmi_calculator.html">Metric Version</a> </li></ul></li><li><a href="/healthyweight/assessing/bmi/childrens_bmi/about_childrens_bmi.html">About Child &amp; Teen  BMI</a> <ul><li><a href="/healthyweight/assessing/bmi/childrens_bmi/measuring_children.html">Measuring Children's Height and Weight Accurately At Home</a></li></ul></li><li><a href="http://nccd.cdc.gov/dnpabmi/Calculator.aspx">Child &amp; Teen BMI Calculator</a></li><li><a href="/healthyweight/assessing/bmi/childrens_bmi/tool_for_schools.html">Children's BMI Tool for Schools</a></li></ul></li><li><a href="/healthyweight/calories/index.html">Finding a Balance</a> <ul><li><a href="/healthyweight/calories/other_factors.html">Other Factors in Weight Gain</a></li></ul></li><li><a href="/healthyweight/prevention/index.html">Preventing Weight Gain</a></li><li><a href="/healthyweight/losing_weight/index.html">Losing Weight</a> <ul><li><a href="/healthyweight/losing_weight/getting_started.html">Getting Started</a></li><li><a href="/healthyweight/losing_weight/eating_habits.html">Improving Your Eating Habits</a></li><li><a href="/healthyweight/losing_weight/keepingitoff.html">Keeping It Off</a></li></ul></li><li><a href="/healthyweight/healthy_eating/index.html">Healthy Eating for a Healthy Weight</a> <ul><li><a href="/healthyweight/healthy_eating/meals.html">Planning Meals</a></li><li><a href="/healthyweight/healthy_eating/cutting_calories.html">Cutting Calories</a> <ul><li><a href="/healthyweight/healthy_eating/energy_density.html">Eat More, Weigh Less?</a></li><li><a href="/healthyweight/healthy_eating/drinks.html">Rethink Your Drink</a></li><li><a href="/healthyweight/healthy_eating/portion_size.html">Portion Pitfalls</a></li><li><a href="/healthyweight/healthy_eating/fruits_vegetables.html">Using Fruits &amp; Vegetables to Manage Your Weight</a></li></ul></li><li><a href="/healthyweight/healthy_eating/recipes.html">Healthy Recipes</a></li></ul></li><li><a href="/healthyweight/physical_activity/index.html">Physical Activity for a Healthy Weight</a> <ul><li><a href="/healthyweight/physical_activity/getting_started.html">Getting Started</a></li></ul></li><li><a href="/healthyweight/success/index.html">Success Stories</a></li><li><a href="/healthyweight/children/index.html">Tips for Parents</a></li><li><a href="/healthyweight/effects/index.html">The Health Effects of Overweight &amp; Obesity</a></li><li><a href="/healthyweight/tools/index.html">External Resources</a></li></ul></li><li><a href="/breastfeeding/index.htm">Breastfeeding</a></li><li><a href="/immpact/index.html">IMMPaCt</a></li><li><a href="/nccdphp/dnpao/state-local-programs/index.html">State and Local Programs</a></li></ul>
+
+
+
+                        <h3><a href="/zika/index.html">Zika Virus Home</a></h3>
+
+                        <ul id="nav-primary">
+                            <li>
+                                <a href="/zika/cdc-role.html">What CDC is Doing</a></li>
+
+                            <li>
+                                <a href="/zika/about/index.html">About Zika Virus Disease</a>
+                                <ul>
+                                    <li>
+                                        <a href="/zika/about/gbs-qa.html">Guillain-Barr&#233; Syndrome</a></li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="/zika/prevention/index.html">Prevention</a>
+                                <ul>
+                                    <li>
+                                        <a href="/zika/prevention/prevention-kit.html">Build Your Own Zika Prevention Kit</a></li>
+
+                                    <li>
+                                        <a href="/zika/prevention/controlling-mosquitoes-at-home.html">Controlling Mosquitoes at Home</a></li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="/zika/transmission/index.html">Transmission</a>
+                                <ul>
+                                    <li>
+                                        <a href="/zika/transmission/sexual-transmission.html">Zika &amp; Sexual Transmission</a></li>
+
+                                    <li>
+                                        <a href="/zika/transmission/blood-transfusion.html">Zika &amp; Blood Transfusion</a></li>
+
+                                    <li>
+                                        <a href="/zika/transmission/qa-animals.html">Zika &amp; Animals</a></li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="/zika/symptoms/index.html">Symptoms, Diagnosis, &amp; Treatment</a></li>
+
+                            <li>
+                                <a href="/zika/geo/index.html">Areas with Zika</a>
+                                <ul>
+                                    <li><a href="/zika/geo/active-countries.html">All Countries &#38; Territories</a></li>
+
+                                    <li>
+                                        <a href="/zika/geo/united-states.html">Cases in the United States</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/zika/geo/pregwomen-uscases.html">Cases in Pregnant Women</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="/zika/specific-groups.html">Information for Specific Groups</a>
+                                <ul>
+                                    <li>
+                                        <a href="/zika/pregnancy/index.html">Pregnant Women</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/zika/pregnancy/question-answers.html">Zika &amp; Pregnancy</a></li>
+
+                                            <li>
+                                                <a href="/zika/pregnancy/protect-yourself.html">How to Protect Yourself</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="/zika/state-labs/index.html">State &amp; Local Public Health Laboratories</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/zika/state-labs/biosafety-guidance.html">Biosafety Guidance</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="/zika/vector/index.html">Vector Surveillance &amp; Control </a>
+                                        <ul>
+                                            <li>
+                                                <a href="/zika/vector/range.html">Estimated range of <em>Aedes aegypti</em> and <em>Aedes albopictus</em> in the US</a></li>
+
+                                            <li><a href="/zika/vector/vector-control.html">Surveillance &#38; Control of <em>Aedes aegypti</em> and <em>Aedes albopictus</em> in the United States</a></li>
+
+                                            <li>
+                                                <a href="/zika/vector/disinsection.html">Disinsection</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="/zika/public-health-partners/index.html">State &amp; Local Health Departments</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/zika/hc-providers/registry.html">Pregnancy Registry</a></li>
+
+                                            <li>
+                                                <a href="/zika/public-health-partners/zap-teleconferences.html">ZAP Summit Follow-up Teleconferences</a></li>
+
+                                            <li>
+                                                <a href="/zika/public-health-partners/microcephaly-case-definitions.html">Congenital Microcephaly Case Definitions</a></li>
+
+                                            <li>
+                                                <a href="/zika/public-health-partners/tips.html">Top 10 Zika Response Planning Tips</a></li>
+
+                                            <li>
+                                                <a href="/zika/public-health-partners/risk-based-prep.html">Zika Virus Risk-Based Preparedness &amp; Response Guidance for States</a></li>
+
+                                            <li>
+                                                <a href="/zika/public-health-partners/comm-planning-guide.html">Zika Communication Planning Guide for States</a></li>
+
+                                            <li>
+                                                <a href="/zika/public-health-partners/vector-control-us.html">Zika Vector Control in the Continental US</a></li>
+
+                                            <li>
+                                                <a href="/zika/public-health-partners/zapss.html">Zika Active Pregnancy Surveillance System</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="/zika/parents/index.html">Parents</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/zika/parents/what-parents-should-know.html">What Parents Should Know about Zika</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="/zika/pregnancy/thinking-about-pregnancy.html">Women &amp; Their Partners Thinking about Pregnancy</a></li>
+
+                                    <li>
+                                        <a href="/zika/blood-tissue-collection-centers.html">Blood &amp; Tissue Collection Centers</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/zika/areasatrisk.html">Areas At Risk</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="/zika/hc-providers/index.html">For Healthcare Providers</a>
+                                <ul>
+                                    <li>
+                                        <a href="/zika/hc-providers/clinical-guidance.html">Clinical Guidance</a></li>
+
+                                    <li>
+                                        <a href="/zika/hc-providers/clinicalevaluation.html">Clinical Evaluation &amp; Disease</a></li>
+
+                                    <li>
+                                        <a href="/zika/hc-providers/diagnostic.html">Diagnostic Testing</a>
+                                        <ul>
+                                            <li>
+                                                <a href="/zika/hc-providers/tissue-collection-submission.html">Fetal Tissue Collection &amp; Submission</a></li>
+
+                                            <li>
+                                                <a href="/zika/hc-providers/body-fluids-collection-submission.html">Body Fluid Collection &amp; Submission</a></li>
+
+                                            <li>
+                                                <a href="/zika/hc-providers/training-videos.html">Zika Testing Training Videos</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li>
+                                        <a href="/zika/hc-providers/tools.html">Tools for Healthcare Providers</a></li>
+
+                                    <li>
+                                        <a href="/zika/hc-providers/training-resources.html">Training Resources</a></li>
+
+                                    <li>
+                                        <a href="/zika/hc-providers/qa-pregnant-women.html">QA: Pregnant Women &amp; Women of Reproductive Age</a></li>
+
+                                    <li>
+                                        <a href="/zika/hc-providers/qa-pediatrician.html">QA: Infants &amp; Zika Virus Infection</a></li>
+
+                                    <li>
+                                        <a href="/zika/hc-providers/qa-sexual-transmission.html">QA: Sexual Transmission of Zika Virus</a></li>
+
+                                    <li>
+                                        <a href="/zika/hc-providers/hiv-zika.html">HIV Infection &amp; Zika Virus</a></li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="/zika/resources/index.html">Resources &amp; Publications</a></li>
+
+                            <li>
+                                <a href="/zika/comm-resources/index.html">Communication Resources</a>
+                                <ul>
+                                    <li>
+                                        <a href="/zika/comm-resources/video.html">Video Resources</a></li>
+
+                                    <li>
+                                        <a href="/zika/fs-posters/index.html">Fact Sheets &amp; Posters</a></li>
+
+                                    <li>
+                                        <a href="/zika/comm-resources/infographics.html">Infographics</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+
                     </nav>
                     <div class="nav-related">
 
-                        <div class="module-typeG emailupdates">
-                            <span class="sprite-24-govd-icon"></span>
-                            <h4>Get Email Updates</h4>
-                            <p>To receive email updates about this page, enter your email address:</p>
-                            <form name="govdelivery" action="https://public.govdelivery.com/accounts/USCDC/subscribers/qualify">
-                                <fieldset>
-                                    <input type="hidden" value="USCDC_300" name="topic_id" />
-                                    <label><span class="hidden">Enter Email Address</span><input type="text" class="email" name="email" value="" onfocus="this.value=''" /></label>
-                                    <a class="explain" href="http://www.cdc.gov/emailupdates/">What's this?</a>
-                                    <a href="javascript:quicksubscribe();return false;" class="button">Submit</a>
-                                    <noscript>
-                                        <a class="explain" href="http://www.cdc.gov/emailupdates/">What's this?</a>
-                                        <label><span class="hidden">Submit Button</span><input type="submit" class="button submit" name="commit" value="Submit" /></label>
-                                    </noscript>
-                                </fieldset>
-                            </form>
+
+
+
+
+
+
+
+
+
+                        <div class="rx-row padding-top-fifteen">
+
+                            <p style=" text-align: center;">
+                                <a href="/zika/pregnancy/index.html"><img class="" alt='Zika and Pregnancy button.  ' src='/zika/images/pregnancy-button.jpg'/></a></p>
+
                         </div>
+
+
+
+                        <div class="rx-row padding-top-fifteen">
+                            <p style=" text-align: center;">
+                                <a href="/mmwr/zika_reports.html"><img class="" alt='CDC MMWR Zika button' src='/zika/images/zika_mmwr_button.jpg'/></a></p>
+                        </div>
+
+
+
+
+
+
+
 
 
                     </div>
@@ -224,17 +458,20 @@
                 <div id="featureArea">
                     <div class="span19">
 
+
+
+
                     </div>
                 </div>
                 <div class="breadcrumbs hidden-one span19">
 
+
                     <div class="bread-crumb hidden-one"></div>
+
                 </div>
                 <div class="span19 pagetitle">
                     <div class='syndicate'>
-                        <div class='mSyndicate'>
-                            <h1>Zika Risk Assessment Tool (Prototype)</h1>
-                        </div>
+                        <h1>About Zika Virus Disease</h1>
                     </div>
                 </div>
                 <div id="share-bar" class="span19">
@@ -242,16 +479,19 @@
                         <div class="row">
                             <div class="hidden-one pull-right">
                                 <div class="pageoptionsContainer languageOptions languageOptionsOff"><span id="po-language-label" class="select-label">Language:</span><div id="po-language" class="languages pageoptions pull-right"><div class="select-box"><a href="#">English</a><span class="icon-angle-down pull-right poarrow"></span></div><ul class="drop-down" aria-labelledby="po-language-label"><li>
-                                    <a class="noLinking" href="/healthyweight/spanish/assessing/bmi/adult_bmi/english_bmi_calculator/bmi_calculator.html">Espa&ntilde;ol (Spanish)</a>
+                                    <a onclick="return switchMPLanguage('es');" href="http://espanol.cdc.gov/enes/zika/about/index.html" mporgnav=""> Español </a>
+                                </li><li>
+                                    <a onclick="return switchMPLanguage('pt');" href="http://portugues.cdc.gov/zika/about/index.html" mporgnav=""> Português </a>
                                 </li></ul></div></div>            							            						</div>
                             <div class="span8">
                                 <div id="socialMediaShareContainer">
                                     <div class="share_container noLinking">
                                         <a class="share_button_facebook" title="Facebook" href="#"><span class="tp-sr-only">Recommend on Facebook</span><span id="share_facebook" class="facebookRecommend"> </span></a>
                                         <a class="share_button_twitter" title="Twitter" href="#"><span class="tp-sr-only">Tweet</span><span id="share_twitter" class="twitterTweet"> </span></a>
-                                        <a class="share_button" href="#socialMediaShareContainer" ><img src="/TemplatePackage/3.0/images/sm-plus.gif" alt="Share" /><span class="shareButtonEn" aria-label="Share">Share</span><span class="shareButtonEs" aria-label="Compartir">Compartir</span></a>
+                                        <a class="share_button" href="#socialMediaShareContainer" ><img src="/TemplatePackage/3.0/images/social/addthis-32.png" alt="Share" /><span class="shareButtonEn tp-sr-only" aria-label="Share">Share</span><span class="shareButtonEs tp-sr-only" aria-label="Compartir">Compartir</span></a>
                                     </div>
                                 </div>
+
                                 <!-- target anchor for return to top feature in VP1 -->
                                 <a id="content-start" tabindex="-1"></a>
                             </div>
@@ -261,297 +501,403 @@
                 <!-- body -->
                 <div id="body" class="span19">
                     <div id="contentArea" >
-                        <div class='mSyndicate'>
-                            <div class="syndicate">
-                                <div id="calc_form">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam dignissim finibus metus, eu porta ex accumsan vitae. Morbi non sapien ac risus hendrerit porta.</a>.</p>
-                                    <div>
-                                        <!--Zika Risk Assessment Tool-->
-                                        <h3>Zika Risk Assessment Tool</h3>
-                                        <div id="intro" name="intro">
-                                            <p>Zika virus is primarily spread by mosquitoes. It can also be spread by a man
-                                                with Zika to his sex partners, even if he doesn't get sick. Where you live, your travel history,
-                                                and the travel histroy of your sex partner(s) can affect your risk of Zika. This web app can help you
-                                                learn more about Zika and how to protect yourself.
-                                            <ul>
-                                                <li>Use this app for each traveler or resident in your household.</li>
-                                                <li>If you traveled recently and also have future travel plans, please answer questions for both
-                                                    scenarios to get complete CDC recommendations.</li>
-                                                <li>This app is not intended to replace the advice of a medical professional.</li>
-                                            </ul>
-                                            </p>
-                                        </div>
-                                        <input id="start" name="start" type="button" value="Start"/>
-                                    </div>
-                                    <div class="question">
-                                        <p id="question-text" name="question-text"></p>
-                                        <p id="question-answers"></p>
-                                        <p id="endpoint"></p>
-                                        <p id="endpoint-disclaimer">
-                                            The mosquitoes that spread Zika usually do not live at elevations above 6,500 feet (2,000 meters).
-                                            Travelers and residents whose activities are only above this elevation are at minimal risk of getting Zika from a mosquito.
-                                            For more information: <a href="http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations">http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations</a></p>
-                                        <p id="endpoint-call-to-action">
-                                            CDC routinely updates information as it learns more about Zika:
-                                            Check CDC’s website often for the latest information. <a href="http://www.cdc.gov/zika/index.html">http://www.cdc.gov/zika/index.html</a>
-                                            CDC’s guidance for women and their partners thinking about pregnancy will continue to be updated as we learn more.
-                                        </p>
-                                        <button id="back">Back</button>
-                                        <button id="restart">Restart</button>
-                                    </div>
-                                    <!--End Zika Risk Assessment Tool-->
-                                    <div class="clear"></div>
-                                    </div>
+                        <div class="row">
+                            <div class="span19">
 
+                                <div class="rx-row">
+                                    <!--mp_trans_add <div class="module-typeC"><p class="padding-top-fifteen"><strong>This site is frequently updated. Some text may be in English until it is translated.</strong></p></div> -->
                                 </div>
                             </div>
-                            <!-- Related Nav Area -->
-                            <div class="nav-related hidden-three hidden-four">
-
-                                <div class="module-typeG emailupdates">
-                                    <span class="sprite-24-govd-icon"></span>
-                                    <h4>Get Email Updates</h4>
-                                    <p>To receive email updates about this page, enter your email address:</p>
-                                    <form name="govdelivery" action="https://public.govdelivery.com/accounts/USCDC/subscribers/qualify">
-                                        <fieldset>
-                                            <input type="hidden" value="USCDC_300" name="topic_id" />
-                                            <label><span class="hidden">Enter Email Address</span><input type="text" class="email" name="email" value="" onfocus="this.value=''" /></label>
-                                            <a class="explain" href="http://www.cdc.gov/emailupdates/">What's this?</a>
-                                            <a href="javascript:quicksubscribe();return false;" class="button">Submit</a>
-                                            <noscript>
-                                                <a class="explain" href="http://www.cdc.gov/emailupdates/">What's this?</a>
-                                                <label><span class="hidden">Submit Button</span><input type="submit" class="button submit" name="commit" value="Submit" /></label>
-                                            </noscript>
-                                        </fieldset>
-                                    </form>
-                                </div>
-
-                            </div>
-                            <!-- Persistent Content Area -->
-                            <div id="content-secondary">
-
-
-                            </div><!-- /end #content-secondary -->
-                        </div><!-- /end #contentArea -->
-                    </div><!-- /end body -->
-                </div>
-                <div class="row">
-                    <div class="span24 visible-one">
-                        <div class="pageoptionsContainer languageOptions languageOptionsOff"><span id="po-language-bottom-label" class="select-label">Language:</span><div id="po-language-bottom" class="languages pageoptions pull-right"><div class="select-box"><a href="#">English</a><span class="icon-angle-down pull-right poarrow"></span></div><ul class="drop-down" aria-labelledby="po-language-bottom-label"><li>
-                            <a class="noLinking" href="/healthyweight/spanish/assessing/bmi/adult_bmi/english_bmi_calculator/bmi_calculator.html">Espa&ntilde;ol (Spanish)</a>
-                        </li></ul></div></div>						</div>
-                </div>
-                <div class="row">
-                    <div class="span24">
-                        <div id="plugin-legend" class="pluginOff">
-                            <h5>File Formats Help:</h5><span><a href="http://www.cdc.gov/Other/plugins/">How do I view different file formats (PDF, DOC, PPT, MPEG) on this site?</a></span>
-                            <ul>
-                                <li class="plugin-pdf"><a href="http://www.cdc.gov/Other/plugins/#pdf"><span class="sprite-16-pdf">Adobe PDF file</span></a></li>
-                                <li class="plugin-ppt"><a href="http://www.cdc.gov/Other/plugins/#ppt"><span class="sprite-16-ppt">Microsoft PowerPoint file</span></a></li>
-                                <li class="plugin-word"><a href="http://www.cdc.gov/Other/plugins/#doc"><span class="sprite-16-word">Microsoft Word file</span></a></li>
-                                <li class="plugin-excel"><a href="http://www.cdc.gov/Other/plugins/#xls"><span class="sprite-16-excel">Microsoft Excel file</span></a></li>
-                                <li class="plugin-wmv"><a href="http://www.cdc.gov/Other/plugins/#wmv"><span class="sprite-16-wmv">Audio/Video file</span></a></li>
-                                <li class="plugin-qt"><a href="http://www.cdc.gov/Other/plugins/#qt"><span class="sprite-16-qt">Apple Quicktime file</span></a></li>
-                                <li class="plugin-real"><a href="http://www.cdc.gov/Other/plugins/#ram"><span class="sprite-16-rp">RealPlayer file</span></a></li>
-                                <li class="plugin-text"><a href="http://www.cdc.gov/Other/plugins/#text"><span class="sprite-16-txt">Text file</span></a></li>
-                                <li class="plugin-zip"><a href="http://www.cdc.gov/Other/plugins/#zip"><span class="sprite-16-zip">Zip Archive file</span></a></li>
-                                <li class="plugin-sas"><a href="http://www.cdc.gov/Other/plugins/#sas"><span class="sprite-16-sas">SAS file</span></a></li>
-                                <li class="plugin-epub"><a href="http://www.cdc.gov/Other/plugins/#epub"><span class="sprite-16-ebook">ePub file</span></a></li>
-                                <li class="plugin-ris"><a href="http://www.cdc.gov/Other/plugins/#ris"><span class="sprite-16-ris">RIS file</span></a></li>
-                            </ul>
                         </div>
-                    </div>
-                </div>
-                <!-- date stamp -->
-                <div id="datestamp" class="row" itemscope="itemscope" itemtype="http://schema.org/WebPage">
-                    <div class="span24">
-                        <ul>
-                            <li class="last-reviewed">Page last reviewed: <span itemprop="lastReviewed">May 15, 2015</span></li>
-                            <li class="last-updated">Page last updated: <span itemprop="dateModified">May 15, 2015</span></li>
-                            <li class="content-source">Content source:
+                        <div class='syndicate'>
 
-                                <ul><li itemprop="sourceOrganization" itemscope="itemscope" itemtype="http://schema.org/Organization"><a href="/nccdphp/dnpao/index.html">Division of Nutrition, Physical Activity, and Obesity</a>, <a href="http://www.cdc.gov/chronicdisease">National Center for Chronic Disease Prevention and Health Promotion</a></li></ul>
-                            </li>
+                            <!--Zika Risk Assessment Tool-->
+                            <div class="well span10">
+                            <div>
 
+                                <h3>Zika Risk Assessment Tool</h3>
+                                <div id="intro" name="intro">
+                                    <p>Zika virus is primarily spread by mosquitoes. It can also be spread by a man
+                                        with Zika to his sex partners, even if he doesn't get sick. Where you live, your travel history,
+                                        and the travel histroy of your sex partner(s) can affect your risk of Zika. This web app can help you
+                                        learn more about Zika and how to protect yourself.
+                                    <ul>
+                                        <li>Use this app for each traveler or resident in your household.</li>
+                                        <li>If you traveled recently and also have future travel plans, please answer questions for both
+                                            scenarios to get complete CDC recommendations.</li>
+                                        <li>This app is not intended to replace the advice of a medical professional.</li>
+                                    </ul>
+                                    </p>
+                                </div>
+                                <input class="btn btn-default" id="start" name="start" type="button" value="Start"/>
+                            </div>
+                            <div class="question">
+                                <p id="question-text" name="question-text"></p>
+                                <div id="question-answers"></div>
+                                <div id="singleSelectCountry" display="none">
+
+                                <select class="countrySelect" id="singleCountry" style="width: 100%">
+                                    <option></option>
+                                </select>
+                                <button class="btn btn-default" id="singleCountrySelect" multiple="multiple">Next</button>
+                                </div>
+                                <div id="multiSelectCountry" display="none">
+                                    <select class="countrySelect" id="multiCountry" style="width: 100%">
+
+                                    </select>
+                                    <button class="btn btn-default" id="multiCountrySelect">Next</button>
+                                </div>
+                                <p id="endpoint">
+                                </p>
+                                <p id="endpoint-disclaimer">
+                                    The mosquitoes that spread Zika usually do not live at elevations above 6,500 feet (2,000 meters).
+                                    Travelers and residents whose activities are only above this elevation are at minimal risk of getting Zika from a mosquito.
+                                    For more information: <a href="http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations">http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations</a></p>
+                                <p id="endpoint-call-to-action">
+                                    CDC routinely updates information as it learns more about Zika:
+                                    Check CDC’s website often for the latest information. <a href="http://www.cdc.gov/zika/index.html">http://www.cdc.gov/zika/index.html</a>
+                                    CDC’s guidance for women and their partners thinking about pregnancy will continue to be updated as we learn more.
+                                </p>
+                                <br />
+                                <button class="btn btn-default" id="back">Back</button>
+                                <button class="btn btn-default" id="restart">Restart</button>
+                            </div>
+                            </div>
+                            <!--End Zika Risk Assessment Tool-->
+
+                            <div class="rx-row pull-right span7">
+
+                                <div class="module-typeA" >
+                                    <h3>Zika 101 Presentation</h3>
+                                    <div>
+                                        <p> <img class="" alt="	Zika 101 slide presentation cover slide" src="/zika/images/zika-101-title-slide.jpg" /></p>
+                                        <ul class="list-bullet">
+                                            <li><a href="/zika/comm-resources/zika101slides.pptx">English [PPT - 3.7 MB]</a></li>
+                                            <li><a href="http://espanol.cdc.gov/zika/comm-resources/zika101slides.pptx">Spanish [PPT - 3.7 MB]</a></li>
+                                        </ul>				</div>
+                                </div>
+
+
+                                <div style=" clear: both;"></div>
+
+
+                                <div class="module-typeA" >
+                                    <h3>Zika: The Basics of the Virus and How to Protect Against It</h3>
+                                    <div>
+                                        <p> <img class="" alt="	Zika: The basics of the virus and how to protext against it factsheet thumbnail" src="/zika/images/fs-zika-basics.jpg" /></p>
+                                        <ul class="list-bullet">
+                                            <li><a href="/zika/pdfs/fs-zika-basics.pdf">English [PDF - 2 pages]</a></li>
+                                            <li><a href="http://espanol.cdc.gov/img/cdc/ES_49305.pdf">Spanish [PDF - 2 pages]</a></li>
+                                        </ul>				</div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <!-- Related Nav Area -->
+                        <div class="nav-related hidden-three hidden-four">
+
+
+
+
+
+
+
+
+
+
+                            <div class="rx-row padding-top-fifteen">
+
+                                <p style=" text-align: center;">
+                                    <a href="/zika/pregnancy/index.html"><img class="" alt='Zika and Pregnancy button.  ' src='/zika/images/pregnancy-button.jpg'/></a></p>
+
+                            </div>
+
+
+
+                            <div class="rx-row padding-top-fifteen">
+                                <p style=" text-align: center;">
+                                    <a href="/mmwr/zika_reports.html"><img class="" alt='CDC MMWR Zika button' src='/zika/images/zika_mmwr_button.jpg'/></a></p>
+                            </div>
+
+
+
+
+
+                        </div>
+                        <!-- Persistent Content Area -->
+                        <div id="content-secondary">
+
+
+
+
+
+
+
+
+                        </div><!-- /end #content-secondary -->
+                    </div><!-- /end #contentArea -->
+                </div><!-- /end body -->
+            </div>
+            <div class="row">
+                <div class="span24 visible-one">
+                    <div class="pageoptionsContainer languageOptions languageOptionsOff"><span id="po-language-bottom-label" class="select-label">Language:</span><div id="po-language-bottom" class="languages pageoptions pull-right"><div class="select-box"><a href="#">English</a><span class="icon-angle-down pull-right poarrow"></span></div><ul class="drop-down" aria-labelledby="po-language-bottom-label"><li>
+                        <a onclick="return switchMPLanguage('es');" href="http://espanol.cdc.gov/enes/zika/about/index.html" mporgnav=""> Español </a>
+                    </li><li>
+                        <a onclick="return switchMPLanguage('pt');" href="http://portugues.cdc.gov/zika/about/index.html" mporgnav=""> Português </a>
+                    </li></ul></div></div>						</div>
+            </div>
+            <div class="row">
+                <div class="span24">
+                    <div id="plugin-legend" class="pluginOff">
+                        <h5>File Formats Help:</h5><span><a href="http://www.cdc.gov/Other/plugins/">How do I view different file formats (PDF, DOC, PPT, MPEG) on this site?</a></span>
+                        <ul>
+                            <li class="plugin-pdf"><a href="http://www.cdc.gov/Other/plugins/#pdf"><span class="sprite-16-pdf">Adobe PDF file</span></a></li>
+                            <li class="plugin-ppt"><a href="http://www.cdc.gov/Other/plugins/#ppt"><span class="sprite-16-ppt">Microsoft PowerPoint file</span></a></li>
+                            <li class="plugin-word"><a href="http://www.cdc.gov/Other/plugins/#doc"><span class="sprite-16-word">Microsoft Word file</span></a></li>
+                            <li class="plugin-excel"><a href="http://www.cdc.gov/Other/plugins/#xls"><span class="sprite-16-excel">Microsoft Excel file</span></a></li>
+                            <li class="plugin-wmv"><a href="http://www.cdc.gov/Other/plugins/#wmv"><span class="sprite-16-wmv">Audio/Video file</span></a></li>
+                            <li class="plugin-qt"><a href="http://www.cdc.gov/Other/plugins/#qt"><span class="sprite-16-qt">Apple Quicktime file</span></a></li>
+                            <li class="plugin-real"><a href="http://www.cdc.gov/Other/plugins/#ram"><span class="sprite-16-rp">RealPlayer file</span></a></li>
+                            <li class="plugin-text"><a href="http://www.cdc.gov/Other/plugins/#text"><span class="sprite-16-txt">Text file</span></a></li>
+                            <li class="plugin-zip"><a href="http://www.cdc.gov/Other/plugins/#zip"><span class="sprite-16-zip">Zip Archive file</span></a></li>
+                            <li class="plugin-sas"><a href="http://www.cdc.gov/Other/plugins/#sas"><span class="sprite-16-sas">SAS file</span></a></li>
+                            <li class="plugin-epub"><a href="http://www.cdc.gov/Other/plugins/#epub"><span class="sprite-16-ebook">ePub file</span></a></li>
+                            <li class="plugin-ris"><a href="http://www.cdc.gov/Other/plugins/#ris"><span class="sprite-16-ris">RIS file</span></a></li>
                         </ul>
                     </div>
-                </div>
-            </div><!-- /end #content -->
-        </div><!-- /.container for content -->
-        <!-- footer -->
-        <footer id="footer" class="cdcSlimFooter">
-            <div class="socialMedia">
-                <div class="container">
-                    <nav class="followcdc">
-                        <ul>
-                            <li><a href="http://www.cdc.gov/Other/emailupdates/"><span class="sprite-24-govd"></span><span class="tp-sr-only">Email</span></a></li>
-                            <li><a href="http://www.facebook.com/CDC" target="_blank"><span class="sprite-24-facebook"></span><span class="tp-sr-only">Recommend</span></a></li>
-                            <li><a href="http://twitter.com/CDCgov" target="_blank"><span class="sprite-24-twitter"></span><span class="tp-sr-only">Tweet</span></a></li>
-                            <li><a href="http://www.youtube.com/user/CDCstreamingHealth" target="_blank"><span class="sprite-24-youtube"></span><span class="tp-sr-only">YouTube</span></a></li>
-                            <li><a href="https://instagram.com/CDCgov/" target="_blank"><span class="sprite-24-instagram"></span><span class="tp-sr-only">Instagram</span></a></li>
-                        </ul>
-                    </nav>
-                    <nav class="cdcmedia">
-                        <ul>
-                            <li><a href="http://www2c.cdc.gov/podcasts/"><span class="sprite-24-listen"></span><span class="tp-sr-only">Listen</span></a></li>
-                            <li><a href="http://www.cdc.gov/cdctv"><span class="sprite-24-watch"></span><span class="tp-sr-only">Watch</span></a></li>
-                            <li><a href="http://www2c.cdc.gov/podcasts/rss.asp"><span class="sprite-24-rss"></span><span class="tp-sr-only">RSS</span></a></li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
+            <!-- date stamp -->
+            <div id="datestamp" class="row" itemscope="itemscope" itemtype="http://schema.org/WebPage">
+                <div class="span24">
+                    <ul>
+                        <li class="last-reviewed">Page last reviewed: <span itemprop="lastReviewed">February 22, 2016</span></li>
+                        <li class="last-updated">Page last updated: <span itemprop="dateModified">June 3, 2016</span></li>
+                        <li class="content-source">Content source:
+
+
+
+                            <ul><li itemprop="sourceOrganization" itemscope="itemscope" itemtype="http://schema.org/Organization"><a href="http://www.cdc.gov/" itemprop="url">Centers for Disease Control and Prevention</a><br /><a href="http://www.cdc.gov/ncezid">National Center for Emerging and Zoonotic Infectious Diseases (NCEZID)</a><br /><a href="http://www.cdc.gov/ncezid/dvbd/index.html">Division of Vector-Borne Diseases (DVBD)</a></li></ul>
+
+                        </li>
+
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /end #content -->
+    </div><!-- /.container for content -->
+    <!-- footer -->
+    <footer id="footer" class="cdcSlimFooter">
+
+        <!-- include eng footerSubSocialMedia.html -->
+        <div class="socialMedia">
             <div class="container">
-                <div class="cdcLinks">
-                    <div class="container">
-                        <ul>
-                            <li>
-                                <nav>
-                                    <h6 class="hidden-four hidden-three">ABOUT <span class="icon-plus visible-one pull-right"></span></h6>
-                                    <ul class="hidden-one">
-                                        <li><a href="http://www.cdc.gov/about/default.htm">About CDC</a></li>
-                                        <li><a href="http://jobs.cdc.gov/">Jobs</a></li>
-                                        <li><a href="http://www.cdc.gov/funding/">Funding</a></li>
-                                    </ul>
-                                </nav>
-                            </li>
-                            <li>
-                                <nav>
-                                    <h6 class="hidden-four hidden-three">LEGAL <span class="icon-plus visible-one pull-right"></span></h6>
-                                    <ul class="hidden-one">
-                                        <li><a href="http://www.cdc.gov/Other/policies.html">Policies</a></li>
-                                        <li><a href="http://www.cdc.gov/Other/privacy.html">Privacy</a></li>
-                                        <li><a href="http://www.cdc.gov/od/foia/">FOIA</a></li>
-                                        <li><a href="http://www.cdc.gov/eeo/nofearact/index.htm">No Fear Act</a></li>
-                                        <li><a href="http://oig.hhs.gov/" class="no-link">OIG</a></li>
-                                    </ul>
-                                </nav>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="cdcContact">
-                    <div class="container">
-                        <ul>
-                            <li class="local-contact">
-                                <section>
-                                    <address class="address" itemscope="itemscope" itemtype="http://www.schema.org/Organization">
-																			<span class="value" itemprop="address" itemscope="itemscope" itemtype="http://www.schema.org/PostalAddress">
-																				<span itemprop="streetAddress">1600 Clifton Road</span>
-																				<span itemprop="addressLocality">Atlanta</span>,
-																				<span itemprop="addressRegion">GA</span>
-																				<span itemprop="postalCode">30329-4027</span>
-																				<span itemprop="addressCountry">USA</span>
-																			</span><br />
-                                        <span class="value" itemprop="telephone">800-CDC-INFO (800-232-4636)</span>,
-                                        <span class="value" itemprop="telephone">TTY: 888-232-6348</span><br />
-																			<span class="value" itemprop="contactPoint" itemscope="itemscope" itemtype="http://www.schema.org/ContactPoint">
-																				<span itemprop="url"><a href="https://wwwn.cdc.gov/dcs/ContactUs/Form" class=" default no-link">Email CDC-INFO</a></span>
-																			</span>
-                                    </address>
-                                </section>
-                            </li>
-                            <li class="contact">
-                                <section>
-                                    <address class="address" itemscope="itemscope" itemtype="http://www.schema.org/Organization">
-																			<span class="value" itemprop="contactPoint" itemscope="itemscope" itemtype="http://www.schema.org/ContactPoint">
-																				<span itemprop="url"><a href="http://www.hhs.gov/" class="no-link">U.S. Department of Health & Human Services</a></span>
-																			</span><br />
-																			<span class="value" itemprop="contactPoint" itemscope="itemscope" itemtype="http://www.schema.org/ContactPoint">
-																				<span itemprop="url"><a href="http://www.hhs.gov/open/" class="no-link">HHS/Open</a></span>
-																			</span><br />
-																			<span class="value" itemprop="contactPoint" itemscope="itemscope" itemtype="http://www.schema.org/ContactPoint">
-																				<span itemprop="url"><a href="http://www.usa.gov/" class="no-link">USA.gov</a></span>
-																			</span>
-                                    </address>
-                                </section>
-                            </li>
-                        </ul>
-                    </div>
+                <nav class="followcdc">
+                    <ul>
+                        <li><a href="http://www.cdc.gov/Other/emailupdates"><span class="sprite-24-govd"></span><span class="tp-sr-only">Email</span></a></li>
+                        <li><a href="https://www.facebook.com/CDC" target="_blank"><span class="sprite-24-facebook"></span><span class="tp-sr-only">Recommend</span></a></li>
+                        <li><a href="https://twitter.com/CDCgov" target="_blank"><span class="sprite-24-twitter"></span><span class="tp-sr-only">Tweet</span></a></li>
+                        <li><a href="https://www.youtube.com/user/CDCstreamingHealth" target="_blank"><span class="sprite-24-youtube"></span><span class="tp-sr-only">YouTube</span></a></li>
+                        <li><a href="https://www.instagram.com/CDCgov/" target="_blank"><span class="sprite-24-instagram"></span><span class="tp-sr-only">Instagram</span></a></li>
+                    </ul>
+                </nav>
+                <nav class="cdcmedia">
+                    <ul>
+                        <li><a href="http://www2c.cdc.gov/podcasts"><span class="sprite-24-listen"></span><span class="tp-sr-only">Listen</span></a></li>
+                        <li><a href="http://www.cdc.gov/cdctv"><span class="sprite-24-watch"></span><span class="tp-sr-only">Watch</span></a></li>
+                        <li><a href="http://www2c.cdc.gov/podcasts/rss.asp"><span class="sprite-24-rss"></span><span class="tp-sr-only">RSS</span></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /include eng footerSubSocialMedia.html -->
+
+        <div class="container">
+            <div class="cdcLinks">
+                <div class="container">
+                    <ul>
+
+                        <!-- include eng footerSubCdcLinks.html-->
+                        <li>
+                            <nav>
+                                <h6 class="hidden-four hidden-three">ABOUT <span class="icon-plus visible-one pull-right"></span></h6>
+                                <ul class="hidden-one">
+                                    <li><a href="http://www.cdc.gov/about/default.htm">About CDC</a></li>
+                                    <li><a href="https://jobs.cdc.gov">Jobs</a></li>
+                                    <li><a href="http://www.cdc.gov/funding">Funding</a></li>
+                                </ul>
+                            </nav>
+                        </li>
+                        <li>
+                            <nav>
+                                <h6 class="hidden-four hidden-three">LEGAL <span class="icon-plus visible-one pull-right"></span></h6>
+                                <ul class="hidden-one">
+                                    <li><a href="http://www.cdc.gov/Other/policies.html">Policies</a></li>
+                                    <li><a href="http://www.cdc.gov/Other/privacy.html">Privacy</a></li>
+                                    <li><a href="http://www.cdc.gov/od/foia">FOIA</a></li>
+                                    <li><a href="http://www.cdc.gov/eeo/nofearact/index.htm">No Fear Act</a></li>
+                                    <li><a href="https://oig.hhs.gov" class="no-link">OIG</a></li>
+                                </ul>
+                            </nav>
+                        </li>
+                        <!--/ include eng footerSubCdcLinks.html-->
+
+                    </ul>
                 </div>
             </div>
-        </footer>			<!-- /#footer -->
-        <div id="totop" class="off visible-one">Top</div>
-    </div>
-    <script>page_timing.libs_start = Date.now();</script><script src="/TemplatePackage/3.0/js/libs.min.js"></script><script>page_timing.libs_end = Date.now();page_timing.core_start = Date.now();</script><script src="/TemplatePackage/3.0/js/core.min.js"></script><script>page_timing.core_end = Date.now();</script><!-- Start Site Settings Overrides -->
+            <div class="cdcContact">
+                <div class="container">
+                    <ul>
+                        <li class="local-contact">
+
+                            <!-- include eng footerSubGlobalContact1.html -->
+                            <section>
+                                <address class="address" itemscope="itemscope" itemtype="https://schema.org/Organization">
+		<span class="value" itemprop="address" itemscope="itemscope" itemtype="https://schema.org/PostalAddress">
+			<span itemprop="streetAddress">1600 Clifton Road</span>
+			<span itemprop="addressLocality">Atlanta</span>,
+			<span itemprop="addressRegion">GA</span>
+			<span itemprop="postalCode">30329-4027</span>
+			<span itemprop="addressCountry">USA</span>
+		</span><br />
+                                    <span class="value" itemprop="telephone">800-CDC-INFO (800-232-4636)</span>,
+                                    <span class="value" itemprop="telephone">TTY: 888-232-6348</span><br />
+		<span class="value" itemprop="contactPoint" itemscope="itemscope" itemtype="https://schema.org/ContactPoint">
+			<span itemprop="url"><a href="https://wwwn.cdc.gov/dcs/RequestForm.aspx" class=" default no-link">Email CDC-INFO</a></span>
+		</span>
+                                </address>
+                            </section>
+                            <!-- /include eng footerSubGlobalContact1.html -->
+
+                        </li>
+                        <li class="contact">
+
+                            <!-- include eng footerSubGlobalContact2.html -->
+                            <section>
+                                <address class="address" itemscope="itemscope" itemtype="https://schema.org/Organization">
+		<span class="value" itemprop="contactPoint" itemscope="itemscope" itemtype="https://schema.org/ContactPoint">
+			<span itemprop="url"><a href="https://www.hhs.gov" class="no-link">U.S. Department of Health & Human Services</a></span>
+		</span><br />
+        <span class="value" itemprop="contactPoint" itemscope="itemscope" itemtype="https://schema.org/ContactPoint">
+        	<span itemprop="url"><a href="https://www.hhs.gov/open" class="no-link">HHS/Open</a></span>
+        </span><br />
+        <span class="value" itemprop="contactPoint" itemscope="itemscope" itemtype="https://schema.org/ContactPoint">
+			<span itemprop="url"><a href="https://www.usa.gov/" class="no-link">USA.gov</a></span>
+		</span>
+                                </address>
+                            </section>
+                            <!-- /include eng footerSubGlobalContact2.html -->
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>			<!-- /#footer -->
+    <div id="totop" class="off visible-one">Top</div>
+</div>
+<script>page_timing.libs_start = Date.now();</script><script src="/TemplatePackage/3.0/js/libs.min.js?3.2.0.1"></script><script>page_timing.libs_end = Date.now();page_timing.core_start = Date.now();</script><script src="/TemplatePackage/3.0/js/core.min.js?3.2.0.1"></script><script>page_timing.core_end = Date.now();</script><!-- Start Site Settings Overrides -->
+<script>
+    CDC.Constants.set("flexSliderVideoDomains", ['youtube.com','ytimg.com','vimeocdn.com'], 'es');
+</script>
+<!-- End Site Settings Overrides --><script>page_timing.app_start = Date.now();</script><script src="/TemplatePackage/3.0/js/app.min.js?3.2.0.1"></script><script>page_timing.app_end = Date.now();</script>
+<!-- Begin Survey scripts -->
+<script src="/JScript/foresee/foresee-trigger.js"></script>
+<script src="/JScript/foresee-variables.js"></script>
+<!-- End Survey scripts -->
+
+<script>if (typeof page_timing !== 'undefined') { page_timing.metrics_start = Date.now(); }</script>
+<!-- xxxxxxxxxxxxxxxxxx METRICS code begins here xxxxxxxxxxxxxxxxxxxxxxxxxxx-->
+<div id="metrics">
+
+    <!-- Begin Google DAP inclusion -->
+    <script type="text/javascript" id="_fed_an_ua_tag" src="/JScript/metrics/google/Universal-Federated-Analytics-Min.js?agency=HHS&amp;subagency=CDC"></script>
+    <!-- End Google DAP inclusion -->
+
+    <!-- Begin Template Package Custom Interactions -->
+    <script type="text/javascript" src="/JScript/metrics/rd_custom_interactions.js"></script>
+    <!-- End Template Package Custom Interactions -->
+
+    <!-- SiteCatalyst code version: H.21. -->
+    <script src="/JScript/metrics/topic_levels.js"></script>
+    <script src="/JScript/metrics/s_code_v21_cdcgov.js"></script>
     <script>
-        CDC.Constants.set("flexSliderVideoDomains", ['youtube.com','ytimg.com','vimeocdn.com'], 'es');
+
+        enquire.register(CDC.Global.selectors.vp1, function() {
+            s.prop49 = 1;
+        });
+        enquire.register(CDC.Global.selectors.vp2, function() {
+            s.prop49 = 2;
+        });
+        enquire.register(CDC.Global.selectors.vp3, function() {
+            s.prop49 = 3;
+        });
+        enquire.register(CDC.Global.selectors.vp4, function() {
+            s.prop49 = 4;
+        });
+
+
+
+
+
+        s.pageName=document.title;
+        s.channel="Zika virus";
+        siteCatalyst.setAzEntry("Zika");
+        siteCatalyst.setLevel1("NCEZID");
+        siteCatalyst.setLevel2("DVBD");
+        siteCatalyst.setLevel3("Zika");
+
+
+
+        s.prop2=window.location.href;
+        s.prop26=document.title;
+        s.prop30=document.title;
+        s.prop31=window.location.href;
+        s.prop46=window.location.href;
+        s.server=window.location.hostname;
+
+        // Update the level variables here.
+        updateVariables(s);
+
+        /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+        var s_code=s.t();if(s_code)document.write(s_code);</script>
+    <script type="text/javascript">
+        if(navigator.appVersion.indexOf('MSIE')>=0) { document.write(unescape('%3C')+'\!-'+'-'); }
     </script>
-    <!-- End Site Settings Overrides --><script>page_timing.app_start = Date.now();</script><script src="/TemplatePackage/3.0/js/app.min.js"></script><script>page_timing.app_end = Date.now();</script>
-    <!-- Begin Survey scripts -->
-    <script src="/JScript/foresee/foresee-trigger.js"></script>
-    <script src="/JScript/foresee-variables.js"></script>
-    <!-- End Survey scripts -->
-
-    <script>if (typeof page_timing !== 'undefined') { page_timing.metrics_start = Date.now(); }</script>
-    <!-- xxxxxxxxxxxxxxxxxx METRICS code begins here xxxxxxxxxxxxxxxxxxxxxxxxxxx-->
-    <div id="metrics">
-        <!-- Begin Google DAP inclusion -->
-        <script type="text/javascript" id="_fed_an_ua_tag" src="/JScript/metrics/google/Universal-Federated-Analytics-Min.js?agency=HHS&amp;subagency=CDC"></script>
-        <!-- End Google DAP inclusion -->
-        <!-- Begin Template Package Custom Interactions -->
-        <script type="text/javascript" src="/JScript/metrics/rd_custom_interactions.js"></script>
-        <!-- End Template Package Custom Interactions -->
-        <!-- SiteCatalyst code version: H.21. -->
-        <script src="/JScript/metrics/topic_levels.js"></script>
-        <script src="/JScript/metrics/s_code_v21_cdcgov.js"></script>
-        <script>
-            enquire.register(CDC.Global.selectors.vp1, function() {
-                s.prop49 = 1;
-            });
-            enquire.register(CDC.Global.selectors.vp2, function() {
-                s.prop49 = 2;
-            });
-            enquire.register(CDC.Global.selectors.vp3, function() {
-                s.prop49 = 3;
-            });
-            enquire.register(CDC.Global.selectors.vp4, function() {
-                s.prop49 = 4;
-            });
-
-
-            s.pageName=document.title
-            s.channel="Healthy Weight"
-            siteCatalyst.setLevel1("Chronic");
-            siteCatalyst.setLevel2("Division of Nutrition, Physical Activity, and Obesity DNPAO");
-            siteCatalyst.setLevel3("Healthy Weight");
+    <noscript><a href="http://www.omniture.com"><img src="http://mtrics.cdc.gov/b/ss/cdcgov/1/H.21--NS/01/H.21--NS/0" height="1" width="1" alt="Web Analytics" /></a></noscript><!--/DO NOT REMOVE/-->
+    <!-- End SiteCatalyst code version: H.21. -->
+    <!-- Begin Template Package DigitalGov Search Support -->
+    <script type="text/javascript" src="/JScript/rd_search.js"></script>
+    <!-- End Template Package DigitalGov Search Support -->
+</div>
+<!-- xxxxxxxxxxxxxxxxxx METRICS code ends here xxxxxxxxxxxxxxxxxxxxxxxxxxx-->
+<script>if (typeof page_timing !== 'undefined') { page_timing.metrics_end = Date.now(); }</script>
 
 
 
+<script>
+    <!--//
+    $(document).ready(function () {
+        var cdcLeftNav = new CDC.LeftNav("nav-primary");
+        cdcLeftNav.render();
+    });
+    //-->
+</script>
 
-            s.prop2=window.location.href;
-            s.prop26=document.title;
-            s.prop30=document.title;
-            s.prop31=window.location.href;
-            s.prop46=window.location.href;
-            s.server=window.location.hostname;
-            // Update the level variables here.
-            updateVariables(s);
-            /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
-            var s_code=s.t();if(s_code)document.write(s_code);</script>
-        <script type="text/javascript">
-            if(navigator.appVersion.indexOf('MSIE')>=0) { document.write(unescape('%3C')+'\!-'+'-'); }
-        </script>
-        <noscript><a href="http://www.omniture.com"><img src="http://mtrics.cdc.gov/b/ss/cdcgov/1/H.21--NS/0" height="1" width="1" alt="Web Analytics" /></a></noscript><!--/DO NOT REMOVE/-->
-        <!-- End SiteCatalyst code version: H.21. -->
-        <!-- Begin Template Package DigitalGov Search Support -->
-        <script type="text/javascript" src="/JScript/rd_search.js"></script>
-        <!-- End Template Package DigitalGov Search Support -->
-    </div>
-    <!-- xxxxxxxxxxxxxxxxxx METRICS code ends here xxxxxxxxxxxxxxxxxxxxxxxxxxx-->
-    <script>if (typeof page_timing !== 'undefined') { page_timing.metrics_end = Date.now(); }</script>
 
-    <!--[if IE]> <script defer language="javascript" type="text/javascript"> 		var cdcLeftNav = new CDC.LeftNav("nav-primary", "/healthyweight/rd/assessing/bmi/adult_bmi/metric_bmi_calculator/bmi_calculator.html", true, false, false); 		cdcLeftNav.render(); </script> <![endif]--> <!--[if ! IE]><!--> <script language="javascript" type="text/javascript">  $().ready(function(){ 		var cdcLeftNav = new CDC.LeftNav("nav-primary", "/healthyweight/rd/assessing/bmi/adult_bmi/metric_bmi_calculator/bmi_calculator.html", true, false, false); 		cdcLeftNav.render(); }); </script> <!--<![endif]-->
 
-    <!-- Related Nav Area -->
+<script type="text/javascript" src="zika_risk_assessment.js"></script>
+<script type="text/javascript" src="/dist/js/select2.full.js"></script>
+<script type="text/javascript" src="/zika/~inc~/motionpoint.js"></script>
 
-    <script>page_timing.libs_start = Date.now();</script><script src="/TemplatePackage/3.0/js/libs.min.js"></script><script>page_timing.libs_end = Date.now();page_timing.core_start = Date.now();</script><script src="/TemplatePackage/3.0/js/core.min.js"></script><script>page_timing.core_end = Date.now();</script><!-- Start Site Settings Overrides -->
-    <script>
-        CDC.Constants.set("flexSliderVideoDomains", ['youtube.com','ytimg.com','vimeocdn.com'], 'es');
-    </script>
-    <!-- End Site Settings Overrides --><script>page_timing.app_start = Date.now();</script><script src="/TemplatePackage/3.0/js/app.min.js"></script><script>page_timing.app_end = Date.now();</script>
+<script type="text/javascript" src="/zika/~inc~/motionpoint-inline.js"></script>
 
-    <script type="text/javascript" src="zika_risk_assessment.js"></script>
+
 
 </body>
 </html>
-

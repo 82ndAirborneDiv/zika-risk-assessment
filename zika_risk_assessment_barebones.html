@@ -1,0 +1,59 @@
+<head>
+    <link rel="stylesheet" href="/TemplatePackage/3.0/css/lib/bootstrap24.css" />
+    <link href="dist/css/select2.min.css" rel="stylesheet" />
+    <script src="dist/js/select2.min.js"></script>
+</head>
+<div class="well span10">
+    <div>
+
+        <h3>Zika Risk Assessment Tool</h3>
+        <div id="intro" name="intro">
+            <p>Zika virus is primarily spread by mosquitoes. It can also be spread by a man
+                with Zika to his sex partners, even if he doesn't get sick. Where you live, your travel history,
+                and the travel histroy of your sex partner(s) can affect your risk of Zika. This web app can help you
+                learn more about Zika and how to protect yourself.
+            <ul>
+                <li>Use this app for each traveler or resident in your household.</li>
+                <li>If you traveled recently and also have future travel plans, please answer questions for both
+                    scenarios to get complete CDC recommendations.</li>
+                <li>This app is not intended to replace the advice of a medical professional.</li>
+            </ul>
+            </p>
+        </div>
+        <input class="btn btn-default" id="start" name="start" type="button" value="Start"/>
+    </div>
+    <div class="question">
+        <p id="question-text" name="question-text"></p>
+        <div id="question-answers"></div>
+        <div id="singleSelectCountry" display="none">
+
+            <select class="countrySelect" id="singleCountry" style="width: 100%">
+                <option></option>
+            </select>
+            <button class="btn btn-default" id="singleCountrySelect" multiple="multiple">Next</button>
+        </div>
+        <div id="multiSelectCountry" display="none">
+            <select class="countrySelect" id="multiCountry" style="width: 100%">
+
+            </select>
+            <button class="btn btn-default" id="multiCountrySelect">Next</button>
+        </div>
+        <p id="endpoint">
+        </p>
+        <p id="endpoint-disclaimer">
+            The mosquitoes that spread Zika usually do not live at elevations above 6,500 feet (2,000 meters).
+            Travelers and residents whose activities are only above this elevation are at minimal risk of getting Zika from a mosquito.
+            For more information: <a href="http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations">http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations</a></p>
+        <p id="endpoint-call-to-action">
+            CDC routinely updates information as it learns more about Zika:
+            Check CDC’s website often for the latest information. <a href="http://www.cdc.gov/zika/index.html">http://www.cdc.gov/zika/index.html</a>
+            CDC’s guidance for women and their partners thinking about pregnancy will continue to be updated as we learn more.
+        </p>
+        <br />
+        <button class="btn btn-default" id="back">Back</button>
+        <button class="btn btn-default" id="restart">Restart</button>
+    </div>
+</div>
+<script type="text/javascript" src="/TemplatePackage/contrib/libs/jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="zika_risk_assessment.js"></script>
+<script type="text/javascript" src="/dist/js/select2.full.js"></script>
