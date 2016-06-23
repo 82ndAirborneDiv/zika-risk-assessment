@@ -1,68 +1,96 @@
 /**
  * Created by jason on 6/8/16.
  */
+//panels
+var introPanel = $("#zika-app-intro");
+var mainPanel = $("#zika-app-main");
+
+//panel content
+var endpointContent = $("#zika-app-endpoint");
+var endpointText = $("#zika-app-endpoint-text");
+var questionContent = $("#zika-app-question");
+var questionText = $("#question-text");
+var questionAnswers = $("#question-answers");
+
+//country select dropdown lists
+var singleCountryListSurround = $("#singleCountryListDiv");
+var singleCountryList = $("#singleCountry");
+var multiCountryListSurround = $("#multCountryListDiv");
+var multiCountryList = $("#multiCountry");
+
+//Nav buttons
+var start = $("#start");
+var back = $("#back");
+var restart = $("#restart");
+
+//several next buttons are present for different purposes, defined here
+var allNextButtons = $(".zika-app-next-btn");
+var singleCountryNextButton = $("#singleCountrySelect");
+var multiCountryNextButton = $("#multiCountrySelect");
+var answerNextButton = $("#answerSelect");
+
+//array to store answers
+var userAnswers = [];
+
+var currentQuestion;
+
+
+
+
 $(document).ready(function(){
-    $("#singleCountry").select2({
+    //populate country lists
+    singleCountryList.select2({
         placeholder: 'Select a country',
         data: countries,
         multiple: false
     });
-    $("#multiCountry").select2({
+    multiCountryList.select2({
         placeholder: 'Select a country or countries',
         data: countries,
-        multiple: true
-    })
-    $("#singleSelectCountry").hide();
-    $("#multiSelectCountry").hide();
-    $("#endpoint-call-to-action").hide();
-    $("#endpoint-disclaimer").hide();
-    $("#country-answers").hide();
+        multiple: true,
+    });
 
-    $("#start").click(function() {
-        $("#start").hide();
-        $("#intro").hide();
-        $("#back").show();
-        $("#restart").show();
+    //hide intro panel, show main panel
+    start.click(function() {
+        introPanel.hide();
+        mainPanel.show();
         loadNextQuestion("" +1);
     });
-    $("#back").click(function(){
-        var historyLength = navigationHistory.length;
+
+
+    back.click(function(){
+        /*var historyLength = navigationHistory.length;
         if (historyLength > 1) {
             loadNextQuestion(navigationHistory[historyLength - 2]);
             navigationHistory.pop();
             navigationHistory.pop();
+        }*/
+        var size = userAnswers.length;
+        if(size > 0){
+            loadNextQuestion(userAnswers[size - 1][0]);
         }
-        $("#endpoint-call-to-action").hide();
-        $("#endpoint-disclaimer").hide();
-    }).hide();
-    $("#restart").click(function(){
-        navigationHistory = [];
-        $("#start").show();
-        $("#intro").show();
-        $("#question-text").hide();
-        $("#question-answers").hide();
-        $("#endpoint").hide();
-        $("#endpoint-call-to-action").hide();
-        $("#endpoint-disclaimer").hide();
-        $("#back").hide();
-        $("#restart").hide();
-        $("#singleSelectCountry").hide();
-        $('html, body').animate({ scrollTop: 0 }, 0);
-    }).hide();
-    $(".answer").click(function(){
-        $("#question-text").html(questions["" +this.name].text);
     });
-    $("#singleCountrySelect").click(function(){
-        var currentQuestion = navigationHistory[navigationHistory.length - 1];
-        var selection = $("#singleCountry").val();
+
+    restart.click(function(){
+        navigationHistory = [];
+        userAnswers = [];
+        introPanel.show();
+        mainPanel.hide();
+        multiCountryList.val(null).trigger("change");
+        singleCountryList.val(null).trigger("change");
+        $('html, body').animate({ scrollTop: 0 }, 0);
+    });
+
+    singleCountryNextButton.click(function(){
+        var selection = singleCountryList.val();
         var next;
-        console.log(selection);
 
         if("" === selection){
 
         }
         else {
-            if (zikaCountries.includes(selection)) {
+            userAnswers.push([currentQuestion, selection]);
+            if (zikaCountries.indexOf(selection) >= 0) {
                 next = questions["" + currentQuestion].answers["1"];
             }
             else {
@@ -74,32 +102,28 @@ $(document).ready(function(){
             else {
                 loadNextQuestion(next.nextChoice);
             }
-            $("#singleSelectCountry").hide();
         }
     });
-    $("#multiCountrySelect").click(function(){
-        var currentQuestion = navigationHistory[navigationHistory.length - 1];;
+    multiCountryNextButton.click(function(){
         var input = $('#multiCountry option:selected');
         var selection = $.map(input, function(option){
             return option.value;
         });
+
         var next;
-        console.log(selection);
 
         if(selection.length === 0){
 
         }
         else{
-            console.log("starting check for zika countries");
+            userAnswers.push([currentQuestion, selection]);
             var zika = false;
             for(var i = 0; i < selection.length; i++){
-                console.log(selection[i]);
-                if(zikaCountries.includes(selection[i])){
+                if(zikaCountries.indexOf(selection[i]) >= 0){
                     zika = true;
                     break;
                 }
             }
-            console.log(zika);
             if(zika){
                 next = questions["" + currentQuestion].answers["1"];
             }
@@ -112,96 +136,134 @@ $(document).ready(function(){
             else {
                 loadNextQuestion(next.nextChoice);
             }
-            $("#multiSelectCountry").hide();
         }
     });
-    /*
-    $("#singleCountry").change(function(){
-        var currentQuestion = navigationHistory[navigationHistory.length - 1];
-        var selection = document.getElementById("singleCountry").value;
-        var next;
-        if(zikaCountries.includes(selection)){
-            next = questions["" +currentQuestion].answers["1"];
+    answerNextButton.click(function(){
+        var answerInput = $("input[name=optionsRadios]:checked").val();
+        var selectedAnswerObject = questions["" + currentQuestion].answers["" +answerInput];
+        userAnswers.push([currentQuestion, answerInput]);
+
+        if(answerInput != null) {
+            if (selectedAnswerObject.isEndPoint) {
+                loadEndPoint(selectedAnswerObject.nextChoice);
+            }
+            else {
+                loadNextQuestion(selectedAnswerObject.nextChoice);
+            }
         }
-        else{
-            next = questions["" +currentQuestion].answers["2"];
+        else {
         }
-        if(next.isEndPoint){
-            loadEndPoint(next.nextChoice);
-        }
-        else{
-            loadNextQuestion(next.nextChoice);
-        }
-        $("#singleSelectCountry").hide();
     });
-    */
 });
 
-function Question(text, answers) {
-    this.text = text;
-    this.answers = answers;
-}
-
-function Answer(text, nextChoice) {
-    this.text = text;
-    this.nextChoice = nextChoice;
-}
 function loadNextQuestion(number){
-    $("#singleSelectCountry").hide();
-    $("#multiSelectCountry").hide();
-    //$("#singleCountry option[value='default']").prop('selected', true).hide();
-    $("#question-text").html(questions["" +number].text).show();
+    currentQuestion = number;
+    clearMainPanel();
+    questionContent.show();
+    questionText.html(questions["" +number].text).show();
     var answers = Object.keys(questions["" +number].answers);
-    var buttons = '<div class="btn-group btn-group-vertical" role="group">';
+    //var buttons = '<div class="btn-group btn-group-vertical" role="group">';
+    var radioButtonsTemp = '';
 
+    var previouslyVisited = false;
+    if(userAnswers.length > 0 && userAnswers[userAnswers.length - 1][0] === number){
+        previouslyVisited = true;
+    }
     for(var i = 1; i <= answers.length; i++) {
-        var temp = questions["" + number].answers[i];
+        var temp = questions["" + number].answers["" +i];
         switch (temp.text) {
             case "Non-Zika Country":
                 if(temp.hasOwnProperty("multiSelect")){
                     if(temp.multiSelect){
-                        $("#multiSelectCountry").show();
+                        if(previouslyVisited){
+                            multiCountryList.val(userAnswers[userAnswers.length - 1][1]).trigger("change");
+                            userAnswers.pop();
+                        }
+                        multiCountryListSurround.show();
+                        multiCountryNextButton.show();
+
+                        //work around for bug which affects placeholder text when the parent div is
+                        //hidden when select2 is initialized.
+                        //bug documented https://github.com/select2/select2/issues/3817
+                        //solution from https://jsfiddle.net/agq08j5z/1/
+                        multiCountryListSurround.find('input')
+                            .each(function(){
+                                var $this = $(this);
+                                $this.width($this.parents('span.select2-container').width() -2);
+                            });
                     }
                 }
                 else{
-                    $("#singleSelectCountry").show();
+                    if(previouslyVisited){
+                        singleCountryList.val(userAnswers[userAnswers.length - 1][1]).trigger("change");
+                        userAnswers.pop();
+                    }
+                    singleCountryListSurround.show();
+                    singleCountryNextButton.show();
                 }
                 break;
             case "Zika Country":
+
                 break;
             default:
-                if (!temp.isEndPoint) {
+                //buttons solution
+               /* if (!temp.isEndPoint) {
                     buttons += '<button class="btn btn-default" style="white-space: normal" onclick=' + 'loadNextQuestion(' + temp.nextChoice + ')>' + temp.text + '</button>';
                 }
                 else {
                     buttons += '<button class="btn btn-default" style="white-space: normal" onclick=' + 'loadEndPoint(' + temp.nextChoice + ')>' + temp.text + '</button>';
+                }*/
+                radioButtonsTemp += '<div class="radio z-risk-rad">'
+                radioButtonsTemp += '<label>';
+                if(previouslyVisited && userAnswers[userAnswers.length - 1][1] === "" +i) {
+                    radioButtonsTemp += '<input type="radio" name="optionsRadios" value="' + i + '" checked>';
+                    userAnswers.pop();
                 }
+                else{
+                    radioButtonsTemp += '<input type="radio" name="optionsRadios" value="' + i + '">';
+                }
+                radioButtonsTemp += temp.text;
+                radioButtonsTemp += '</label>';
+                radioButtonsTemp += '</div>';
+                answerNextButton.show();
                 break;
         }
+
         $('html, body').animate({ scrollTop: 0 }, 0);
     }
 
-    buttons += "</div>";
-    navigationHistory.push(number);
-    $("#question-answers").html(buttons).show();
-    $("#endpoint").hide();
+    //buttons += "</div>";
+    questionAnswers.html(radioButtonsTemp).show();
 }
 
 function loadEndPoint(number){
-    navigationHistory.push(number);
-    $("#question-answers").hide();
-    $("#question-text").hide();
-    $("#endpoint").load("endpoints.html #endpoint" +number).show();
-    $("#endpoint-call-to-action").show();
-    $("#endpoint-disclaimer").show();
+    clearMainPanel();
+    endpointText.load("endpoints.html #endpoint" +number);
+
+    endpointContent.show();
     $('html, body').animate({ scrollTop: 0 }, 0);
 }
-var navigationHistory = [];
 
-function Country(name, activeZika){
-    this.name = name;
-    this.activeZika = activeZika;
+function clearMainPanel(){
+    //endpoint
+    endpointText.html("");
+    allNextButtons.hide();
+    endpointContent.hide();
+
+    //question
+    questionText.html("");
+    questionContent.hide();
+    questionAnswers.html("");
+    questionAnswers.hide();
+    singleCountryListSurround.hide();
+    multiCountryListSurround.hide();
+    multiCountryList.val(null).trigger("change");
+    singleCountryList.val(null).trigger("change");
+
+    //next buttons
+    allNextButtons.hide();
 }
+var navigationHistory = [];
 
 /*
     The Zika countries object was built from the CDC page and cross comparing the countries listed with a country code
@@ -1186,561 +1248,561 @@ var countrySelectionList = ''
  */
 var questions = {
     1: {
-        text : "Where do you live?",
-        answers : {
-            1 : {
-                text : "Zika Country",
-                nextChoice : 25,
-                isEndPoint : false
+        text: "Where do you live?",
+        answers: {
+            1: {
+                text: "Zika Country",
+                nextChoice: 25,
+                isEndPoint: false
             },
-            2 : {
-                text : "Non-Zika Country",
-                nextChoice : 2,
-                isEndPoint : false,
+            2: {
+                text: "Non-Zika Country",
+                nextChoice: 2,
+                isEndPoint: false,
             }
         }
     },
-    2 : {
+    2: {
         text: "Have you recently traveled or do you plan to travel internationally?",
-        answers : {
-            1 : {
-                text : "No and neither is my male sex partner(s)",
-                nextChoice : 1,
-                isEndPoint : true
+        answers: {
+            1: {
+                text: "No and neither is my male sex partner(s)",
+                nextChoice: 1,
+                isEndPoint: true
             },
-            2 : {
-                text : "No, and my sex partner(s) is female",
-                nextChoice : 1,
-                isEndPoint : true
+            2: {
+                text: "No, and my sex partner(s) is female",
+                nextChoice: 1,
+                isEndPoint: true
             },
-            3 : {
+            3: {
                 text: "No, and I am not sexually active.",
                 nextChoice: 1,
                 isEndPoint: true
             },
-            4 : {
-                text : "I plan to travel.",
-                nextChoice : 3,
-                isEndPoint : false
+            4: {
+                text: "I plan to travel.",
+                nextChoice: 3,
+                isEndPoint: false
             },
-            5 : {
-                text : "I have traveled in the past 6 months.",
-                nextChoice : 7,
-                isEndPoint : false
+            5: {
+                text: "I have traveled in the past 6 months.",
+                nextChoice: 7,
+                isEndPoint: false
             },
-            6 : {
-                text : "No, but my male sex partner(s) has traveled, will travel, or lives abroad.",
-                nextChoice : 15,
-                isEndPoint : false
+            6: {
+                text: "No, but my male sex partner(s) has traveled, will travel, or lives abroad.",
+                nextChoice: 15,
+                isEndPoint: false
             }
         }
     },
-    3 : {
-        text : "Where are you planning to travel?",
-        answers : {
-            1 : {
-                text : "Zika Country",
-                nextChoice : 4,
-                isEndPoint : false
+    3: {
+        text: "Where are you planning to travel?",
+        answers: {
+            1: {
+                text: "Zika Country",
+                nextChoice: 4,
+                isEndPoint: false
             },
-            2 : {
-                text : "Non-Zika Country",
-                nextChoice : 1,
-                isEndPoint : true,
+            2: {
+                text: "Non-Zika Country",
+                nextChoice: 1,
+                isEndPoint: true,
                 multiSelect: true
             }
         }
     },
-    4 : {
-        text : "Are you a man or a woman?",
-        answers : {
-            1 : {
-                text : "Man",
-                nextChoice : 5,
-                isEndPoint : false
+    4: {
+        text: "Are you a man or a woman?",
+        answers: {
+            1: {
+                text: "Man",
+                nextChoice: 5,
+                isEndPoint: false
             },
-            2 : {
-                text : "Woman",
-                nextChoice : 6,
-                isEndPoint : false
+            2: {
+                text: "Woman",
+                nextChoice: 6,
+                isEndPoint: false
             }
         }
     },
-    5 : {
-        text : "Which of these best describes you?",
-        answers : {
-            1 : {
-                text : "I am not sexually active.",
-                nextChoice : 34,
-                isEndPoint : true
+    5: {
+        text: "Which of these best describes you?",
+        answers: {
+            1: {
+                text: "I am not sexually active.",
+                nextChoice: 34,
+                isEndPoint: true
             },
-            2 : {
-                text : "I have a pregnant sex partner.",
-                nextChoice : 33,
-                isEndPoint : true
+            2: {
+                text: "I have a pregnant sex partner.",
+                nextChoice: 33,
+                isEndPoint: true
             },
-            3 : {
-                text : "I am sexually active with a female partner(s) who is not considering pregnancy.",
-                nextChoice : 37,
-                isEndPoint : true
+            3: {
+                text: "I am sexually active with a female partner(s) who is not considering pregnancy.",
+                nextChoice: 37,
+                isEndPoint: true
             },
-            4 : {
-                text : "I am sexually active and my partner(s) is male.",
-                nextChoice : 37,
-                isEndPoint : true
+            4: {
+                text: "I am sexually active and my partner(s) is male.",
+                nextChoice: 37,
+                isEndPoint: true
             },
-            5 : {
-                text : "My partner and I are considering pregnancy.",
-                nextChoice : 36,
-                isEndPoint : true
+            5: {
+                text: "My partner and I are considering pregnancy.",
+                nextChoice: 36,
+                isEndPoint: true
             }
         }
     },
-    6 : {
-        text : "Which of these best describes you?",
-        answers : {
-            1 : {
-                text : "My sex partner(s) is female.",
-                nextChoice : 43,
-                isEndPoint : true
+    6: {
+        text: "Which of these best describes you?",
+        answers: {
+            1: {
+                text: "My sex partner(s) is female.",
+                nextChoice: 43,
+                isEndPoint: true
             },
-            2 : {
-                text : "I am not sexually active",
-                nextChoice : 35,
-                isEndPoint : true
+            2: {
+                text: "I am not sexually active",
+                nextChoice: 35,
+                isEndPoint: true
             },
-            3 : {
-                text : "I am pregnant.",
-                nextChoice : 38,
-                isEndPoint : true
+            3: {
+                text: "I am pregnant.",
+                nextChoice: 38,
+                isEndPoint: true
             },
-            4 : {
-                text : "I am considering getting pregnant.",
-                nextChoice : 39,
-                isEndPoint : true
+            4: {
+                text: "I am considering getting pregnant.",
+                nextChoice: 39,
+                isEndPoint: true
             },
-            5 : {
-                text : "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
-                nextChoice : 40,
-                isEndPoint : true
+            5: {
+                text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
+                nextChoice: 40,
+                isEndPoint: true
             }
         }
     },
-    7 : {
-        text : "Where have you traveled? (Answer for all destinations, including those you passed through.)",
-        answers : {
-            1 : {
-                text : "Zika Country",
-                nextChoice : 8,
-                isEndPoint : false
+    7: {
+        text: "Where have you traveled? (Answer for all destinations, including those you passed through.)",
+        answers: {
+            1: {
+                text: "Zika Country",
+                nextChoice: 8,
+                isEndPoint: false
             },
-            2 : {
-                text : "Non-Zika Country",
-                nextChoice : 1,
-                isEndPoint : true,
+            2: {
+                text: "Non-Zika Country",
+                nextChoice: 1,
+                isEndPoint: true,
                 multiSelect: true
             }
         }
     },
-    8 : {
-        text : "Are you a man or a woman?",
-        answers : {
-            1 : {
-                text : "Man",
-                nextChoice : 9,
-                isEndPoint : false
+    8: {
+        text: "Are you a man or a woman?",
+        answers: {
+            1: {
+                text: "Man",
+                nextChoice: 9,
+                isEndPoint: false
             },
-            2 : {
-                text : "Woman",
-                nextChoice : 12,
-                isEndPoint : false
+            2: {
+                text: "Woman",
+                nextChoice: 12,
+                isEndPoint: false
             }
         }
     },
-    9 : {
-        text : "Which of these best describes you?",
-        answers : {
-            1 : {
-                text : "I am not sexually active.",
-                nextChoice : 22,
-                isEndPoint : true
+    9: {
+        text: "Which of these best describes you?",
+        answers: {
+            1: {
+                text: "I am not sexually active.",
+                nextChoice: 22,
+                isEndPoint: true
             },
-            2 : {
-                text : "I have a pregnant sex partner.",
-                nextChoice : 23,
-                isEndPoint : true
+            2: {
+                text: "I have a pregnant sex partner.",
+                nextChoice: 23,
+                isEndPoint: true
             },
-            3 : {
-                text : "I am sexually active with a female partner(s) who is not considering pregnancy.",
-                nextChoice : 11,
-                isEndPoint : false
+            3: {
+                text: "I am sexually active with a female partner(s) who is not considering pregnancy.",
+                nextChoice: 11,
+                isEndPoint: false
             },
-            4 : {
-                text : "I am sexually active and my partner(s) is male.",
-                nextChoice : 11,
-                isEndPoint : false
+            4: {
+                text: "I am sexually active and my partner(s) is male.",
+                nextChoice: 11,
+                isEndPoint: false
             },
-            5 : {
-                text : "My partner and I are considering pregnancy.",
-                nextChoice : 10,
-                isEndPoint : false
+            5: {
+                text: "My partner and I are considering pregnancy.",
+                nextChoice: 10,
+                isEndPoint: false
             }
         }
     },
-    10 : {
-        text : "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 25,
-                isEndPoint : true
+    10: {
+        text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 25,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 26,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 26,
+                isEndPoint: true
             }
         }
     },
-    11 : {
-        text : "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 27,
-                isEndPoint : true
+    11: {
+        text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 27,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 28,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 28,
+                isEndPoint: true
             }
         }
     },
-    12 : {
-        text : "Which of these best describes you?",
-        answers : {
-            1 : {
-                text : "My sex partner(s) is female.",
-                nextChoice : 24,
-                isEndPoint : true
+    12: {
+        text: "Which of these best describes you?",
+        answers: {
+            1: {
+                text: "My sex partner(s) is female.",
+                nextChoice: 24,
+                isEndPoint: true
             },
-            2 : {
-                text : "I am not sexually active",
-                nextChoice : 24,
-                isEndPoint : true
+            2: {
+                text: "I am not sexually active",
+                nextChoice: 24,
+                isEndPoint: true
             },
-            3 : {
-                text : "I am pregnant.",
-                nextChoice : 13,
-                isEndPoint : false
+            3: {
+                text: "I am pregnant.",
+                nextChoice: 13,
+                isEndPoint: false
             },
-            4 : {
-                text : "I am considering getting pregnant.",
-                nextChoice : 14,
-                isEndPoint : false
+            4: {
+                text: "I am considering getting pregnant.",
+                nextChoice: 14,
+                isEndPoint: false
             },
-            5 : {
-                text : "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
-                nextChoice : 24,
-                isEndPoint : true
+            5: {
+                text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
+                nextChoice: 24,
+                isEndPoint: true
             }
         }
     },
-    13 : {
-        text : "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 29,
-                isEndPoint : true
+    13: {
+        text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 29,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 32,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 32,
+                isEndPoint: true
             }
         }
     },
-    14 : {
-        text : "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 30,
-                isEndPoint : true
+    14: {
+        text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 30,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 31,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 31,
+                isEndPoint: true
             }
         }
     },
-    15 : {
-        text : "Has your partner been in a foreign country (traveled or lived abroad) or is he planning travel?",
-        answers : {
-            1 : {
-                text : "He has been in a foreign country",
-                nextChoice : 16,
-                isEndPoint : false
+    15: {
+        text: "Has your partner been in a foreign country (traveled or lived abroad) or is he planning travel?",
+        answers: {
+            1: {
+                text: "He has been in a foreign country",
+                nextChoice: 16,
+                isEndPoint: false
             },
-            2 : {
-                text : "He is planning to travel.",
-                nextChoice : 22,
-                isEndPoint : false
+            2: {
+                text: "He is planning to travel.",
+                nextChoice: 22,
+                isEndPoint: false
             }
         }
     },
-    16 : {
-        text : "Where has your partner traveled or lived?",
-        answers : {
-            1 : {
-                text : "Zika Country",
-                nextChoice : 17,
-                isEndPoint : false
+    16: {
+        text: "Where has your partner traveled or lived?",
+        answers: {
+            1: {
+                text: "Zika Country",
+                nextChoice: 17,
+                isEndPoint: false
             },
-            2 : {
-                text : "Non-Zika Country",
-                nextChoice : 1,
-                isEndPoint : true,
+            2: {
+                text: "Non-Zika Country",
+                nextChoice: 1,
+                isEndPoint: true,
                 multiSelect: true
             }
         }
     },
-    17 : {
-        text : "Are you a man or a woman?",
-        answers : {
-            1 : {
-                text : "Man",
-                nextChoice : 18,
-                isEndPoint : false
+    17: {
+        text: "Are you a man or a woman?",
+        answers: {
+            1: {
+                text: "Man",
+                nextChoice: 18,
+                isEndPoint: false
             },
-            2 : {
-                text : "Woman",
-                nextChoice : 19,
-                isEndPoint : false
+            2: {
+                text: "Woman",
+                nextChoice: 19,
+                isEndPoint: false
             }
         }
     },
-    18 : {
-        text : "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 10,
-                isEndPoint : true
+    18: {
+        text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 10,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 11,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 11,
+                isEndPoint: true
             }
         }
     },
-    19 : {
-        text : "Which of these best describes you?",
-        answers : {
-            1 : {
-                text : "I am pregnant.",
-                nextChoice : 12,
-                isEndPoint : true
+    19: {
+        text: "Which of these best describes you?",
+        answers: {
+            1: {
+                text: "I am pregnant.",
+                nextChoice: 12,
+                isEndPoint: true
             },
-            2 : {
-                text : "I am considering getting pregnant.",
-                nextChoice : 20,
-                isEndPoint : false
+            2: {
+                text: "I am considering getting pregnant.",
+                nextChoice: 20,
+                isEndPoint: false
             },
-            3 : {
-                text : "I am not pregnant or trying to become pregnant.",
-                nextChoice : 21,
-                isEndPoint : false
+            3: {
+                text: "I am not pregnant or trying to become pregnant.",
+                nextChoice: 21,
+                isEndPoint: false
             }
         }
     },
-    20 : {
-        text : "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 13,
-                isEndPoint : true
+    20: {
+        text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 13,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 14,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 14,
+                isEndPoint: true
             }
         }
     },
-    21 : {
-        text : "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 15,
-                isEndPoint : true
+    21: {
+        text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 15,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 16,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 16,
+                isEndPoint: true
             }
         }
     },
-    22 : {
-        text : "Where does your partner plan to travel?",
-        answers : {
-            1 : {
-                text : "Zika Country",
-                nextChoice : 23,
-                isEndPoint : false
+    22: {
+        text: "Where does your partner plan to travel?",
+        answers: {
+            1: {
+                text: "Zika Country",
+                nextChoice: 23,
+                isEndPoint: false
             },
-            2 : {
-                text : "Non-Zika Country",
-                nextChoice : 1,
-                isEndPoint : true,
+            2: {
+                text: "Non-Zika Country",
+                nextChoice: 1,
+                isEndPoint: true,
                 multiSelect: true
             }
         }
     },
-    23 : {
-        text : "Are you a man or a woman?",
-        answers : {
-            1 : {
-                text : "Man",
-                nextChoice : 18,
-                isEndPoint : true
+    23: {
+        text: "Are you a man or a woman?",
+        answers: {
+            1: {
+                text: "Man",
+                nextChoice: 18,
+                isEndPoint: true
             },
-            2 : {
-                text : "Woman",
-                nextChoice : 24,
-                isEndPoint : false
+            2: {
+                text: "Woman",
+                nextChoice: 24,
+                isEndPoint: false
             }
         }
     },
-    24 : {
-        text : "Which of these best describes you?",
-        answers : {
-            1 : {
-                text : "I am pregnant.",
-                nextChoice : 19,
-                isEndPoint : true
+    24: {
+        text: "Which of these best describes you?",
+        answers: {
+            1: {
+                text: "I am pregnant.",
+                nextChoice: 19,
+                isEndPoint: true
             },
-            2 : {
-                text : "I am considering getting pregnant.",
-                nextChoice : 20,
-                isEndPoint : true
+            2: {
+                text: "I am considering getting pregnant.",
+                nextChoice: 20,
+                isEndPoint: true
             },
-            3 : {
-                text : "I am not pregnant or trying to become pregnant.",
-                nextChoice : 21,
-                isEndPoint : true
+            3: {
+                text: "I am not pregnant or trying to become pregnant.",
+                nextChoice: 21,
+                isEndPoint: true
             }
         }
     },
-    25 : {
-        text : "Are you a man or a woman?",
-        answers : {
-            1 : {
-                text : "Man",
-                nextChoice : 26,
-                isEndPoint : false
+    25: {
+        text: "Are you a man or a woman?",
+        answers: {
+            1: {
+                text: "Man",
+                nextChoice: 26,
+                isEndPoint: false
             },
-            2 : {
-                text : "Woman",
-                nextChoice : 28,
-                isEndPoint : false
+            2: {
+                text: "Woman",
+                nextChoice: 28,
+                isEndPoint: false
             }
         }
     },
-    26 : {
-        text : "Which of these best describes you?",
-        answers : {
-            1 : {
-                text : "I am not sexually active.",
-                nextChoice : 2,
-                isEndPoint : true
+    26: {
+        text: "Which of these best describes you?",
+        answers: {
+            1: {
+                text: "I am not sexually active.",
+                nextChoice: 2,
+                isEndPoint: true
             },
-            2 : {
-                text : "I have a pregnant sex partner.",
-                nextChoice : 4,
-                isEndPoint : true
+            2: {
+                text: "I have a pregnant sex partner.",
+                nextChoice: 4,
+                isEndPoint: true
             },
-            3 : {
-                text : "I am sexually active with a female partner(s) who is not considering pregnancy.",
-                nextChoice : 5,
-                isEndPoint : true
+            3: {
+                text: "I am sexually active with a female partner(s) who is not considering pregnancy.",
+                nextChoice: 5,
+                isEndPoint: true
             },
-            4 : {
-                text : "I am sexually active and my partner(s) is male.",
-                nextChoice : 5,
-                isEndPoint : true
+            4: {
+                text: "I am sexually active and my partner(s) is male.",
+                nextChoice: 5,
+                isEndPoint: true
             },
-            5 : {
-                text : "My partner and I are considering pregnancy.",
-                nextChoice : 27,
-                isEndPoint : false
+            5: {
+                text: "My partner and I are considering pregnancy.",
+                nextChoice: 27,
+                isEndPoint: false
             }
         }
     },
-    27 : {
-        text : "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 8,
-                isEndPoint : true
+    27: {
+        text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 8,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 9,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 9,
+                isEndPoint: true
             }
         }
     },
-    28 : {
-        text : "Which of these best describes you?",
-        answers : {
-            1 : {
-                text : "My sex partner(s) is female.",
-                nextChoice : 17,
-                isEndPoint : true
+    28: {
+        text: "Which of these best describes you?",
+        answers: {
+            1: {
+                text: "My sex partner(s) is female.",
+                nextChoice: 17,
+                isEndPoint: true
             },
-            2 : {
-                text : "I am not sexually active",
-                nextChoice : 3,
-                isEndPoint : true
+            2: {
+                text: "I am not sexually active",
+                nextChoice: 3,
+                isEndPoint: true
             },
-            3 : {
-                text : "I am pregnant.",
-                nextChoice : 6,
-                isEndPoint : true
+            3: {
+                text: "I am pregnant.",
+                nextChoice: 6,
+                isEndPoint: true
             },
-            4 : {
-                text : "I am considering getting pregnant.",
-                nextChoice : 29,
-                isEndPoint : false
+            4: {
+                text: "I am considering getting pregnant.",
+                nextChoice: 29,
+                isEndPoint: false
             },
-            5 : {
-                text : "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
-                nextChoice : 7,
-                isEndPoint : true
+            5: {
+                text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
+                nextChoice: 7,
+                isEndPoint: true
             }
         }
     },
-    29 : {
-        text : "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
-        answers : {
-            1 : {
-                text : "Yes",
-                nextChoice : 41,
-                isEndPoint : true
+    29: {
+        text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextChoice: 41,
+                isEndPoint: true
             },
-            2 : {
-                text : "No",
-                nextChoice : 42,
-                isEndPoint : true
+            2: {
+                text: "No",
+                nextChoice: 42,
+                isEndPoint: true
             }
         }
     }

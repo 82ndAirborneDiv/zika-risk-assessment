@@ -1,0 +1,20 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.z-risk-rad {
+	margin-left:20px;
+}
+
+.panel-heading{
+	height:53px;
+}
+.panel-title {
+	vertical-align: middle;
+}
+
+.btn-sm{
+	border: none;
+	color: #337ab7;
+	font-weight: 400;
+	font-size: 14px;
+}

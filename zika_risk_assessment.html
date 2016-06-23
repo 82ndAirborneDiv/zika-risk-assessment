@@ -7,6 +7,8 @@
 <!--[if !IE]><!-->     <html class="no-js nav theme-blue  " lang="en-us" > <!--<![endif]-->
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Zika Risk Assessment | Zika virus |  CDC</title>
 
     <meta name="description" content="<p>Information on Zika virus. Provided by the U.S. Centers for Disease Control and Prevention.</p>" />        <meta name="keywords" content="Zika virus, Zika, Tropical Africa, mosquitoes, avoid mosquito bites, Aedes, viral disease, Flaviviridae family" />		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,6 +54,11 @@
     <meta name="msapplication-square310x310logo" content="/TemplatePackage/3.0/images/Win8_tile_310x310.png" />
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
 
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+
+    <!-- select2 -->
     <link href="dist/css/select2.min.css" rel="stylesheet" />
     <script src="dist/js/select2.min.js"></script>
 
@@ -512,57 +519,83 @@ See the noscript include for modifying the emergency message. DO NOT add it here
                         <div class='syndicate'>
 
                             <!--Zika Risk Assessment Tool-->
-                            <div class="well span10">
-                            <div>
 
-                                <h3>Zika Risk Assessment Tool</h3>
-                                <div id="intro" name="intro">
-                                    <p>Zika virus is primarily spread by mosquitoes. It can also be spread by a man
-                                        with Zika to his sex partners, even if he doesn't get sick. Where you live, your travel history,
-                                        and the travel histroy of your sex partner(s) can affect your risk of Zika. This web app can help you
-                                        learn more about Zika and how to protect yourself.
-                                    <ul>
-                                        <li>Use this app for each traveler or resident in your household.</li>
-                                        <li>If you traveled recently and also have future travel plans, please answer questions for both
-                                            scenarios to get complete CDC recommendations.</li>
-                                        <li>This app is not intended to replace the advice of a medical professional.</li>
-                                    </ul>
-                                    </p>
-                                </div>
-                                <input class="btn btn-default" id="start" name="start" type="button" value="Start"/>
-                            </div>
-                            <div class="question">
-                                <p id="question-text" name="question-text"></p>
-                                <div id="question-answers"></div>
-                                <div id="singleSelectCountry" display="none">
+                                <div class="row">
+                                    <div class="col-lg-12" align="left">
+                                        <div class="panel panel-primary" id="zika-app-intro">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Zika Risk Assessment Tool</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <p>Zika virus is primarily spread by mosquitoes. It can also be spread by a man
+                                                    with Zika to his sex partners, even if he doesn't get sick. Where you live, your travel history,
+                                                    and the travel histroy of your sex partner(s) can affect your risk of Zika. This web app can help you
+                                                    learn more about Zika and how to protect yourself. </p>
+                                                <ul>
+                                                    <li>Use this app for each traveler or resident in your household.</li>
+                                                    <li>If you traveled recently and also have future travel plans, please answer questions for both
+                                                        scenarios to get complete CDC recommendations.</li>
+                                                    <li>This app is not intended to replace the advice of a medical professional.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="panel-footer" align="right">
 
-                                <select class="countrySelect" id="singleCountry" style="width: 100%">
-                                    <option></option>
-                                </select>
-                                <button class="btn btn-default" id="singleCountrySelect" multiple="multiple">Next</button>
-                                </div>
-                                <div id="multiSelectCountry" display="none">
-                                    <select class="countrySelect" id="multiCountry" style="width: 100%">
+                                                <button type="button" class="btn btn-primary" id="start">Start</button>
 
-                                    </select>
-                                    <button class="btn btn-default" id="multiCountrySelect">Next</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p id="endpoint">
-                                </p>
-                                <p id="endpoint-disclaimer">
-                                    The mosquitoes that spread Zika usually do not live at elevations above 6,500 feet (2,000 meters).
-                                    Travelers and residents whose activities are only above this elevation are at minimal risk of getting Zika from a mosquito.
-                                    For more information: <a href="http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations">http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations</a></p>
-                                <p id="endpoint-call-to-action">
-                                    CDC routinely updates information as it learns more about Zika:
-                                    Check CDC’s website often for the latest information. <a href="http://www.cdc.gov/zika/index.html">http://www.cdc.gov/zika/index.html</a>
-                                    CDC’s guidance for women and their partners thinking about pregnancy will continue to be updated as we learn more.
-                                </p>
-                                <br />
-                                <button class="btn btn-default" id="back">Back</button>
-                                <button class="btn btn-default" id="restart">Restart</button>
-                            </div>
-                            </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="panel panel-primary" id="zika-app-main" style="display: none">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Zika Risk Assessment Tool</h3>
+                                            </div>
+                                            <div class="panel-body" id="zika-app-question">
+                                                <p id="question-text"></p>
+                                                <div id="question-answers">
+
+                                                </div>
+                                                <div id="singleCountryListDiv" style="display: none">
+                                                    <select class="countrySelect" id="singleCountry" style="width: 100%">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                                <div id="multCountryListDiv" style="display:none">
+                                                    <select class="countrySelect" id="multiCountry" style="width: 100%">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" id="zika-app-endpoint">
+                                                <p id="zika-app-endpoint-text"></p>
+                                                <p>
+                                                    The mosquitoes that spread Zika usually do not live at elevations above 6,500 feet (2,000 meters).
+                                                    Travelers and residents whose activities are only above this elevation are at minimal risk of getting Zika from a mosquito.
+                                                    For more information: <a href="http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations">http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations</a></p>
+                                                <p>
+                                                    CDC routinely updates information as it learns more about Zika:
+                                                    Check CDC’s website often for the latest information. <a href="http://www.cdc.gov/zika/index.html">http://www.cdc.gov/zika/index.html</a>
+                                                    CDC’s guidance for women and their partners thinking about pregnancy will continue to be updated as we learn more.
+                                                </p>
+                                            </div>
+                                            <div class="panel-footer">
+                                                <div class="row">
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 pull-left">
+                                                        <button type="button" class="btn btn-primary" id="back">&#171; Back</button> <button type="button" class="btn btn-primary" id="restart">Restart</button>
+                                                    </div>
+                                                    <div class="col-lg-6 col-md-6 col-sm-6 pull-right" align="right">
+                                                        <button class="btn btn-primary zika-app-next-btn" id="singleCountrySelect" style="display: none">Next</button>
+                                                        <button class="btn btn-primary zika-app-next-btn" id="multiCountrySelect" style="display: none">Next</button>
+                                                        <button class="btn btn-primary zika-app-next-btn" id="answerSelect" style="display: none">Next</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             <!--End Zika Risk Assessment Tool-->
 
                             <div class="rx-row pull-right span7">
@@ -574,11 +607,14 @@ See the noscript include for modifying the emergency message. DO NOT add it here
                                         <ul class="list-bullet">
                                             <li><a href="/zika/comm-resources/zika101slides.pptx">English [PPT - 3.7 MB]</a></li>
                                             <li><a href="http://espanol.cdc.gov/zika/comm-resources/zika101slides.pptx">Spanish [PPT - 3.7 MB]</a></li>
-                                        </ul>				</div>
+                                        </ul>
+                                    </div>
                                 </div>
 
 
-                                <div style=" clear: both;"></div>
+                                <div style=" clear: both;">
+
+                                </div>
 
 
                                 <div class="module-typeA" >
@@ -588,10 +624,9 @@ See the noscript include for modifying the emergency message. DO NOT add it here
                                         <ul class="list-bullet">
                                             <li><a href="/zika/pdfs/fs-zika-basics.pdf">English [PDF - 2 pages]</a></li>
                                             <li><a href="http://espanol.cdc.gov/img/cdc/ES_49305.pdf">Spanish [PDF - 2 pages]</a></li>
-                                        </ul>				</div>
+                                        </ul>
+                                    </div>
                                 </div>
-
-
 
                             </div>
                         </div>
@@ -890,7 +925,7 @@ See the noscript include for modifying the emergency message. DO NOT add it here
 </script>
 
 
-
+<script src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="zika_risk_assessment.js"></script>
 <script type="text/javascript" src="/dist/js/select2.full.js"></script>
 <script type="text/javascript" src="/zika/~inc~/motionpoint.js"></script>
