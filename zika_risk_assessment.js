@@ -90,11 +90,17 @@ $(document).ready(function(){
         }
         else {
             userAnswers.push([currentQuestion, selection]);
-            if (zikaCountries.indexOf(selection) >= 0) {
+            if (zikaCountries.indexOf(selection) >= 0) { //Zika country
                 next = questions["" + currentQuestion].answers["1"];
             }
-            else {
-                next = questions["" + currentQuestion].answers["2"];
+            else { //non-Zika country
+
+                if(Object.keys(questions[currentQuestion].answers).indexOf("3") >= 0 && selection !== "US"){ //question 1 requires disclaimer for non-Zika, non-US countries
+                        next = questions["" + currentQuestion].answers["3"];
+                }
+                else {
+                    next = questions["" + currentQuestion].answers["2"];
+                }
             }
             if (next.isEndPoint) {
                 loadEndPoint(next.nextChoice);
@@ -141,9 +147,9 @@ $(document).ready(function(){
     answerNextButton.click(function(){
         var answerInput = $("input[name=optionsRadios]:checked").val();
         var selectedAnswerObject = questions["" + currentQuestion].answers["" +answerInput];
-        userAnswers.push([currentQuestion, answerInput]);
 
         if(answerInput != null) {
+            userAnswers.push([currentQuestion, answerInput]);
             if (selectedAnswerObject.isEndPoint) {
                 loadEndPoint(selectedAnswerObject.nextChoice);
             }
@@ -152,6 +158,10 @@ $(document).ready(function(){
             }
         }
         else {
+            if(currentQuestion === 30){
+                userAnswers.push([currentQuestion, answerInput]);
+                loadNextQuestion(2);
+            }
         }
     });
 });
@@ -169,6 +179,14 @@ function loadNextQuestion(number){
     if(userAnswers.length > 0 && userAnswers[userAnswers.length - 1][0] === number){
         previouslyVisited = true;
     }
+
+    if(answers.length === 0){
+        answerNextButton.show();
+        if(previouslyVisited){
+            userAnswers.pop();
+        }
+    }
+
     for(var i = 1; i <= answers.length; i++) {
         var temp = questions["" + number].answers["" +i];
         switch (temp.text) {
@@ -204,6 +222,8 @@ function loadNextQuestion(number){
                 break;
             case "Zika Country":
 
+                break;
+            case "Non-US, Non-Zika":
                 break;
             default:
                 //buttons solution
@@ -1259,6 +1279,11 @@ var questions = {
                 text: "Non-Zika Country",
                 nextChoice: 2,
                 isEndPoint: false,
+            },
+            3: {
+                text: "Non-US, Non-Zika",
+                nextChoice: 30,
+                isEndPoint: false
             }
         }
     },
@@ -1804,6 +1829,15 @@ var questions = {
                 nextChoice: 42,
                 isEndPoint: true
             }
+        }
+    },
+    30: {
+        text: "The following are US government recommendations for US residents. Some national governments may make " +
+        "public health and travel recommendations to their own populations, based on their assessment of the available " +
+        "evidence and local risk factors. If you would like to continue and receive CDC recommendations, click the "+
+        "next button.",
+        answers:{
+
         }
     }
 }

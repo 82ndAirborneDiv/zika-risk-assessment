@@ -4,17 +4,16 @@
 .z-risk-rad {
 	margin-left:20px;
 }
-
 .panel-heading{
-	height:53px;
+	height: 42px;
 }
 .panel-title {
 	vertical-align: middle;
 }
 
-.btn-sm{
+.btn-xs{
 	border: none;
 	color: #337ab7;
 	font-weight: 400;
-	font-size: 14px;
+	font-size: 12px;
 }
