@@ -11,6 +11,7 @@ var endpointText = $("#zika-app-endpoint-text");
 var questionContent = $("#zika-app-question");
 var questionText = $("#question-text");
 var questionAnswers = $("#question-answers");
+var alertArea = $("#alert-area");
 
 //country select dropdown lists
 var singleCountryListSurround = $("#singleCountryListDiv");
@@ -50,6 +51,16 @@ $(document).ready(function(){
         multiple: true,
     });
 
+    //clear alerts on country selected
+    singleCountryList.change(function(){
+        alertArea.html("");
+    });
+
+    //clear alerts on country selected
+    multiCountryList.change(function(){
+        alertArea.html("");
+    });
+
     //hide intro panel, show main panel
     start.click(function() {
         introPanel.hide();
@@ -59,26 +70,18 @@ $(document).ready(function(){
 
 
     back.click(function(){
-        /*var historyLength = navigationHistory.length;
-        if (historyLength > 1) {
-            loadNextQuestion(navigationHistory[historyLength - 2]);
-            navigationHistory.pop();
-            navigationHistory.pop();
-        }*/
         var size = userAnswers.length;
         if(size > 0){
             loadNextQuestion(userAnswers[size - 1][0]);
         }
+        else{
+            //back should restart the app when on question 1
+            triggerRestart();
+        }
     });
 
     restart.click(function(){
-        navigationHistory = [];
-        userAnswers = [];
-        introPanel.show();
-        mainPanel.hide();
-        multiCountryList.val(null).trigger("change");
-        singleCountryList.val(null).trigger("change");
-        $('html, body').animate({ scrollTop: 0 }, 0);
+        triggerRestart();
     });
 
     singleCountryNextButton.click(function(){
@@ -86,7 +89,7 @@ $(document).ready(function(){
         var next;
 
         if("" === selection){
-
+            noSelectionAlert();
         }
         else {
             userAnswers.push([currentQuestion, selection]);
@@ -119,7 +122,7 @@ $(document).ready(function(){
         var next;
 
         if(selection.length === 0){
-
+            noSelectionAlert();
         }
         else{
             userAnswers.push([currentQuestion, selection]);
@@ -162,10 +165,28 @@ $(document).ready(function(){
                 userAnswers.push([currentQuestion, answerInput]);
                 loadNextQuestion(2);
             }
+            else{
+                noSelectionAlert();
+            }
         }
     });
 });
-
+function noSelectionAlert(){
+    var alert = '<div class="alert alert-warning fade in">';
+    alert += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+    alert += '<strong>Please make a selection.</strong>';
+    alert += '</div>';
+    alertArea.html(alert);
+}
+function triggerRestart(){
+    navigationHistory = [];
+    userAnswers = [];
+    introPanel.show();
+    mainPanel.hide();
+    multiCountryList.val(null).trigger("change");
+    singleCountryList.val(null).trigger("change");
+    $('html, body').animate({ scrollTop: 0 }, 0);
+}
 function loadNextQuestion(number){
     currentQuestion = number;
     clearMainPanel();
@@ -236,11 +257,11 @@ function loadNextQuestion(number){
                 radioButtonsTemp += '<div class="radio z-risk-rad">'
                 radioButtonsTemp += '<label>';
                 if(previouslyVisited && userAnswers[userAnswers.length - 1][1] === "" +i) {
-                    radioButtonsTemp += '<input type="radio" name="optionsRadios" value="' + i + '" checked>';
+                    radioButtonsTemp += '<input type="radio" id="radioAnswer" name="optionsRadios" value="' + i + '" checked>';
                     userAnswers.pop();
                 }
                 else{
-                    radioButtonsTemp += '<input type="radio" name="optionsRadios" value="' + i + '">';
+                    radioButtonsTemp += '<input type="radio" id="radioAnswer" name="optionsRadios" value="' + i + '">';
                 }
                 radioButtonsTemp += temp.text;
                 radioButtonsTemp += '</label>';
@@ -254,6 +275,11 @@ function loadNextQuestion(number){
 
     //buttons += "</div>";
     questionAnswers.html(radioButtonsTemp).show();
+
+    //clear alerts on radio selected
+    $("input[name=optionsRadios]:radio").change(function(){
+        alertArea.html("");
+    });
 }
 
 function loadEndPoint(number){
@@ -282,6 +308,9 @@ function clearMainPanel(){
 
     //next buttons
     allNextButtons.hide();
+
+    //alert area
+    alertArea.html("");
 }
 var navigationHistory = [];
 
@@ -298,6 +327,10 @@ var zikaCountries = [
     "VE", "AS", "FJ", "FM", "MH", "NC", "PG", "WS", "TO", "CV"
 ]
 var countries = [
+    {
+        id: 'US',
+        text: "United States (USA)"
+    },
     {
         id: 'AF',
         text: "Afghanistan"
@@ -1204,15 +1237,11 @@ var countries = [
     },
     {
         id: 'AE',
-        text: "United Arab Emirates"
+        text: "United Arab Emirates (UAE)"
     },
     {
         id: 'GB',
-        text: "United Kingdom"
-    },
-    {
-        id: 'US',
-        text: "United States"
+        text: "United Kingdom (UK)"
     },
     {
         id: 'UY',
