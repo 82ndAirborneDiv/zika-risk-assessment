@@ -1347,12 +1347,12 @@ var questions = {
         text: "Have you recently traveled or do you plan to travel internationally?",
         answers: {
             1: {
-                text: "No and neither is my male sex partner(s)",
+                text: "No and neither is my male sex partner(s).",
                 nextChoice: 1,
                 isEndPoint: true
             },
             2: {
-                text: "No, and my sex partner(s) is female",
+                text: "No, and my sex partner(s) is female.",
                 nextChoice: 1,
                 isEndPoint: true
             },
@@ -1362,18 +1362,18 @@ var questions = {
                 isEndPoint: true
             },
             4: {
+                text: "No, but my male sex partner(s) has traveled, will travel, or lives abroad.",
+                nextChoice: 15,
+                isEndPoint: false
+            },
+            5: {
                 text: "I plan to travel.",
                 nextChoice: 3,
                 isEndPoint: false
             },
-            5: {
+            6: {
                 text: "I have traveled in the past 6 months.",
                 nextChoice: 7,
-                isEndPoint: false
-            },
-            6: {
-                text: "No, but my male sex partner(s) has traveled, will travel, or lives abroad.",
-                nextChoice: 15,
                 isEndPoint: false
             }
         }
@@ -1448,7 +1448,7 @@ var questions = {
                 isEndPoint: true
             },
             2: {
-                text: "I am not sexually active",
+                text: "I am not sexually active.",
                 nextChoice: 35,
                 isEndPoint: true
             },
@@ -1569,7 +1569,7 @@ var questions = {
                 isEndPoint: true
             },
             2: {
-                text: "I am not sexually active",
+                text: "I am not sexually active.",
                 nextChoice: 24,
                 isEndPoint: true
             },
@@ -1624,7 +1624,7 @@ var questions = {
         text: "Has your partner been in a foreign country (traveled or lived abroad) or is he planning travel?",
         answers: {
             1: {
-                text: "He has been in a foreign country",
+                text: "He has been in a foreign country.",
                 nextChoice: 16,
                 isEndPoint: false
             },
@@ -1851,7 +1851,7 @@ var questions = {
                 isEndPoint: true
             },
             2: {
-                text: "I am not sexually active",
+                text: "I am not sexually active.",
                 nextChoice: 3,
                 isEndPoint: true
             },
