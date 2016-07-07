@@ -81,13 +81,12 @@ $(document).ready(function(){
 });
 function noSelectionAlert(){
     var alert = '<div class="alert alert-warning fade in">';
-    alert += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+    alert += '<a href="#" class="close" style="text-decoration: none;"data-dismiss="alert" aria-label="close">&times;</a>';
     alert += '<strong>Please make a selection.</strong>';
     alert += '</div>';
     alertArea.html(alert);
 }
 function triggerRestart(){
-    navigationHistory = [];
     userAnswers = [];
     introPanel.show();
     mainPanel.hide();
@@ -166,7 +165,7 @@ function loadNextQuestion(number){
             case "Zika Country":
 
                 break;
-            case "Non-US, Non-Zika":
+            case "Non-US":
                 break;
             default:
                 //buttons solution
@@ -181,6 +180,7 @@ function loadNextQuestion(number){
                 if(previouslyVisited && userAnswers[userAnswers.length - 1][1] === "" +i) {
                     radioButtonsTemp += '<input type="radio" id="radioAnswer" name="optionsRadios" value="' + i + '" checked>';
                     userAnswers.pop();
+                    previouslyVisited = false;
                 }
                 else{
                     radioButtonsTemp += '<input type="radio" id="radioAnswer" name="optionsRadios" value="' + i + '">';
@@ -238,15 +238,15 @@ function singleCountryNextClicked(){
     }
     else {
         userAnswers.push([currentQuestion, selection]);
-        if (zikaCountries.indexOf(selection) >= 0) { //Zika country
-            next = questions["" + currentQuestion].answers["1"];
-        }
-        else { //non-Zika country
 
-            if(Object.keys(questions[currentQuestion].answers).indexOf("3") >= 0 && selection !== "US"){ //question 1 requires disclaimer for non-Zika, non-US countries
-                next = questions["" + currentQuestion].answers["3"];
+        if(Object.keys(questions[currentQuestion].answers).indexOf("3") >= 0 && selection !== "US"){ //question 1 requires disclaimer for non-US countries
+            next = questions["" + currentQuestion].answers["3"];
+        }
+        else{
+            if (zikaCountries.indexOf(selection) >= 0) { //Zika country
+                next = questions["" + currentQuestion].answers["1"];
             }
-            else {
+            else { //non-Zika country
                 next = questions["" + currentQuestion].answers["2"];
             }
         }
@@ -310,7 +310,14 @@ function answerNextButtonClicked(){
     else {
         if(currentQuestion === 30){
             userAnswers.push([currentQuestion, answerInput]);
-            loadNextQuestion(2);
+            var next;
+            if (zikaCountries.indexOf(userAnswers[0][1]) >= 0) { //Zika country
+                next = questions["" + 1].answers["1"];
+            }
+            else { //non-Zika country
+                next = questions["" + 1].answers["2"];
+            }
+            loadNextQuestion(next.nextChoice);
         }
         else{
             noSelectionAlert();
@@ -339,7 +346,6 @@ function clearMainPanel(){
     //alert area
     alertArea.html("");
 }
-var navigationHistory = [];
 
 /*
     The Zika countries object was built from the CDC page and cross comparing the countries listed with a country code
@@ -1316,7 +1322,6 @@ var countries = [
     }
 ]
 
-var countrySelectionList = ''
 /*
     The questions object was built from the powerpoint flow chart for the Zika Risk Assessment tool.
     Question and answers are displayed via the loadNextQuestion method.
@@ -1337,7 +1342,7 @@ var questions = {
                 isEndPoint: false,
             },
             3: {
-                text: "Non-US, Non-Zika",
+                text: "Non-US",
                 nextChoice: 30,
                 isEndPoint: false
             }
@@ -1347,33 +1352,18 @@ var questions = {
         text: "Have you recently traveled or do you plan to travel internationally?",
         answers: {
             1: {
-                text: "No and neither is my male sex partner(s).",
-                nextChoice: 1,
-                isEndPoint: true
-            },
-            2: {
-                text: "No, and my sex partner(s) is female.",
-                nextChoice: 1,
-                isEndPoint: true
-            },
-            3: {
-                text: "No, and I am not sexually active.",
-                nextChoice: 1,
-                isEndPoint: true
-            },
-            4: {
-                text: "No, but my male sex partner(s) has traveled, will travel, or lives abroad.",
-                nextChoice: 15,
-                isEndPoint: false
-            },
-            5: {
                 text: "I plan to travel.",
                 nextChoice: 3,
                 isEndPoint: false
             },
-            6: {
+            2: {
                 text: "I have traveled in the past 6 months.",
                 nextChoice: 7,
+                isEndPoint: false
+            },
+            3:{
+                text: "No, I have not traveled recently and am not planning travel.",
+                nextChoice: 31,
                 isEndPoint: false
             }
         }
@@ -1413,7 +1403,7 @@ var questions = {
         text: "Which of these best describes you?",
         answers: {
             1: {
-                text: "I am not sexually active.",
+                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
                 nextChoice: 34,
                 isEndPoint: true
             },
@@ -1423,7 +1413,7 @@ var questions = {
                 isEndPoint: true
             },
             3: {
-                text: "I am sexually active with a female partner(s) who is not considering pregnancy.",
+                text: "I am sexually active with a female partner(s) who is not pregnant or considering pregnancy.",
                 nextChoice: 37,
                 isEndPoint: true
             },
@@ -1448,7 +1438,7 @@ var questions = {
                 isEndPoint: true
             },
             2: {
-                text: "I am not sexually active.",
+                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
                 nextChoice: 35,
                 isEndPoint: true
             },
@@ -1504,7 +1494,7 @@ var questions = {
         text: "Which of these best describes you?",
         answers: {
             1: {
-                text: "I am not sexually active.",
+                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
                 nextChoice: 22,
                 isEndPoint: true
             },
@@ -1514,7 +1504,7 @@ var questions = {
                 isEndPoint: true
             },
             3: {
-                text: "I am sexually active with a female partner(s) who is not considering pregnancy.",
+                text: "I am sexually active with a female partner(s) who is not pregnant or considering pregnancy.",
                 nextChoice: 11,
                 isEndPoint: false
             },
@@ -1569,7 +1559,7 @@ var questions = {
                 isEndPoint: true
             },
             2: {
-                text: "I am not sexually active.",
+                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
                 nextChoice: 24,
                 isEndPoint: true
             },
@@ -1801,7 +1791,7 @@ var questions = {
         text: "Which of these best describes you?",
         answers: {
             1: {
-                text: "I am not sexually active.",
+                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
                 nextChoice: 2,
                 isEndPoint: true
             },
@@ -1811,7 +1801,7 @@ var questions = {
                 isEndPoint: true
             },
             3: {
-                text: "I am sexually active with a female partner(s) who is not considering pregnancy.",
+                text: "I am sexually active with a female partner(s) who is not pregnant or considering pregnancy.",
                 nextChoice: 5,
                 isEndPoint: true
             },
@@ -1851,7 +1841,7 @@ var questions = {
                 isEndPoint: true
             },
             2: {
-                text: "I am not sexually active.",
+                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
                 nextChoice: 3,
                 isEndPoint: true
             },
@@ -1894,6 +1884,32 @@ var questions = {
         "next button.",
         answers:{
 
+        }
+    },
+    31:{
+        text: "The travel history of your sex partner(s) can also affect your risk of Zika. Do you have a male partner " +
+            "who has traveled, will travel, or lives abroad?",
+        answers:{
+            1:{
+                text: "Yes, my male sex partner(s) has traveled, will travel, or lives abroad.",
+                nextChoice: 15,
+                isEndPoint: false
+            },
+            2:{
+                text: "No, my partner has not recently traveled and is not planning travel.",
+                nextChoice: 1,
+                isEndPoint: true
+            },
+            3:{
+                text: "No, my sex partner(s) is female.",
+                nextChoice: 1,
+                isEndPoint: true
+            },
+            4:{
+                text: "No, I'm not sexually active (I do not have vaginal, anal or oral sex).",
+                nextChoice: 1,
+                isEndPoint: true
+            }
         }
     }
 }
