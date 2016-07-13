@@ -85,6 +85,7 @@ function noSelectionAlert(){
     alert += '<strong>Please make a selection.</strong>';
     alert += '</div>';
     alertArea.html(alert);
+    resizeWidget(50);
 }
 function triggerRestart(){
     userAnswers = [];
@@ -92,6 +93,7 @@ function triggerRestart(){
     mainPanel.hide();
     multiCountryList.val(null).trigger("change");
     singleCountryList.val(null).trigger("change");
+    resizeWidget(50);
     $('html, body').animate({ scrollTop: 0 }, 0);
 }
 function loadNextQuestion(number){
@@ -191,8 +193,6 @@ function loadNextQuestion(number){
                 answerMode = 'standard';
                 break;
         }
-
-        $('html, body').animate({ scrollTop: 0 }, 0);
     }
 
     switch(answerMode) {
@@ -345,7 +345,24 @@ function clearMainPanel(){
 
     //alert area
     alertArea.html("");
+
+    resizeWidget(50);
 }
+
+function resizeWidget (intMsDelay) {
+    intMsDelay = intMsDelay || 250;
+    window.setTimeout(function(){
+        if (window.hasOwnProperty('parentIFrame') && window.parentIFrame.hasOwnProperty('size')) {
+            window.parentIFrame.size($('#widget-wrapper').height());
+            console.log('resize triggered');
+        } else {
+            console.log('warn resize unavailable, Please ensure this widget is being loaded within the widget framework');
+        }
+    }, intMsDelay, false);
+
+    return true;
+}
+
 
 /*
     The Zika countries object was built from the CDC page and cross comparing the countries listed with a country code
