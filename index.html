@@ -19,25 +19,27 @@
     <title>Zika Assessment Tool</title>
 </head>
 <body>
-<div data-iframe-height="" id="widget-wrapper">
+<div data-iframe-height="" class="widget-wrapper">
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-primary" id="zika-app-intro">
                 <div class="panel-heading">
                     <h3 class="panel-title">Zika Risk Assessment</h3>
                 </div>
-                <div class="panel-body">
-                    <p>Zika virus is primarily spread by mosquitoes. A pregnant woman can pass Zika to her developing
-                        fetus. Zika can also be spread through sex (vaginal, anal, or oral) by a man with Zika to his
-                        female and male partners (even if he doesn't have symptoms). Where you live, your travel history,
-                        and the travel history of your sex partner(s) can affect your risk of Zika. This web app can
-                        help you learn more about Zika and how to protect yourself. </p>
-                    <ul>
-                        <li>Use this app for each traveler or resident in your household.</li>
-                        <li>If you traveled recently and also have future travel plans, please answer questions for both
-                            scenarios to get complete CDC recommendations.</li>
-                        <li>This app is not intended to replace the advice of a medical professional.</li>
-                    </ul>
+                <div class="scrollable">
+                    <div class="panel-body">
+                        <p>Zika virus is primarily spread by mosquitoes. A pregnant woman can pass Zika to her developing
+                            fetus. Zika can also be spread through sex (vaginal, anal, or oral) by a man with Zika to his
+                            female and male partners (even if he doesn't have symptoms). Where you live, your travel history,
+                            and the travel history of your sex partner(s) can affect your risk of Zika. This web app can
+                            help you learn more about Zika and how to protect yourself. </p>
+                        <ul>
+                            <li>Use this app for each traveler or resident in your household.</li>
+                            <li>If you traveled recently and also have future travel plans, please answer questions for both
+                                scenarios to get complete CDC recommendations.</li>
+                            <li>This app is not intended to replace the advice of a medical professional.</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="panel-footer" align="right">
 
@@ -61,37 +63,39 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body" id="zika-app-question">
-                    <div id="alert-area">
+                <div class="scrollable">
+                    <div class="panel-body" id="zika-app-question">
+                        <div id="alert-area">
 
-                    </div>
-                    <p id="question-text"></p>
-                    <div id="question-answers">
+                        </div>
+                        <p id="question-text"></p>
+                        <div id="question-answers">
 
-                    </div>
+                        </div>
 
-                    <div id="singleCountryListDiv" style="display: none">
-                        <select class="countrySelect" id="singleCountry" style="width: 100%">
-                            <option></option>
-                        </select>
+                        <div id="singleCountryListDiv" style="display: none">
+                            <select class="countrySelect" id="singleCountry" style="width: 100%">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div id="multCountryListDiv" style="display:none">
+                            <select class="countrySelect" id="multiCountry" style="width: 100%">
+                            </select>
+                        </div>
                     </div>
-                    <div id="multCountryListDiv" style="display:none">
-                        <select class="countrySelect" id="multiCountry" style="width: 100%">
-                        </select>
-                    </div>
-                </div>
-                <div class="panel-body" id="zika-app-endpoint">
-                    <p id="zika-app-endpoint-text"></p>
-                    <div class="well">
-                    <ul>
-                        <li>The mosquitoes that spread Zika usually do not live at elevations above 6,500 feet (2,000 meters).</li>
-                        <li>Travelers and residents whose activities are only above this elevation are at minimal risk of getting Zika from a mosquito.</li>
-                        <li>For more information on Zika and elevation, see: <a href="http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations" target="_blank">http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations</a>.</li>
-                        <li>Check our travel notices for a map of your specific destination: <a href="http://wwwnc.cdc.gov/travel/page/zika-travel-information" target="_blank">http://wwwnc.cdc.gov/travel/page/zika-travel-information</a> </li>
-                    </ul>
-                    <p>
-                        CDC is routinely updating information as we learn more about Zika. Check the CDC website often for the latest information. <a href="http://www.cdc.gov/zika/index.html" target="_blank">http://www.cdc.gov/zika/index.html</a>
-                    </p>
+                    <div class="panel-body" id="zika-app-endpoint">
+                        <p id="zika-app-endpoint-text"></p>
+                        <div class="well">
+                            <ul>
+                                <li>The mosquitoes that spread Zika usually do not live at elevations above 6,500 feet (2,000 meters).</li>
+                                <li>Travelers and residents whose activities are only above this elevation are at minimal risk of getting Zika from a mosquito.</li>
+                                <li>For more information on Zika and elevation, see: <a href="http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations" target="_blank">http://wwwnc.cdc.gov/travel/page/q-a-zika-risk-high-elevations</a>.</li>
+                                <li>Check our travel notices for a map of your specific destination: <a href="http://wwwnc.cdc.gov/travel/page/zika-travel-information" target="_blank">http://wwwnc.cdc.gov/travel/page/zika-travel-information</a> </li>
+                            </ul>
+                            <p>
+                                CDC is routinely updating information as we learn more about Zika. Check the CDC website often for the latest information. <a href="http://www.cdc.gov/zika/index.html" target="_blank">http://www.cdc.gov/zika/index.html</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div class="panel-footer">

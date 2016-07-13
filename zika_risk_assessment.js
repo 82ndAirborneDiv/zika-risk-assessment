@@ -85,7 +85,7 @@ function noSelectionAlert(){
     alert += '<strong>Please make a selection.</strong>';
     alert += '</div>';
     alertArea.html(alert);
-    resizeWidget(50);
+    //resizeWidget(50);
 }
 function triggerRestart(){
     userAnswers = [];
@@ -93,7 +93,7 @@ function triggerRestart(){
     mainPanel.hide();
     multiCountryList.val(null).trigger("change");
     singleCountryList.val(null).trigger("change");
-    resizeWidget(50);
+    //resizeWidget(50);
     $('html, body').animate({ scrollTop: 0 }, 0);
 }
 function loadNextQuestion(number){
@@ -346,10 +346,10 @@ function clearMainPanel(){
     //alert area
     alertArea.html("");
 
-    resizeWidget(50);
+    //resizeWidget(50);
 }
 
-function resizeWidget (intMsDelay) {
+/*function resizeWidget (intMsDelay) {
     intMsDelay = intMsDelay || 250;
     window.setTimeout(function(){
         if (window.hasOwnProperty('parentIFrame') && window.parentIFrame.hasOwnProperty('size')) {
@@ -361,7 +361,7 @@ function resizeWidget (intMsDelay) {
     }, intMsDelay, false);
 
     return true;
-}
+}*/
 
 
 /*

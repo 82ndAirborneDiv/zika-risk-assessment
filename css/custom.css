@@ -60,3 +60,14 @@ a {
 	background-color: #075290;
 	border-color: #075290;
 }
+.scrollable{
+	overflow:auto;
+	max-height: 267px;
+}
+.widget-wrapper{
+	min-width: 274px;
+	max-height:450px;
+}
+.panel-body{
+	min-height: 267px;
+}
