@@ -89,11 +89,13 @@ function noSelectionAlert(){
 }
 function triggerRestart(){
     userAnswers = [];
+    clearMainPanel();
     introPanel.show();
     mainPanel.hide();
     multiCountryList.val(null).trigger("change");
     singleCountryList.val(null).trigger("change");
-    //resizeWidget(50);
+
+    /*TODO: change to panel body*/
     $('html, body').animate({ scrollTop: 0 }, 0);
 }
 function loadNextQuestion(number){
@@ -346,14 +348,14 @@ function clearMainPanel(){
     //alert area
     alertArea.html("");
 
-    //resizeWidget(50);
+    resizeWidget(50);
 }
 
-/*function resizeWidget (intMsDelay) {
+function resizeWidget (intMsDelay) {
     intMsDelay = intMsDelay || 250;
     window.setTimeout(function(){
         if (window.hasOwnProperty('parentIFrame') && window.parentIFrame.hasOwnProperty('size')) {
-            window.parentIFrame.size($('#widget-wrapper').height());
+            window.parentIFrame.size($('.widget-wrapper').height());
             console.log('resize triggered');
         } else {
             console.log('warn resize unavailable, Please ensure this widget is being loaded within the widget framework');
@@ -361,7 +363,7 @@ function clearMainPanel(){
     }, intMsDelay, false);
 
     return true;
-}*/
+}
 
 
 /*

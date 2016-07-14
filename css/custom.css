@@ -45,9 +45,26 @@ a {
 	text-decoration: underline;
 }
 
+.panel-body{
+	min-height: 375px;
+	max-height: 640px;
+}
+
 @media only screen and (max-width: 350px) {
 
 	.zika-title {font-size:14px;}
+	.panel-body{
+		height: 375px;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+
+	.zika-title {font-size:14px;}
+	.panel-body{
+		min-height: 375px;
+		max-height: 450px;
+	}
 }
 
 .panel-primary>.panel-heading {
@@ -62,12 +79,9 @@ a {
 }
 .scrollable{
 	overflow:auto;
-	max-height: 267px;
 }
 .widget-wrapper{
 	min-width: 274px;
-	max-height:450px;
+	max-height:755px;
 }
-.panel-body{
-	min-height: 267px;
-}
+
