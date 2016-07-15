@@ -71,9 +71,9 @@
 
         // INIT METRICS
         cdcMetrics.init({
-            //c32 : "WIDGET_ID_HERE",
-            //pageName : "WIDGET_NAME_HERE",
-            //useMetrics : 'false'
+            c32 : "widget-130",
+            pageName : "zikaRiskAssessment",
+            useMetrics : 'true'
         });
 
         cdcCommon.log('Common Framework Metrics Initialized!');
@@ -98,7 +98,6 @@
 
         })
     };
-
     window.CDC.Widget.syndicatedLoad = function (cdcCommon) {
 
         cdcCommon = cdcCommon || window.cdcCommon || window.CDC.Widget.Common;
