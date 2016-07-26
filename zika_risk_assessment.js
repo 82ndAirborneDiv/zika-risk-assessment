@@ -85,7 +85,7 @@ function noSelectionAlert(){
     alert += '<strong>Please make a selection.</strong>';
     alert += '</div>';
     alertArea.html(alert);
-    //resizeWidget(50);
+    resizeWidget(50);
 }
 function triggerRestart(){
     userAnswers = [];
@@ -94,7 +94,7 @@ function triggerRestart(){
     mainPanel.hide();
     multiCountryList.val(null).trigger("change");
     singleCountryList.val(null).trigger("change");
-
+    
     /*TODO: change to panel body*/
     $('html, body').animate({ scrollTop: 0 }, 0);
 }
@@ -222,6 +222,7 @@ function loadNextQuestion(number){
     $("input[name=optionsRadios]:radio").change(function(){
         alertArea.html("");
     });
+    resizeWidget(50);
 }
 
 function loadEndPoint(number){
@@ -229,6 +230,7 @@ function loadEndPoint(number){
     endpointText.load("endpoints.html #endpoint" +number);
 
     endpointContent.show();
+    resizeWidget(50);
     $('html, body').animate({ scrollTop: 0 }, 0);
 }
 function singleCountryNextClicked(){
