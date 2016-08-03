@@ -77,7 +77,7 @@
         });
 
         cdcCommon.log('Common Framework Metrics Initialized!');
-
+        cdcMetrics.trackEvent("Page loaded", "intro");
         /*
          BASIC USAGE EXAMPLES :
 

@@ -16,7 +16,7 @@ var alertArea = $("#alert-area");
 //country select dropdown lists
 var singleCountryListSurround = $("#singleCountryListDiv");
 var singleCountryList = $("#singleCountry");
-var multiCountryListSurround = $("#multCountryListDiv");
+var multiCountryListSurround = $("#multiCountryListDiv");
 var multiCountryList = $("#multiCountry");
 
 //Nav buttons
@@ -34,26 +34,12 @@ var currentQuestion;
 
 
 $(document).ready(function(){
-    //populate country lists
-    singleCountryList.select2({
-        placeholder: 'Select a country',
-        data: countries,
-        multiple: false
-    });
-    multiCountryList.select2({
-        placeholder: 'Select a country or countries',
-        data: countries,
-        multiple: true,
-    });
+    $.each(countries,function(key, value)
+    {
+        singleCountryList.append('<option value=' + value.id + '>' + value.text + '</option>');
 
-    //clear alerts on country selected
-    singleCountryList.change(function(){
-        alertArea.html("");
-    });
-
-    //clear alerts on country selected
-    multiCountryList.change(function(){
-        alertArea.html("");
+        multiCountryList.append('<label><input class="checkboxListItem" style="margin-left: 10px; margin-right: 10px"' +
+            ' type="checkbox" name="option[]" value="' + value.id + '">' + value.text + '</label>');
     });
 
     //hide intro panel, show main panel
@@ -80,32 +66,37 @@ $(document).ready(function(){
     });
 });
 function noSelectionAlert(){
-    var alert = '<div class="alert alert-warning fade in">';
-    alert += '<a href="#" class="close" style="text-decoration: none;"data-dismiss="alert" aria-label="close">&times;</a>';
+    var alert = '<div id="noSelectionAlert" class="alert alert-warning fade in" role="alert">';
+    alert += '<a href="#" class="close" id="close-alert" style="text-decoration: none;"data-dismiss="alert"' +
+        ' role="button" aria-label="close">&times;</a>';
     alert += '<strong>Please make a selection.</strong>';
     alert += '</div>';
     alertArea.html(alert);
+    //return focus to Next button when close alert button is clicked
+    $('#noSelectionAlert').on('closed.bs.alert', function(){
+        nextButton.focus();
+    });
+
+    //focus on close alert button when noSelectionAlert is displayed
+    $('#close-alert').focus();
     resizeWidget(50);
 }
 function triggerRestart(){
     userAnswers = [];
     clearMainPanel();
-    introPanel.show();
+    introPanel.show().focus();
     mainPanel.hide();
-    multiCountryList.val(null).trigger("change");
-    singleCountryList.val(null).trigger("change");
-    
-    /*TODO: change to panel body*/
-    $('html, body').animate({ scrollTop: 0 }, 0);
+    $('.panel-body').focus();
+
+    $('.scrollable').animate({ scrollTop: 0 }, 0);
 }
 function loadNextQuestion(number){
     nextButton.unbind();
     currentQuestion = number;
     clearMainPanel();
     questionContent.show();
-    questionText.html(questions["" +number].text).show();
+    var qText = questions["" +number].text;
     var answers = Object.keys(questions["" +number].answers);
-    //var buttons = '<div class="btn-group btn-group-vertical" role="group">';
     var radioButtonsTemp = '';
     var answerMode = '';
 
@@ -114,87 +105,66 @@ function loadNextQuestion(number){
         previouslyVisited = true;
     }
 
-    if(answers.length === 0){
-        nextButton.click(function(){
-            answerNextButtonClicked();
-        }).show();
-        if(previouslyVisited){
-            userAnswers.pop();
-        }
-    }
+    switch (questions["" +number].answerType){
+        case "none":
+            nextButton.click(function(){
+                answerNextButtonClicked();
+            }).show();
+            if(previouslyVisited){
+                userAnswers.pop();
+            }
+            questionText.html('<strong>' +qText +'</strong>');
+            break;
+        case "singleSelect":
+            if(previouslyVisited){
+                singleCountryList.val(userAnswers[userAnswers.length - 1][1]).trigger("change");
+                userAnswers.pop();
+            }
+            $('#singleCountryLabel').html(qText);
+            singleCountryListSurround.show();
+            answerMode = 'singleCountry';
+            break;
+        case "multiSelect":
 
-    for(var i = 1; i <= answers.length; i++) {
-        var temp = questions["" + number].answers["" +i];
-        switch (temp.text) {
-            case "Non-Zika Country":
-                if(temp.hasOwnProperty("multiSelect")){
-                    if(temp.multiSelect){
-                        if(previouslyVisited){
-                            multiCountryList.val(userAnswers[userAnswers.length - 1][1]).trigger("change");
-                            userAnswers.pop();
-                        }
-                        multiCountryListSurround.show();
-                        answerMode = 'multiCountry';
+            if(previouslyVisited){
+                multiCountryList.find("input:checkbox").each(function(){
+                    var answerChecked = userAnswers[userAnswers.length - 1][1].indexOf($(this).val());
+                    $(this).prop('checked', answerChecked >= 0);
+                });
+                //multiCountryList.val(userAnswers[userAnswers.length - 1][1]).trigger("change");
+                userAnswers.pop();
+            }
+            $('#multiCountryLabel').html(qText);
+            multiCountryList.multiselect();
+            multiCountryListSurround.show();
+            answerMode = 'multiCountry';
+            break;
+        case "radio":
+            var radioLabel = '<div id="radio_label">' +qText +'</div>';
+            radioButtonsTemp += radioLabel;
+            radioButtonsTemp += '<div role="radiogroup" aria-labelledby="' +"radio_label" +'">';
+            for(var i = 1; i <= answers.length; i++) {
+                var temp = questions["" + number].answers["" +i];
 
-                        //work around for bug which affects placeholder text when the parent div is
-                        //hidden when select2 is initialized.
-                        //bug documented https://github.com/select2/select2/issues/3817
-                        //solution from https://jsfiddle.net/agq08j5z/1/
-                        multiCountryListSurround.find('input')
-                            .each(function(){
-                                var $this = $(this);
-                                $this.width($this.parents('span.select2-container').width() -2);
-                            });
-                    }
-                }
-                else{
-                    if(previouslyVisited){
-                        singleCountryList.val(userAnswers[userAnswers.length - 1][1]).trigger("change");
-                        userAnswers.pop();
-                    }
-                    singleCountryListSurround.show();
-                    answerMode = 'singleCountry';
-
-                    //work around for bug which affects placeholder text when the parent div is
-                    //hidden when select2 is initialized.
-                    //bug documented https://github.com/select2/select2/issues/3817
-                    //solution from https://jsfiddle.net/agq08j5z/1/
-                    singleCountryListSurround.find('input')
-                        .each(function(){
-                            var $this = $(this);
-                            $this.width($this.parents('span.select2-container').width() -2);
-                        });
-                }
-                break;
-            case "Zika Country":
-
-                break;
-            case "Non-US":
-                break;
-            default:
-                //buttons solution
-               /* if (!temp.isEndPoint) {
-                    buttons += '<button class="btn btn-default" style="white-space: normal" onclick=' + 'loadNextQuestion(' + temp.nextChoice + ')>' + temp.text + '</button>';
-                }
-                else {
-                    buttons += '<button class="btn btn-default" style="white-space: normal" onclick=' + 'loadEndPoint(' + temp.nextChoice + ')>' + temp.text + '</button>';
-                }*/
                 radioButtonsTemp += '<div class="radio z-risk-rad">'
                 radioButtonsTemp += '<label>';
-                if(previouslyVisited && userAnswers[userAnswers.length - 1][1] === "" +i) {
-                    radioButtonsTemp += '<input type="radio" id="radioAnswer" name="optionsRadios" value="' + i + '" checked>';
+                if (previouslyVisited && userAnswers[userAnswers.length - 1][1] === "" + i) {
+                    radioButtonsTemp += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
+                        + i + '" checked>';
                     userAnswers.pop();
                     previouslyVisited = false;
                 }
-                else{
-                    radioButtonsTemp += '<input type="radio" id="radioAnswer" name="optionsRadios" value="' + i + '">';
+                else {
+                    radioButtonsTemp += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
+                        + i + '">';
                 }
                 radioButtonsTemp += temp.text;
                 radioButtonsTemp += '</label>';
                 radioButtonsTemp += '</div>';
-                answerMode = 'standard';
-                break;
-        }
+            }
+            radioButtonsTemp += '</div>';
+            answerMode = 'standard';
+            break;
     }
 
     switch(answerMode) {
@@ -215,14 +185,25 @@ function loadNextQuestion(number){
             break;
 
     }
-    //buttons += "</div>";
     questionAnswers.html(radioButtonsTemp).show();
 
     //clear alerts on radio selected
     $("input[name=optionsRadios]:radio").change(function(){
         alertArea.html("");
     });
-    resizeWidget(50);
+    //clear alerts on checkbox checked
+    $("input:checkbox").change(function(){
+        alertArea.html("");
+    });
+
+    //clear alerts on country selected
+    singleCountryList.change(function(){
+        alertArea.html("");
+    });
+
+    $('.panel-body').focus();
+
+    resizeWidget(100);
 }
 
 function loadEndPoint(number){
@@ -230,8 +211,8 @@ function loadEndPoint(number){
     endpointText.load("endpoints.html #endpoint" +number);
 
     endpointContent.show();
-    resizeWidget(50);
-    $('html, body').animate({ scrollTop: 0 }, 0);
+    resizeWidget(250);
+    $('.panel-body').focus();
 }
 function singleCountryNextClicked(){
     var selection = singleCountryList.val();
@@ -243,7 +224,8 @@ function singleCountryNextClicked(){
     else {
         userAnswers.push([currentQuestion, selection]);
 
-        if(Object.keys(questions[currentQuestion].answers).indexOf("3") >= 0 && selection !== "US"){ //question 1 requires disclaimer for non-US countries
+        //question 1 requires disclaimer for non-US countries
+        if(Object.keys(questions[currentQuestion].answers).indexOf("3") >= 0 && selection !== "US"){
             next = questions["" + currentQuestion].answers["3"];
         }
         else{
@@ -264,7 +246,7 @@ function singleCountryNextClicked(){
 }
 
 function multiCountryNextButtonClicked(){
-    var input = $('#multiCountry option:selected');
+    var input = $('#multiCountry input:checkbox:checked');
     var selection = $.map(input, function(option){
         return option.value;
     });
@@ -334,20 +316,24 @@ function clearMainPanel(){
     endpointText.html("");
     endpointContent.hide();
 
-    //question
+    //reset question area
+    multiCountryList.animate({ scrollTop: 0 }, 0);
     questionText.html("");
     questionContent.hide();
     questionAnswers.html("");
     questionAnswers.hide();
     singleCountryListSurround.hide();
     multiCountryListSurround.hide();
-    multiCountryList.val(null).trigger("change");
+
+    //Remove checked state and css from all checkboxes
+    $("input:checkbox").prop("checked", false).parent().removeClass("multiselect-on");
+    //Reset selection on single country list to null
     singleCountryList.val(null).trigger("change");
 
-    //next button
+    //hide next button
     nextButton.hide();
 
-    //alert area
+    //reset alert area
     alertArea.html("");
 
     resizeWidget(50);
@@ -367,6 +353,25 @@ function resizeWidget (intMsDelay) {
     return true;
 }
 
+jQuery.fn.multiselect = function() {
+    $(this).each(function() {
+        var checkboxes = $(this).find("input:checkbox");
+        checkboxes.each(function() {
+            var checkbox = $(this);
+            // Highlight pre-selected checkboxes
+            if (checkbox.prop("checked"))
+                checkbox.parent().addClass("multiselect-on");
+
+            // Highlight checkboxes that the user selects
+            checkbox.change(function() {
+                if (checkbox.prop("checked"))
+                    checkbox.parent().addClass("multiselect-on");
+                else
+                    checkbox.parent().removeClass("multiselect-on");
+            });
+        });
+    });
+};
 
 /*
     The Zika countries object was built from the CDC page and cross comparing the countries listed with a country code
@@ -414,10 +419,6 @@ var countries = [
         text: "Anguilla"
     },
     {
-        id: 'AQ',
-        text: "Antarctica"
-    },
-    {
         id: 'AG',
         text: "Antigua and Barbuda"
     },
@@ -447,7 +448,7 @@ var countries = [
     },
     {
         id: 'BS',
-        text: "Bahamas"
+        text: "Bahamas, The"
     },
     {
         id: 'BH',
@@ -478,16 +479,16 @@ var countries = [
         text: "Benin"
     },
     {
-        id: 'BM',
-        text: "Bermuda"
-    },
-    {
         id: 'BT',
         text: "Bhutan"
     },
     {
         id: 'BO',
         text: "Bolivia"
+    },
+    {
+        id: 'BQ',
+        text: "Bonaire"
     },
     {
         id: 'BA',
@@ -502,14 +503,6 @@ var countries = [
         text: "Brazil"
     },
     {
-        id: 'IO',
-        text: "British Indian Ocean Territory"
-    },
-    {
-        id: 'VG',
-        text: "British Virgin Islands"
-    },
-    {
         id: 'BN',
         text: "Brunei"
     },
@@ -520,6 +513,10 @@ var countries = [
     {
         id: 'BF',
         text: "Burkina Faso"
+    },
+    {
+        id: 'MM',
+        text: "Burma"
     },
     {
         id: 'BI',
@@ -542,10 +539,6 @@ var countries = [
         text: "Cape Verde"
     },
     {
-        id: 'KY',
-        text: "Cayman Islands"
-    },
-    {
         id: 'CF',
         text: "Central African Republic"
     },
@@ -562,28 +555,28 @@ var countries = [
         text: "China"
     },
     {
-        id: 'CX',
-        text: "Christmas Island"
-    },
-    {
-        id: 'CC',
-        text: "Cocos Islands"
-    },
-    {
         id: 'CO',
         text: "Colombia"
     },
     {
-        id: 'KM',
-        text: "Comoros"
+        id: 'PR',
+        text: "Commonwealth of Puerto Rico"
     },
     {
-        id: 'CK',
-        text: "Cook Islands"
+        id: 'CD',
+        text: "Congo, Democratic Republic of the"
+    },
+    {
+        id: 'CG',
+        text: "Congo, Republic of the"
     },
     {
         id: 'CR',
         text: "Costa Rica"
+    },
+    {
+        id: 'CI',
+        text: "Cote d'Ivoire"
     },
     {
         id: 'HR',
@@ -606,10 +599,6 @@ var countries = [
         text: "Czech Republic"
     },
     {
-        id: 'CD',
-        text: "Democratic Republic of the Congo"
-    },
-    {
         id: 'DK',
         text: "Denmark"
     },
@@ -624,10 +613,6 @@ var countries = [
     {
         id: 'DO',
         text: "Dominican Republic"
-    },
-    {
-        id: 'TL',
-        text: "East Timor"
     },
     {
         id: 'EC',
@@ -658,14 +643,6 @@ var countries = [
         text: "Ethiopia"
     },
     {
-        id: 'FK',
-        text: "Falkland Islands"
-    },
-    {
-        id: 'FO',
-        text: "Faroe Islands"
-    },
-    {
         id: 'FJ',
         text: "Fiji"
     },
@@ -678,8 +655,8 @@ var countries = [
         text: "France"
     },
     {
-        id: 'PF',
-        text: "French Polynesia"
+        id: 'GF',
+        text: "French Guiana"
     },
     {
         id: 'GA',
@@ -687,7 +664,7 @@ var countries = [
     },
     {
         id: 'GM',
-        text: "Gambia"
+        text: "Gambia, The"
     },
     {
         id: 'GE',
@@ -702,32 +679,20 @@ var countries = [
         text: "Ghana"
     },
     {
-        id: 'GI',
-        text: "Gibraltar"
-    },
-    {
         id: 'GR',
         text: "Greece"
-    },
-    {
-        id: 'GL',
-        text: "Greenland"
     },
     {
         id: 'GD',
         text: "Grenada"
     },
     {
-        id: 'GU',
-        text: "Guam"
+        id: 'GP',
+        text: "Guadeloupe"
     },
     {
         id: 'GT',
         text: "Guatemala"
-    },
-    {
-        id: 'GG',
-        text: "Guernsey"
     },
     {
         id: 'GN',
@@ -744,6 +709,10 @@ var countries = [
     {
         id: 'HT',
         text: "Haiti"
+    },
+    {
+        id: 'VA',
+        text: "Holy See"
     },
     {
         id: 'HN',
@@ -782,10 +751,6 @@ var countries = [
         text: "Ireland"
     },
     {
-        id: 'IM',
-        text: "Isle of Man"
-    },
-    {
         id: 'IL',
         text: "Israel"
     },
@@ -794,20 +759,12 @@ var countries = [
         text: "Italy"
     },
     {
-        id: 'CI',
-        text: "Ivory Coast"
-    },
-    {
         id: 'JM',
         text: "Jamaica"
     },
     {
         id: 'JP',
         text: "Japan"
-    },
-    {
-        id: 'JE',
-        text: "Jersey"
     },
     {
         id: 'JO',
@@ -824,6 +781,10 @@ var countries = [
     {
         id: 'KI',
         text: "Kiribati"
+    },
+    {
+        id: 'FM',
+        text: "Kosrae, Federated States of Micronesia"
     },
     {
         id: 'XK',
@@ -875,7 +836,7 @@ var countries = [
     },
     {
         id: 'MO',
-        text: "Macao"
+        text: "Macau"
     },
     {
         id: 'MK',
@@ -910,6 +871,10 @@ var countries = [
         text: "Marshall Islands"
     },
     {
+        id: 'MQ',
+        text: "Martinique"
+    },
+    {
         id: 'MR',
         text: "Mauritania"
     },
@@ -918,16 +883,8 @@ var countries = [
         text: "Mauritius"
     },
     {
-        id: 'YT',
-        text: "Mayotte"
-    },
-    {
         id: 'MX',
         text: "Mexico"
-    },
-    {
-        id: 'FM',
-        text: "Micronesia"
     },
     {
         id: 'MD',
@@ -946,20 +903,12 @@ var countries = [
         text: "Montenegro"
     },
     {
-        id: 'MS',
-        text: "Montserrat"
-    },
-    {
         id: 'MA',
         text: "Morocco"
     },
     {
         id: 'MZ',
         text: "Mozambique"
-    },
-    {
-        id: 'MM',
-        text: "Myanmar"
     },
     {
         id: 'MA',
@@ -1002,16 +951,8 @@ var countries = [
         text: "Nigeria"
     },
     {
-        id: 'NU',
-        text: "Niue"
-    },
-    {
         id: 'KP',
         text: "North Korea"
-    },
-    {
-        id: 'MP',
-        text: "Northern Mariana Islands"
     },
     {
         id: 'NO',
@@ -1031,7 +972,7 @@ var countries = [
     },
     {
         id: 'PS',
-        text: "Palestine"
+        text: "Palestinian Territories"
     },
     {
         id: 'PA',
@@ -1054,10 +995,6 @@ var countries = [
         text: "Philippines"
     },
     {
-        id: 'PN',
-        text: "Pitcairn"
-    },
-    {
         id: 'PL',
         text: "Poland"
     },
@@ -1066,20 +1003,8 @@ var countries = [
         text: "Portugal"
     },
     {
-        id: 'PR',
-        text: "Puerto Rico"
-    },
-    {
         id: 'QA',
         text: "Qatar"
-    },
-    {
-        id: 'CG',
-        text: "Republic of the Congo"
-    },
-    {
-        id: 'RE',
-        text: "Reunion"
     },
     {
         id: 'RO',
@@ -1094,12 +1019,12 @@ var countries = [
         text: "Rwanda"
     },
     {
-        id: 'BL',
-        text: "Saint Barthelemy"
+        id: 'BQ',
+        text: "Saba"
     },
     {
-        id: 'SH',
-        text: "Saint Helena"
+        id: 'BL',
+        text: "Saint Barthelemy"
     },
     {
         id: 'KN',
@@ -1112,10 +1037,6 @@ var countries = [
     {
         id: 'MF',
         text: "Saint Martin"
-    },
-    {
-        id: 'PM',
-        text: "Saint Pierre and Miquelon"
     },
     {
         id: 'VC',
@@ -1156,6 +1077,10 @@ var countries = [
     {
         id: 'SG',
         text: "Singapore"
+    },
+    {
+        id: 'BQ',
+        text: "Sint Eustatius"
     },
     {
         id: 'SX',
@@ -1206,10 +1131,6 @@ var countries = [
         text: "Suriname"
     },
     {
-        id: 'SJ',
-        text: "Svalbard and Jan Mayen"
-    },
-    {
         id: 'SZ',
         text: "Swaziland"
     },
@@ -1242,12 +1163,12 @@ var countries = [
         text: "Thailand"
     },
     {
-        id: 'TG',
-        text: "Togo"
+        id: 'TL',
+        text: "Timor-Leste"
     },
     {
-        id: 'TK',
-        text: "Tokelau"
+        id: 'TG',
+        text: "Togo"
     },
     {
         id: 'TO',
@@ -1268,10 +1189,6 @@ var countries = [
     {
         id: 'TM',
         text: "Turkmenistan"
-    },
-    {
-        id: 'TC',
-        text: "Turks and Caicos Islands"
     },
     {
         id: 'TV',
@@ -1310,24 +1227,12 @@ var countries = [
         text: "Vanuatu"
     },
     {
-        id: 'VA',
-        text: "Vatican"
-    },
-    {
         id: 'VE',
         text: "Venezuela"
     },
     {
         id: 'VN',
         text: "Vietnam"
-    },
-    {
-        id: 'WF',
-        text: "Wallis and Futuna"
-    },
-    {
-        id: 'EH',
-        text: "Western Sahara"
     },
     {
         id: 'YE',
@@ -1367,7 +1272,8 @@ var questions = {
                 nextChoice: 30,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "singleSelect"
     },
     2: {
         text: "Have you recently traveled or do you plan to travel internationally?",
@@ -1387,7 +1293,8 @@ var questions = {
                 nextChoice: 31,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     3: {
         text: "Where are you planning to travel?",
@@ -1401,9 +1308,9 @@ var questions = {
                 text: "Non-Zika Country",
                 nextChoice: 1,
                 isEndPoint: true,
-                multiSelect: true
             }
-        }
+        },
+        answerType: "multiSelect"
     },
     4: {
         text: "Are you a man or a woman?",
@@ -1418,7 +1325,8 @@ var questions = {
                 nextChoice: 6,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     5: {
         text: "Which of these best describes you?",
@@ -1448,7 +1356,8 @@ var questions = {
                 nextChoice: 36,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     6: {
         text: "Which of these best describes you?",
@@ -1478,7 +1387,8 @@ var questions = {
                 nextChoice: 40,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     7: {
         text: "Where have you traveled? (Answer for all destinations, including those you passed through.)",
@@ -1492,9 +1402,9 @@ var questions = {
                 text: "Non-Zika Country",
                 nextChoice: 1,
                 isEndPoint: true,
-                multiSelect: true
             }
-        }
+        },
+        answerType: "multiSelect"
     },
     8: {
         text: "Are you a man or a woman?",
@@ -1509,7 +1419,8 @@ var questions = {
                 nextChoice: 12,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     9: {
         text: "Which of these best describes you?",
@@ -1539,7 +1450,8 @@ var questions = {
                 nextChoice: 10,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     10: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1554,7 +1466,8 @@ var questions = {
                 nextChoice: 26,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     11: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1569,7 +1482,8 @@ var questions = {
                 nextChoice: 28,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     12: {
         text: "Which of these best describes you?",
@@ -1599,7 +1513,8 @@ var questions = {
                 nextChoice: 24,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     13: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1614,7 +1529,8 @@ var questions = {
                 nextChoice: 32,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     14: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1629,7 +1545,8 @@ var questions = {
                 nextChoice: 31,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     15: {
         text: "Has your partner been in a foreign country (traveled or lived abroad) or is he planning travel?",
@@ -1644,7 +1561,8 @@ var questions = {
                 nextChoice: 22,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     16: {
         text: "Where has your partner traveled or lived?",
@@ -1658,9 +1576,9 @@ var questions = {
                 text: "Non-Zika Country",
                 nextChoice: 1,
                 isEndPoint: true,
-                multiSelect: true
             }
-        }
+        },
+        answerType: "multiSelect"
     },
     17: {
         text: "Are you a man or a woman?",
@@ -1675,7 +1593,8 @@ var questions = {
                 nextChoice: 19,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     18: {
         text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1690,7 +1609,8 @@ var questions = {
                 nextChoice: 11,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     19: {
         text: "Which of these best describes you?",
@@ -1710,7 +1630,8 @@ var questions = {
                 nextChoice: 21,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     20: {
         text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1725,7 +1646,8 @@ var questions = {
                 nextChoice: 14,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     21: {
         text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1740,7 +1662,8 @@ var questions = {
                 nextChoice: 16,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     22: {
         text: "Where does your partner plan to travel?",
@@ -1754,9 +1677,9 @@ var questions = {
                 text: "Non-Zika Country",
                 nextChoice: 1,
                 isEndPoint: true,
-                multiSelect: true
             }
-        }
+        },
+        answerType: "multiSelect"
     },
     23: {
         text: "Are you a man or a woman?",
@@ -1771,7 +1694,8 @@ var questions = {
                 nextChoice: 24,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     24: {
         text: "Which of these best describes you?",
@@ -1791,7 +1715,8 @@ var questions = {
                 nextChoice: 21,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     25: {
         text: "Are you a man or a woman?",
@@ -1806,7 +1731,8 @@ var questions = {
                 nextChoice: 28,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     26: {
         text: "Which of these best describes you?",
@@ -1836,7 +1762,8 @@ var questions = {
                 nextChoice: 27,
                 isEndPoint: false
             }
-        }
+        },
+        answerType: "radio"
     },
     27: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1851,7 +1778,8 @@ var questions = {
                 nextChoice: 9,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     28: {
         text: "Which of these best describes you?",
@@ -1881,7 +1809,8 @@ var questions = {
                 nextChoice: 7,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     29: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1896,7 +1825,8 @@ var questions = {
                 nextChoice: 42,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     },
     30: {
         text: "The following are US government recommendations for US residents. Some national governments may make " +
@@ -1905,7 +1835,8 @@ var questions = {
         "next button.",
         answers:{
 
-        }
+        },
+        answerType: "none"
     },
     31:{
         text: "The travel history of your sex partner(s) can also affect your risk of Zika. Do you have a male partner " +
@@ -1931,6 +1862,7 @@ var questions = {
                 nextChoice: 1,
                 isEndPoint: true
             }
-        }
+        },
+        answerType: "radio"
     }
 }

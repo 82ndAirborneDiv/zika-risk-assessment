@@ -10,10 +10,6 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- select2 -->
-    <link href="dist/css/select2.min.css" rel="stylesheet" />
-    <script src="dist/js/select2.min.js"></script>
-
     <link href="css/custom.css" rel="stylesheet">
 
     <title>Zika Assessment Tool</title>
@@ -22,7 +18,7 @@
 <div data-iframe-height="" class="widget-wrapper">
     <div class="row">
         <div class="col-lg-12">
-            <div class="panel panel-primary" id="zika-app-intro">
+            <div class="panel panel-primary" id="zika-app-intro"  tabindex="0">
                 <div class="panel-heading">
                     <h3 class="panel-title">Zika Risk Assessment</h3>
                 </div>
@@ -64,27 +60,35 @@
                     </div>
                 </div>
                 <div class="scrollable">
-                    <div class="panel-body" id="zika-app-question">
-                        <p id="question-text"></p>
+                    <div class="panel-body" id="zika-app-question" tabindex="-1">
+                        <div id="question-text">
+
+                        </div>
                         <div id="question-answers">
 
                         </div>
 
-                        <div id="singleCountryListDiv" style="display: none">
-                            <select class="countrySelect" id="singleCountry" style="width: 100%">
+                        <form role="form" id="singleCountryListDiv" class="form-group" style="display: none">
+                            <label id="singleCountryLabel" for="singleCountry"></label>
+                            <select class="form-control" id="singleCountry" name="select">
                                 <option></option>
                             </select>
+                        </form>
+
+
+                        <div id="multiCountryListDiv" style="display:none">
+                            <label id="multiCountryLabel" for="multiCountry"></label>
+                            <div role="group" aria-labelledby="multiCountryLabel" id="multiCountry" class="multiselect">
+
+                            </div>
                         </div>
-                        <div id="multCountryListDiv" style="display:none">
-                            <select class="countrySelect" id="multiCountry" style="width: 100%">
-                            </select>
-                        </div>
+
                         <div id="alert-area" style="padding-top: 10px">
 
                         </div>
                     </div>
 
-                    <div class="panel-body" id="zika-app-endpoint">
+                    <div class="panel-body" id="zika-app-endpoint" tabindex="-1">
                         <p id="zika-app-endpoint-text"></p>
                         <div class="well">
                             <ul>

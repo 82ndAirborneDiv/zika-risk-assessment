@@ -16,27 +16,7 @@
 	border: none;
 	color: #337ab7;
 }
-::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-	color:    #000;
-	opacity: .7;
-}
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-	color:    #000;
-	opacity:  .7;
-}
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-	color:    #000;
-	opacity:  .7;
-}
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-	color:    #000;
-	opacity: .7;
-}
 
-.select2-container--default .select2-selection--single .select2-selection__placeholder {
-	color: #000;
-	opacity: .7;
-}
 .close {
 	opacity: .5;
 }
@@ -85,3 +65,17 @@ a {
 	max-height:755px;
 }
 
+.multiselect {
+	height:18em;
+	border:solid 1px #c0c0c0;
+	overflow:auto;
+}
+
+.multiselect label {
+	display:block;
+}
+
+.multiselect-on {
+
+	background-color:#e5e5e5;
+}
