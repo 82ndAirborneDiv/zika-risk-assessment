@@ -8,16 +8,20 @@ var mainPanel = $("#zika-app-main");
 //panel content
 var endpointContent = $("#zika-app-endpoint");
 var endpointText = $("#zika-app-endpoint-text");
+var endpointAdditionalNotes = $("#zika-app-endpoint-additional-notes");
+var endpointDisclaimer = $("#zika-app-endpoint-disclaimer");
 var questionContent = $("#zika-app-question");
 var questionText = $("#question-text");
 var questionAnswers = $("#question-answers");
 var alertArea = $("#alert-area");
 
 //country lists
-var singleCountryListSurround = $("#singleCountryListDiv");
-var singleCountryList = $("#singleCountry");
-var multiCountryListSurround = $("#multiCountryListDiv");
-var multiCountryList = $("#multiCountry");
+var singleSelectListSurround = $("#singleSelectListDiv");
+var singleSelectList = $("#singleSelectList");
+var singleSelectLabel = $('#singleSelectLabel');
+var multiSelectListSurround = $("#multiSelectListDiv");
+var multiSelectList = $("#multiSelectList");
+var multiSelectLabel = $('#multiSelectLabel');
 
 //Nav buttons
 var start = $("#start");
@@ -64,15 +68,6 @@ function getUserAnswerByIndex(number){
 }
 
 $(document).ready(function(){
-    //populate country lists
-    $.each(countries,function(key, value)
-    {
-        singleCountryList.append('<option value=' + value.id + '>' + value.text + '</option>');
-
-        multiCountryList.append('<label><input class="checkboxListItem" style="margin-left: 10px; margin-right: 10px"' +
-            ' type="checkbox" name="option[]" value="' + value.id + '">' + value.text + '</label>');
-    });
-
     start.click(function() {
         cdcMetrics.trackEvent("ButtonClicked", "Start");
         introPanel.hide();
@@ -92,12 +87,35 @@ $(document).ready(function(){
             triggerRestart();
         }
     });
-
+    nextButton.click(function(){
+        nextButtonClicked();
+    });
     restart.click(function(){
         cdcMetrics.trackEvent("ButtonClicked", "Restart");
         triggerRestart();
     });
 });
+//populate singleSelect list
+var populateSingleSelectList = function(list) {
+    var listHTML = "";
+    listHTML += '<option></option>';
+        $.each(list, function (key, value) {
+            listHTML += '<option value=' + key + '>' + value.text + '</option>';
+        });
+    singleSelectList.html(listHTML);
+}
+//populate multiSelect list
+var populateMultiSelectList = function(list) {
+    var listHTML = "";
+    $.each(list, function (key, value) {
+       listHTML += '<label><input class="checkboxListItem" style="margin-left: 10px; margin-right: 10px"' +
+            ' type="checkbox" name="option[]" value="' + key + '">' + value.text + '</label>';
+    });
+    multiSelectList.html(listHTML);
+}
+var populateRadioList = function(question){
+
+}
 function noSelectionAlert(){
     var alert = '<div id="noSelectionAlert" class="alert alert-warning fade in" role="alert">';
     alert += '<a href="#" class="close" id="close-alert" style="text-decoration: none;"data-dismiss="alert"' +
@@ -124,69 +142,62 @@ function triggerRestart(){
 
     $('.scrollable').animate({ scrollTop: 0 }, 0);
 }
-function loadNextQuestion(number){
+function loadNextQuestion(nextQuestionNumber){
     //unbind next button behavior. Next button behavior is specified in a switch below based on Question type.
-    nextButton.unbind();
+    //nextButton.unbind();
 
     //set global question number to next question
-    currentQuestionNumber = number;
+    currentQuestionNumber = nextQuestionNumber;
 
     clearMainPanel();
+    nextButton.show();
     questionContent.show();
 
-    var nextQuestionObject = getQuestion(number);
+    var nextQuestionObject = getQuestion(nextQuestionNumber);
     var nextQuestionText = nextQuestionObject.text;
-    var nextQuestionAnswers = Object.keys(nextQuestionObject.answers);
-    var radioButtonsTemp = '';
+    var nextQuestionAnswers = nextQuestionObject.getValuesForAnswers();
 
     var previouslyVisited = false;
     var previousAnswerObject;
-    if(userAnswers.length > 0 && getPreviousUserAnswer().question === number){
+    if(userAnswers.length > 0 && getPreviousUserAnswer().question === nextQuestionNumber){
         previouslyVisited = true;
         previousAnswerObject = getPreviousUserAnswer();
     }
 
     //Build question based on next question's answerType
     switch (nextQuestionObject.answerType){
-        case "none":
-            nextButton.click(function(){
-                answerNextButtonClicked();
-            }).show();
+        case AnswerType.NONE:
             if(previouslyVisited){
                 userAnswers.pop();
             }
             questionText.html('<strong>' +nextQuestionText +'</strong>');
             break;
-        case "singleSelect":
-            nextButton.click(function(){
-                singleCountryNextClicked();
-            }).show();
+        case AnswerType.SINGLESELECT:
+            singleSelectListSurround.show();
+            populateSingleSelectList(nextQuestionObject.getValuesForAnswers());
             if(previouslyVisited){
-                singleCountryList.val(previousAnswerObject.answer).trigger("change");
+                singleSelectList.val(previousAnswerObject.answer).trigger("change");
                 userAnswers.pop();
             }
-            $('#singleCountryLabel').html(nextQuestionText);
-            singleCountryListSurround.show();
+            singleSelectLabel.html(nextQuestionText);
 
             //clear alerts on country selected
-            singleCountryList.change(function(){
+            singleSelectList.change(function(){
                 alertArea.html("");
             });
             break;
-        case "multiSelect":
-            nextButton.click(function(){
-                multiCountryNextButtonClicked();
-            }).show();
+        case AnswerType.MULTISELECT:
+            populateMultiSelectList(countries);
             if(previouslyVisited){
-                multiCountryList.find("input:checkbox").each(function(){
+                multiSelectList.find("input:checkbox").each(function(){
                     var answerChecked = previousAnswerObject.answer.indexOf($(this).val());
                     $(this).prop('checked', answerChecked >= 0);
                 });
                 userAnswers.pop();
             }
-            $('#multiCountryLabel').html(nextQuestionText);
-            multiCountryList.multiselect();
-            multiCountryListSurround.show();
+            multiSelectLabel.html(nextQuestionText);
+            multiSelectList.multiselect();
+            multiSelectListSurround.show();
 
             //clear alerts on checkbox checked
             $("input:checkbox").change(function(){
@@ -194,34 +205,30 @@ function loadNextQuestion(number){
             });
 
             break;
-        case "radio":
-            nextButton.click(function(){
-                answerNextButtonClicked();
-            }).show();
-            var radioLabel = '<div id="radio_label">' +nextQuestionText +'</div>';
-            radioButtonsTemp += radioLabel;
-            radioButtonsTemp += '<div role="radiogroup" aria-labelledby="' +"radio_label" +'">';
-            for(var i = 1; i <= nextQuestionAnswers.length; i++) {
-                var tempAnswerObject = nextQuestionObject.answers["" +i];
+        case AnswerType.RADIO:
+            var radioButtonsHTML = '';
+            radioButtonsHTML += '<div id="radio_label">' +nextQuestionText +'</div>';
+            radioButtonsHTML += '<div role="radiogroup" aria-labelledby="' +"radio_label" +'">';
 
-                radioButtonsTemp += '<div class="radio z-risk-rad">'
-                radioButtonsTemp += '<label>';
-                if (previouslyVisited && previousAnswerObject.answer === "" + i) {
-                    radioButtonsTemp += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
-                        + i + '" checked>';
+            $.each(nextQuestionAnswers, function (key, value) {
+                radioButtonsHTML += '<div class="radio z-risk-rad">';
+                radioButtonsHTML += '<label>';
+                if (previouslyVisited && previousAnswerObject.answer === key) {
+                    radioButtonsHTML += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
+                        + key + '" checked>';
                     userAnswers.pop();
                     previouslyVisited = false;
                 }
                 else {
-                    radioButtonsTemp += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
-                        + i + '">';
+                    radioButtonsHTML += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
+                        + key + '">';
                 }
-                radioButtonsTemp += tempAnswerObject.text;
-                radioButtonsTemp += '</label>';
-                radioButtonsTemp += '</div>';
-            }
-            radioButtonsTemp += '</div>';
-            questionAnswers.html(radioButtonsTemp).show();
+                radioButtonsHTML += value.text;
+                radioButtonsHTML += '</label>';
+                radioButtonsHTML += '</div>';
+            });
+            radioButtonsHTML += '</div>';
+            questionAnswers.html(radioButtonsHTML).show();
 
             //clear alerts on radio selected
             $("input[name=optionsRadios]:radio").change(function(){
@@ -239,141 +246,115 @@ function loadEndPoint(number){
     clearMainPanel();
     cdcMetrics.trackEvent("Endpoint Reached", number);
     endpointText.load("endpoints.html #endpoint" +number);
+    $.each(userAnswers, function(){
+        var questionObject = getQuestion(this.question);
+        if(questionObject.hasOwnProperty("getDisclaimer")) {
+            var disclaimer = questionObject.getDisclaimer(this);
+            if (disclaimer != null) {
+                endpointDisclaimer.append($('<div>').load("disclaimers.html #" + disclaimer));
+            }
+        }
+        if(questionObject.hasOwnProperty("getAdditionalNotes")){
+            var additionalNotes = questionObject.getAdditionalNotes(this);
+            if(additionalNotes != null){
+                endpointAdditionalNotes.append($('<div>').load("additionalNotes.html #" +additionalNotes));
+            }
+        }
+    });
+
 
     endpointContent.show();
     resizeWidget();
     $('.panel-body').focus();
 }
-function singleCountryNextClicked(){
-    var selection = singleCountryList.val();
-    var next;
 
-    if("" === selection){
-        noSelectionAlert();
-    }
-    else {
-        var currentQuestionObject = getQuestion(currentQuestionNumber);
-        trackAnswer(selection);
-        userAnswers.push(new UserAnswer(currentQuestionNumber, selection));
-
-        //question 1 requires disclaimer for non-US countries
-        if(Object.keys(currentQuestionObject.answers).indexOf("3") >= 0 && selection !== "US"){
-            next = currentQuestionObject.answers["3"];
-        }
-        else{
-            if (zikaCountries.indexOf(selection) >= 0) { //Zika country
-                next = currentQuestionObject.answers["1"];
-            }
-            else { //non-Zika country
-                next = currentQuestionObject.answers["2"];
-            }
-        }
-        if (next.isEndPoint) {
-            loadEndPoint(next.nextChoice);
-        }
-        else {
-            loadNextQuestion(next.nextChoice);
-        }
-    }
-}
-
-function multiCountryNextButtonClicked(){
-    var input = $('#multiCountry input:checkbox:checked');
-    var selection = $.map(input, function(option){
-        return option.value;
-    });
-
-    //this is set to Zika or non-Zika answer
-    var answerObject;
-
-    if(selection.length === 0){
-        noSelectionAlert();
-    }
-    else{
-        var currentQuestionObject = getQuestion(currentQuestionNumber);
-        userAnswers.push(new UserAnswer(currentQuestionNumber, selection));
-        var zika = false;
-        for(var i = 0; i < selection.length; i++){
-            if(zikaCountries.indexOf(selection[i]) >= 0){
-                zika = true;
-                break;
-            }
-        }
-        if(zika){
-            answerObject = currentQuestionObject.answers["1"];
-            trackAnswer("Answer set included Zika country(ies)");
-        }
-        else{
-            answerObject = currentQuestionObject.answers["2"];
-            trackAnswer("Answer set did not include a Zika country");
-        }
-        if (answerObject.isEndPoint) {
-            loadEndPoint(answerObject.nextChoice);
-        }
-        else {
-            loadNextQuestion(answerObject.nextChoice);
-        }
-    }
-}
-
-function answerNextButtonClicked(){
-    var answerInput = $("input[name=optionsRadios]:checked").val();
+function nextButtonClicked(){
+    var answerInput;
+    var selection;
     var currentQuestionObject = getQuestion(currentQuestionNumber);
-    var selectedAnswerObject = currentQuestionObject.answers["" +answerInput];
+    var selectedAnswerObject;
 
-    if(answerInput != null) {
-        trackAnswer(selectedAnswerObject.text);
-        userAnswers.push(new UserAnswer(currentQuestionNumber, answerInput));
-        if (selectedAnswerObject.isEndPoint) {
-            loadEndPoint(selectedAnswerObject.nextChoice);
-        }
-        else {
-            loadNextQuestion(selectedAnswerObject.nextChoice);
-        }
+    switch(currentQuestionObject.answerType) {
+        case AnswerType.MULTISELECT:
+            answerInput = $('#multiSelectList input:checkbox:checked');
+            selection = $.map(answerInput, function (option) {
+                return option.value;
+            });
+            if(selection.length === 0){
+                noSelectionAlert();
+                return;
+            }
+            break;
+        case AnswerType.SINGLESELECT:
+            selection = singleSelectList.val();
+            if(selection === ""){
+                noSelectionAlert();
+                return;
+            }
+            break;
+        case AnswerType.RADIO:
+            selection = $("input[name=optionsRadios]:checked").val();
+            if(selection == null){
+                noSelectionAlert();
+                return;
+            }
+            break;
+        case AnswerType.NONE:
+            if(currentQuestionNumber === 30) {
+                selection = "Accepted Disclaimer";
+                trackAnswer(selection);
+                //The disclaimer question object has no answers, if the user clicks next, they
+                //accept the disclaimer.
+                //Upon acceptance, they are presented the question based on their answer to
+                //question 1.
+                var question1 = getQuestion(1);
+                if (getRisk(getUserAnswerByIndex(0).answer) == RiskCategory.ZIKA) { //Zika country
+                    selectedAnswerObject = question1.answers["1"];
+                }
+                else { //non-Zika country
+                    selectedAnswerObject = question1.answers["2"];
+                }
+            }
+            break;
+    }
+    userAnswers.push(new UserAnswer(currentQuestionNumber, selection));
+
+    if(currentQuestionObject.answerType !== AnswerType.NONE) {
+        selectedAnswerObject = currentQuestionObject.decideChoice(currentQuestionNumber, selection);
+    }
+    if(selectedAnswerObject.isEndPoint){
+        loadEndPoint(selectedAnswerObject.nextChoice);
     }
     else {
-        if(currentQuestionNumber === 30){
-            answerInput = "Accepted Disclaimer";
-            userAnswers.push(new UserAnswer(currentQuestionNumber, answerInput));
-            trackAnswer(answerInput);
-            //The disclaimer question object has no answers, if the user clicks next, they
-            //accept the disclaimer.
-            //Upon acceptance, they are presented the question based on their answer to
-            //question 1.
-            currentQuestionObject = getQuestion(1);
-            var answerObject;
-            if (zikaCountries.indexOf(getUserAnswerByIndex(0).answer) >= 0) { //Zika country
-                answerObject = currentQuestionObject.answers["1"];
-            }
-            else { //non-Zika country
-                answerObject = currentQuestionObject.answers["2"];
-            }
-            loadNextQuestion(answerObject.nextChoice);
-        }
-        else{
-            noSelectionAlert();
-        }
+        loadNextQuestion(selectedAnswerObject.nextChoice);
     }
+
+
+
 }
 
 function clearMainPanel(){
     //endpoint
     endpointText.html("");
+    endpointAdditionalNotes.html("");
+    endpointDisclaimer.html("");
     endpointContent.hide();
 
     //reset question area
-    multiCountryList.animate({ scrollTop: 0 }, 0);
+    multiSelectList.animate({ scrollTop: 0 }, 0);
     questionText.html("");
     questionContent.hide();
     questionAnswers.html("");
     questionAnswers.hide();
-    singleCountryListSurround.hide();
-    multiCountryListSurround.hide();
+    singleSelectList.html("");
+    multiSelectList.html("");
+    singleSelectListSurround.hide();
+    multiSelectListSurround.hide();
 
     //Remove checked state and css from all checkboxes
     $("input:checkbox").prop("checked", false).parent().removeClass("multiselect-on");
     //Reset selection on single country list to null
-    singleCountryList.val(null).trigger("change");
+    singleSelectList.val(null).trigger("change");
 
     //hide next button
     nextButton.hide();
@@ -425,19 +406,154 @@ function trackAnswer(answer){
     cdcMetrics.trackEvent("Question " +currentQuestionNumber + " answered", answer);
 }
 
+var AnswerType = {
+    SINGLESELECT: "singleSelect",
+    MULTISELECT: "multiSelect",
+    RADIO: "radio",
+    NONE: "none"
+}
+var Disclaimers = {
+    RESIDENCE_US: "residenceDisclaimerUS",
+    RESIDENCE_NON_US: "residenceDisclaimerNonUS"
+}
+var AdditionalNotes = {
+    RESIDENCE_ENDEMIC: "residenceEndemic",
+    RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_SELF: "recentTravelEndemicAndEpidemicSelf",
+    FUTURE_TRAVEL_ENDEMIC_AND_EPIDEMIC_SELF: "futureTravelEndemicAndEpidemicSelf",
+    RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "recentTravelEndemicAndEpidemicPartner",
+    FUTURE_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "futureTravelEndemicAndEpidemicPartner"
+}
+
+
 /*
     The questions object was built from the powerpoint flow chart for the Zika Risk Assessment tool.
     Question and answers are displayed via the loadNextQuestion method.
     nextChoice refers to the next question number when "isEndPoint" is false or to the endPoint when true;
+
+    To add a question, create a new numbered question object below as follows:
+
+
+   32 : {
+        text: "This is a sample question. What is the maximum air speed velocity of an unladen Swallow?",
+        answers: {
+            //Answers include text to display, nextChoice (the number of the next question or endpoint), and isEndPoint,
+            //a boolean which is used to determine the type of the nextChoice, endpoint or question.
+            1 : {
+                text: "I don't know that",
+                nextChoice: 33,
+                isEndPoint: true
+            },
+        }
+        //Answer types are defined in AnswerType object. Defining a new AnswerType requires modifying the following:
+        //loadNextQuestion(), nextButtonClicked()
+        answerType: AnswerType.RADIO,
+        //decideChoice returns an answerObject based on question number and user selection.
+        //decisionLogic object defines common types of decisionLogic for question types that are repeated.
+        //Define a new decisionLogic type or use an existing one.
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        //getValuesForAnswers specifies the answer choices for building the question. For list type questions(single,
+        //or multi select), generate a list object in global scope and return the list object. For radio type questions,
+        //return this.answers
+        getValuesForAnswers: function(){
+            return this.answers;
+        }
+   }
  */
 var questions = {
+    decisionLogic: {
+        //Specific logic for multi select questions regarding potential Zika countries
+        multiCountryCheckForZika : function(questionNumber, selections){
+            var questionObject = getQuestion(questionNumber);
+            var zika = false;
+            for(var i = 0; i < selections.length; i++){
+                if(getRisk(selections[i]) == RiskCategory.ZIKA){
+                    zika = true;
+                    break;
+                }
+            }
+            if(zika){
+                trackAnswer("Answer set included Zika country(ies)");
+                return questionObject.answers["1"];
+            }
+            else{
+                trackAnswer("Answer set did not include a Zika country");
+                return questionObject.answers["2"];
+            }
+        },
+        //Specific logic for single select questions regarding potential Zika countries
+        singleCountryCheckForZika : function(questionNumber, selection){
+            var questionObject = getQuestion(questionNumber);
+            trackAnswer(selection);
+
+            //question 1 requires disclaimer for non-US countries
+            if(currentQuestionNumber === "1" && selection !== "US"){
+                questionObject = getQuestion(1);
+                return questionObject.answers["3"];
+            }
+            else{
+                if (getRisk(selection) == RiskCategory.ZIKA) { //Zika country
+                    return questionObject.answers["1"];
+                }
+                else { //non-Zika country
+                    return questionObject.answers["2"];
+                }
+            }
+        },
+        //Generic logic for radio button answerType
+        getRadioAnswer: function(questionNumber, selection){
+            var questionObject = getQuestion(questionNumber);
+            return questionObject.answers["" +selection];
+        },
+        //disclaimer logic for country selections based on Zika risk
+        disclaimerBasedOnCountryZikaRisk: function(userAnswer){
+            var questionObject = getQuestion(userAnswer.question);
+            var answerObject;
+            switch(questionObject.answerType) {
+                case AnswerType.MULTISELECT:
+                    answerObject = questions.decisionLogic
+                        .multiCountryCheckForZika(userAnswer.question, userAnswer.answer);
+                    break;
+                case AnswerType.SINGLESELECT:
+                    answerObject = questions.decisionLogic
+                        .singleCountryCheckForZika(userAnswer.question, userAnswer.answer);
+                    break;
+            }
+            if (answerObject.hasOwnProperty("disclaimer")) {
+                return answerObject.disclaimer;
+            } else {
+                return null;
+            }
+        },
+        //additionalNotes logic for country selections based on Zika risk
+        additionalNotesBasedOnCountryZikaRisk: function(userAnswer){
+            var questionObject = getQuestion(userAnswer.question);
+            var answerObject;
+            switch(questionObject.answerType) {
+                case AnswerType.MULTISELECT:
+                    answerObject = questions.decisionLogic
+                        .multiCountryCheckForZika(userAnswer.question, userAnswer.answer);
+                    break;
+                case AnswerType.SINGLESELECT:
+                    answerObject = questions.decisionLogic
+                        .singleCountryCheckForZika(userAnswer.question, userAnswer.answer);
+                    break;
+            }
+            if (answerObject.hasOwnProperty("additionalNotes")) {
+                return answerObject.additionalNotes;
+            } else {
+                return null;
+            }
+        },
+    },
     1: {
         text: "Where do you live?",
         answers: {
             1: {
                 text: "Zika Country",
                 nextChoice: 25,
-                isEndPoint: false
+                isEndPoint: false,
             },
             2: {
                 text: "Non-Zika Country",
@@ -447,10 +563,24 @@ var questions = {
             3: {
                 text: "Non-US",
                 nextChoice: 30,
-                isEndPoint: false
+                isEndPoint: false,
             }
         },
-        answerType: "singleSelect"
+        answerType: AnswerType.SINGLESELECT,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.singleCountryCheckForZika(qNum, input);
+        },
+        getValuesForAnswers: function(){
+            return countries;
+        },
+        getDisclaimer: function(input) {
+            //implementing inline as q1 disclaimer is based on residence, US or Non US.
+            if (input.answer == "US") {
+                return Disclaimers.RESIDENCE_US;
+            } else {
+                return Disclaimers.RESIDENCE_NON_US;
+            }
+        }
     },
     2: {
         text: "Have you recently traveled or do you plan to travel internationally?",
@@ -471,7 +601,16 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function(){
+            return this.answers;
+        },
+        getDisclaimer: function(input){
+            return questions.decisionLogic.getDisclaimer(input);
+        }
     },
     3: {
         text: "Where are you planning to travel?",
@@ -487,7 +626,16 @@ var questions = {
                 isEndPoint: true,
             }
         },
-        answerType: "multiSelect"
+        answerType: AnswerType.MULTISELECT,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.multiCountryCheckForZika(qNum, input);
+        },
+        getValuesForAnswers: function(){
+            return countries;
+        },
+        getAdditionalNotes: function(input){
+            return questions.decisionLogic.additionalNotesBasedOnCountryZikaRisk(input);
+        }
     },
     4: {
         text: "Are you a man or a woman?",
@@ -503,7 +651,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     5: {
         text: "Which of these best describes you?",
@@ -534,7 +688,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     6: {
         text: "Which of these best describes you?",
@@ -565,7 +725,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     7: {
         text: "Where have you traveled? (Answer for all destinations, including those you passed through.)",
@@ -581,7 +747,13 @@ var questions = {
                 isEndPoint: true,
             }
         },
-        answerType: "multiSelect"
+        answerType: AnswerType.MULTISELECT,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.multiCountryCheckForZika(qNum, input);
+        },
+        getValuesForAnswers: function(){
+            return countries;
+        }
     },
     8: {
         text: "Are you a man or a woman?",
@@ -597,7 +769,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     9: {
         text: "Which of these best describes you?",
@@ -628,7 +806,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     10: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -644,7 +828,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     11: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -660,7 +850,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     12: {
         text: "Which of these best describes you?",
@@ -691,7 +887,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     13: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -707,7 +909,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     14: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -723,7 +931,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     15: {
         text: "Has your partner been in a foreign country (traveled or lived abroad) or is he planning travel?",
@@ -739,7 +953,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     16: {
         text: "Where has your partner traveled or lived?",
@@ -755,7 +975,13 @@ var questions = {
                 isEndPoint: true,
             }
         },
-        answerType: "multiSelect"
+        answerType: AnswerType.MULTISELECT,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.multiCountryCheckForZika(qNum, input);
+        },
+        getValuesForAnswers: function(){
+            return countries;
+        }
     },
     17: {
         text: "Are you a man or a woman?",
@@ -771,7 +997,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     18: {
         text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -787,7 +1019,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     19: {
         text: "Which of these best describes you?",
@@ -808,7 +1046,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     20: {
         text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -824,7 +1068,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     21: {
         text: "Has your partner had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -840,7 +1090,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     22: {
         text: "Where does your partner plan to travel?",
@@ -856,7 +1112,13 @@ var questions = {
                 isEndPoint: true,
             }
         },
-        answerType: "multiSelect"
+        answerType: AnswerType.MULTISELECT,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.multiCountryCheckForZika(qNum, input);
+        },
+        getValuesForAnswers: function(){
+            return countries;
+        }
     },
     23: {
         text: "Are you a man or a woman?",
@@ -872,7 +1134,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     24: {
         text: "Which of these best describes you?",
@@ -893,7 +1161,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     25: {
         text: "Are you a man or a woman?",
@@ -909,7 +1183,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     26: {
         text: "Which of these best describes you?",
@@ -940,7 +1220,13 @@ var questions = {
                 isEndPoint: false
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     27: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -956,7 +1242,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function(){
+            return this.answers;
+        }
     },
     28: {
         text: "Which of these best describes you?",
@@ -987,7 +1279,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     29: {
         text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
@@ -1003,7 +1301,13 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     30: {
         text: "The following are US government recommendations for US residents. Some national governments may make " +
@@ -1013,7 +1317,10 @@ var questions = {
         answers:{
 
         },
-        answerType: "none"
+        answerType: AnswerType.NONE,
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     },
     31:{
         text: "The travel history of your sex partner(s) can also affect your risk of Zika. Do you have a male partner " +
@@ -1040,887 +1347,893 @@ var questions = {
                 isEndPoint: true
             }
         },
-        answerType: "radio"
+        answerType: AnswerType.RADIO,
+        decideChoice: function(qNum, input){
+            return questions.decisionLogic.getRadioAnswer(qNum, input);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
     }
 }
-/*
- The Zika countries array was built by cross comparing the countries listed
- on the active Zika countries pages (see below for link) with an
- ISO 3166-2 country code list.
- http://www.cdc.gov/zika/geo/active-countries.html
- Country code : Country name
- */
 
-var zikaCountries = [
-    "AR", "AW", "BB", "BZ", "BO", "BQ", "BR", "CO", "PR", "CR", "CU", "CW", "DM", "DO", "EC", "SV", "GF", "GD", "GP",
-    "GT", "GY", "HT", "HN", "JM", "MQ", "MX", "NI", "PA", "PY", "PE", "BL", "LC", "MF", "VC", "SX", "SR", "TT", "VI",
-    "VE", "AS", "FJ", "FM", "MH", "NC", "PG", "WS", "TO", "CV"
-]
+var RiskCategory = {
+    NONE : "none",
+    ZIKA: "zika"
+}
 
+function getCountryById(name){
+    return countries[name];
+}
+
+
+//Returns riskCategory of country
+function getRisk(country){
+    return getCountryById(country).riskCategory;
+}
 /*
  Countries array was built from the State Dept list of countries. Countries listed on
  the active Zika countries page that were missing from the State Dept list were added.
  */
-var countries = [
-    {
-        id: 'US',
-        text: "United States (USA)"
-    },
-    {
-        id: 'AF',
-        text: "Afghanistan"
-    },
-    {
-        id: 'AL',
-        text: "Albania"
-    },
-    {
-        id: 'DZ',
-        text: "Algeria"
-    },
-    {
-        id: 'AS',
-        text: "American Samoa"
-    },
-    {
-        id: 'AD',
-        text: "Andorra"
-    },
-    {
-        id: 'AO',
-        text: "Angola"
-    },
-    {
-        id: 'AI',
-        text: "Anguilla"
-    },
-    {
-        id: 'AG',
-        text: "Antigua and Barbuda"
-    },
-    {
-        id: 'AR',
-        text: "Argentina"
-    },
-    {
-        id: 'AM',
-        text: "Armenia"
-    },
-    {
-        id: 'AW',
-        text: "Aruba"
-    },
-    {
-        id: 'AU',
-        text: "Australia"
-    },
-    {
-        id: 'AT',
-        text: "Austria"
-    },
-    {
-        id: 'AZ',
-        text: "Azerbaijan"
-    },
-    {
-        id: 'BS',
-        text: "Bahamas, The"
-    },
-    {
-        id: 'BH',
-        text: "Bahrain"
-    },
-    {
-        id: 'BD',
-        text: "Bangladesh"
-    },
-    {
-        id: 'BB',
-        text: "Barbados"
-    },
-    {
-        id: 'BY',
-        text: "Belarus"
-    },
-    {
-        id: 'BE',
-        text: "Belgium"
-    },
-    {
-        id: 'BZ',
-        text: "Belize"
-    },
-    {
-        id: 'BJ',
-        text: "Benin"
-    },
-    {
-        id: 'BT',
-        text: "Bhutan"
-    },
-    {
-        id: 'BO',
-        text: "Bolivia"
-    },
-    {
-        id: 'BQ',
-        text: "Bonaire"
+var countries = {
+    'US': {
+        text: "United States (USA)",
+        riskCategory: RiskCategory.NONE
+    },
+    'AF': {
+        text: "Afghanistan",
+        riskCategory: RiskCategory.NONE
+    },
+    'AL': {
+        text: "Albania",
+        riskCategory: RiskCategory.NONE
+    },
+    'DZ': {
+        text: "Algeria",
+        riskCategory: RiskCategory.NONE
+    },
+    'AS': {
+        text: "American Samoa",
+        riskCategory: RiskCategory.ZIKA
+    },
+    'AD': {
+        text: "Andorra",
+        riskCategory: RiskCategory.NONE
+    },
+    'AO': {
+        text: "Angola",
+        riskCategory: RiskCategory.NONE
+    },
+    'AI': {
+        text: "Anguilla",
+        riskCategory: RiskCategory.ZIKA
+    },
+    'AG': {
+        text: "Antigua and Barbuda",
+        riskCategory: RiskCategory.NONE
+    },
+    'AR': {
+        text: "Argentina",
+        riskCategory: RiskCategory.ZIKA
+    },
+    'AM': {
+        text: "Armenia",
+        riskCategory: RiskCategory.NONE
+    },
+    'AW': {
+        text: "Aruba",
+        riskCategory: RiskCategory.ZIKA
+    },
+    'AU': {
+        text: "Australia",
+        riskCategory: RiskCategory.NONE
+    },
+    'AT': {
+        text: "Austria",
+        riskCategory: RiskCategory.NONE
+    },
+    'AZ': {
+        text: "Azerbaijan",
+        riskCategory: RiskCategory.NONE
+    },
+    'BS': {
+        text: "Bahamas, The",
+        riskCategory: RiskCategory.NONE
+    },
+    'BH': {
+        text: "Bahrain",
+        riskCategory: RiskCategory.NONE
+    },
+    'BD': {
+        text: "Bangladesh",
+        riskCategory: RiskCategory.NONE
+    },
+    'BB': {
+        text: "Barbados",
+        riskCategory: RiskCategory.ZIKA
+    },
+    'BY': {
+        text: "Belarus",
+        riskCategory: RiskCategory.NONE
+    },
+    'BE': {
+        text: "Belgium",
+        riskCategory: RiskCategory.NONE
+    },
+    'BZ': {
+        text: "Belize",
+        riskCategory: RiskCategory.ZIKA
+    },
+    'BJ': {
+        text: "Benin",
+        riskCategory: RiskCategory.NONE
+    },
+    'BT': {
+        text: "Bhutan",
+        riskCategory: RiskCategory.NONE
+    },
+    'BO': {
+        text: "Bolivia",
+        riskCategory: RiskCategory.ZIKA
+    },
+    'BQ': {
+        text: "Bonaire",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'BA',
-        text: "Bosnia and Herzegovina"
+    'BA': {
+        text: "Bosnia and Herzegovina",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'BW',
-        text: "Botswana"
+    'BW': {
+        text: "Botswana",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'BR',
-        text: "Brazil"
+    'BR': {
+        text: "Brazil",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'BN',
-        text: "Brunei"
+    'BN': {
+        text: "Brunei",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'BG',
-        text: "Bulgaria"
+    'BG': {
+        text: "Bulgaria",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'BF',
-        text: "Burkina Faso"
+    'BF': {
+        text: "Burkina Faso",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MM',
-        text: "Burma"
+    'MM': {
+        text: "Burma",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'BI',
-        text: "Burundi"
+    'BI': {
+        text: "Burundi",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'KH',
-        text: "Cambodia"
+    'KH': {
+        text: "Cambodia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CM',
-        text: "Cameroon"
+    'CM': {
+        text: "Cameroon",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CA',
-        text: "Canada"
+    'CA': {
+        text: "Canada",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CV',
-        text: "Cape Verde"
+    'CV': {
+        text: "Cape Verde",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'CF',
-        text: "Central African Republic"
+    'CF': {
+        text: "Central African Republic",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TD',
-        text: "Chad"
+    'TD': {
+        text: "Chad",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CL',
-        text: "Chile"
+    'CL': {
+        text: "Chile",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CN',
-        text: "China"
+    'CN': {
+        text: "China",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CO',
-        text: "Colombia"
+    'CO': {
+        text: "Colombia",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'PR',
-        text: "Commonwealth of Puerto Rico"
+    'PR': {
+        text: "Commonwealth of Puerto Rico",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'CD',
-        text: "Congo, Democratic Republic of the"
+    'CD': {
+        text: "Congo, Democratic Republic of the",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CG',
-        text: "Congo, Republic of the"
+    'CG': {
+        text: "Congo, Republic of the",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CR',
-        text: "Costa Rica"
+    'CR': {
+        text: "Costa Rica",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'CI',
-        text: "Cote d'Ivoire"
+    'CI': {
+        text: "Cote d'Ivoire",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'HR',
-        text: "Croatia"
+    'HR': {
+        text: "Croatia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CU',
-        text: "Cuba"
+    'CU': {
+        text: "Cuba",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'CW',
-        text: "Curacao"
+    'CW': {
+        text: "Curacao",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'CY',
-        text: "Cyprus"
+    'CY': {
+        text: "Cyprus",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CZ',
-        text: "Czech Republic"
+    'CZ': {
+        text: "Czech Republic",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'DK',
-        text: "Denmark"
+    'DK': {
+        text: "Denmark",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'DJ',
-        text: "Djibouti"
+    'DJ': {
+        text: "Djibouti",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'DM',
-        text: "Dominica"
+    'DM': {
+        text: "Dominica",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'DO',
-        text: "Dominican Republic"
+    'DO': {
+        text: "Dominican Republic",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'EC',
-        text: "Ecuador"
+    'EC': {
+        text: "Ecuador",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'EG',
-        text: "Egypt"
+    'EG': {
+        text: "Egypt",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SV',
-        text: "El Salvador"
+    'SV': {
+        text: "El Salvador",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'GQ',
-        text: "Equatorial Guinea"
+    'GQ': {
+        text: "Equatorial Guinea",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ER',
-        text: "Eritrea"
+    'ER': {
+        text: "Eritrea",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'EE',
-        text: "Estonia"
+    'EE': {
+        text: "Estonia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ET',
-        text: "Ethiopia"
+    'ET': {
+        text: "Ethiopia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'FJ',
-        text: "Fiji"
+    'FJ': {
+        text: "Fiji",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'FI',
-        text: "Finland"
+    'FI': {
+        text: "Finland",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'FR',
-        text: "France"
+    'FR': {
+        text: "France",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GF',
-        text: "French Guiana"
+    'GF': {
+        text: "French Guiana",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'GA',
-        text: "Gabon"
+    'GA': {
+        text: "Gabon",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GM',
-        text: "Gambia, The"
+    'GM': {
+        text: "Gambia, The",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GE',
-        text: "Georgia"
+    'GE': {
+        text: "Georgia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'DE',
-        text: "Germany"
+    'DE': {
+        text: "Germany",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GH',
-        text: "Ghana"
+    'GH': {
+        text: "Ghana",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GR',
-        text: "Greece"
+    'GR': {
+        text: "Greece",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GD',
-        text: "Grenada"
+    'GD': {
+        text: "Grenada",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'GP',
-        text: "Guadeloupe"
+    'GP': {
+        text: "Guadeloupe",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'GT',
-        text: "Guatemala"
+    'GT': {
+        text: "Guatemala",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'GN',
-        text: "Guinea"
+    'GN': {
+        text: "Guinea",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GW',
-        text: "Guinea-Bissau"
+    'GW': {
+        text: "Guinea-Bissau",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GY',
-        text: "Guyana"
+    'GY': {
+        text: "Guyana",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'HT',
-        text: "Haiti"
+    'HT': {
+        text: "Haiti",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'VA',
-        text: "Holy See"
+    'VA': {
+        text: "Holy See",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'HN',
-        text: "Honduras"
+    'HN': {
+        text: "Honduras",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'HK',
-        text: "Hong Kong"
+    'HK': {
+        text: "Hong Kong",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'HU',
-        text: "Hungary"
+    'HU': {
+        text: "Hungary",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'IS',
-        text: "Iceland"
+    'IS': {
+        text: "Iceland",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'IN',
-        text: "India"
+    'IN': {
+        text: "India",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ID',
-        text: "Indonesia"
+    'ID': {
+        text: "Indonesia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'IR',
-        text: "Iran"
+    'IR': {
+        text: "Iran",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'IQ',
-        text: "Iraq"
+    'IQ': {
+        text: "Iraq",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'IE',
-        text: "Ireland"
+    'IE': {
+        text: "Ireland",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'IL',
-        text: "Israel"
+    'IL': {
+        text: "Israel",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'IT',
-        text: "Italy"
+    'IT': {
+        text: "Italy",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'JM',
-        text: "Jamaica"
+    'JM': {
+        text: "Jamaica",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'JP',
-        text: "Japan"
+    'JP': {
+        text: "Japan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'JO',
-        text: "Jordan"
+    'JO': {
+        text: "Jordan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'KZ',
-        text: "Kazakhstan"
+    'KZ': {
+        text: "Kazakhstan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'KE',
-        text: "Kenya"
+    'KE': {
+        text: "Kenya",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'KI',
-        text: "Kiribati"
+    'KI': {
+        text: "Kiribati",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'FM',
-        text: "Kosrae, Federated States of Micronesia"
+    'FM': {
+        text: "Kosrae, Federated States of Micronesia",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'XK',
-        text: "Kosovo"
+    'XK': {
+        text: "Kosovo",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'KW',
-        text: "Kuwait"
+    'KW': {
+        text: "Kuwait",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'KG',
-        text: "Kyrgyzstan"
+    'KG': {
+        text: "Kyrgyzstan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LA',
-        text: "Laos"
+    'LA': {
+        text: "Laos",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LV',
-        text: "Latvia"
+    'LV': {
+        text: "Latvia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LB',
-        text: "Lebanon"
+    'LB': {
+        text: "Lebanon",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LS',
-        text: "Lesotho"
+    'LS': {
+        text: "Lesotho",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LR',
-        text: "Liberia"
+    'LR': {
+        text: "Liberia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LY',
-        text: "Libya"
+    'LY': {
+        text: "Libya",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LI',
-        text: "Liechtenstein"
+    'LI': {
+        text: "Liechtenstein",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LT',
-        text: "Lithuania"
+    'LT': {
+        text: "Lithuania",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LU',
-        text: "Luxembourg"
+    'LU': {
+        text: "Luxembourg",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MO',
-        text: "Macau"
+    'MO': {
+        text: "Macau",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MK',
-        text: "Macedonia"
+    'MK': {
+        text: "Macedonia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MG',
-        text: "Madagascar"
+    'MG': {
+        text: "Madagascar",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MW',
-        text: "Malawi"
+    'MW': {
+        text: "Malawi",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MY',
-        text: "Malaysia"
+    'MY': {
+        text: "Malaysia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MV',
-        text: "Maldives"
+    'MV': {
+        text: "Maldives",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ML',
-        text: "Mali"
+    'ML': {
+        text: "Mali",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MT',
-        text: "Malta"
+    'MT': {
+        text: "Malta",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MH',
-        text: "Marshall Islands"
+    'MH': {
+        text: "Marshall Islands",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'MQ',
-        text: "Martinique"
+    'MQ': {
+        text: "Martinique",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'MR',
-        text: "Mauritania"
+    'MR': {
+        text: "Mauritania",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MU',
-        text: "Mauritius"
+    'MU': {
+        text: "Mauritius",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MX',
-        text: "Mexico"
+    'MX': {
+        text: "Mexico",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'MD',
-        text: "Moldova"
+    'MD': {
+        text: "Moldova",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MC',
-        text: "Monaco"
+    'MC': {
+        text: "Monaco",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MN',
-        text: "Mongolia"
+    'MN': {
+        text: "Mongolia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ME',
-        text: "Montenegro"
+    'ME': {
+        text: "Montenegro",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MA',
-        text: "Morocco"
+    'MA': {
+        text: "Morocco",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MZ',
-        text: "Mozambique"
+    'MZ': {
+        text: "Mozambique",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'MA',
-        text: "Namibia"
+    'MA': {
+        text: "Namibia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'NR',
-        text: "Nauru"
+    'NR': {
+        text: "Nauru",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'NP',
-        text: "Nepal"
+    'NP': {
+        text: "Nepal",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'NL',
-        text: "Netherlands"
+    'NL': {
+        text: "Netherlands",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'AN',
-        text: "Netherlands Antilles"
+    'AN': {
+        text: "Netherlands Antilles",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'NC',
-        text: "New Caledonia"
+    'NC': {
+        text: "New Caledonia",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'NZ',
-        text: "New Zealand"
+    'NZ': {
+        text: "New Zealand",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'NI',
-        text: "Nicaragua"
+    'NI': {
+        text: "Nicaragua",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'NE',
-        text: "Niger"
+    'NE': {
+        text: "Niger",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'NG',
-        text: "Nigeria"
+    'NG': {
+        text: "Nigeria",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'KP',
-        text: "North Korea"
+    'KP': {
+        text: "North Korea",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'NO',
-        text: "Norway"
+    'NO': {
+        text: "Norway",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'OM',
-        text: "Oman"
+    'OM': {
+        text: "Oman",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'PK',
-        text: "Pakistan"
+    'PK': {
+        text: "Pakistan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'PW',
-        text: "Palau"
+    'PW': {
+        text: "Palau",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'PS',
-        text: "Palestinian Territories"
+    'PS': {
+        text: "Palestinian Territories",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'PA',
-        text: "Panama"
+    'PA': {
+        text: "Panama",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'PG',
-        text: "Papua New Guinea"
+    'PG': {
+        text: "Papua New Guinea",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'PY',
-        text: "Paraguay"
+    'PY': {
+        text: "Paraguay",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'PE',
-        text: "Peru"
+    'PE': {
+        text: "Peru",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'PH',
-        text: "Philippines"
+    'PH': {
+        text: "Philippines",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'PL',
-        text: "Poland"
+    'PL': {
+        text: "Poland",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'PT',
-        text: "Portugal"
+    'PT': {
+        text: "Portugal",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'QA',
-        text: "Qatar"
+    'QA': {
+        text: "Qatar",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'RO',
-        text: "Romania"
+    'RO': {
+        text: "Romania",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'RU',
-        text: "Russia"
+    'RU': {
+        text: "Russia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'RW',
-        text: "Rwanda"
+    'RW': {
+        text: "Rwanda",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'BQ',
-        text: "Saba"
+    'BQ': {
+        text: "Saba",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'BL',
-        text: "Saint Barthelemy"
+    'BL': {
+        text: "Saint Barthelemy",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'KN',
-        text: "Saint Kitts and Nevis"
+    'KN': {
+        text: "Saint Kitts and Nevis",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'LC',
-        text: "Saint Lucia"
+    'LC': {
+        text: "Saint Lucia",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'MF',
-        text: "Saint Martin"
+    'MF': {
+        text: "Saint Martin",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'VC',
-        text: "Saint Vincent and the Grenadines"
+    'VC': {
+        text: "Saint Vincent and the Grenadines",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'WS',
-        text: "Samoa"
+    'WS': {
+        text: "Samoa",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'SM',
-        text: "San Marino"
+    'SM': {
+        text: "San Marino",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ST',
-        text: "Sao Tome and Principe"
+    'ST': {
+        text: "Sao Tome and Principe",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SA',
-        text: "Saudi Arabia"
+    'SA': {
+        text: "Saudi Arabia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SN',
-        text: "Senegal"
+    'SN': {
+        text: "Senegal",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'RS',
-        text: "Serbia"
+    'RS': {
+        text: "Serbia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SC',
-        text: "Seychelles"
+    'SC': {
+        text: "Seychelles",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SL',
-        text: "Sierra Leone"
+    'SL': {
+        text: "Sierra Leone",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SG',
-        text: "Singapore"
+    'SG': {
+        text: "Singapore",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'BQ',
-        text: "Sint Eustatius"
+    'BQ': {
+        text: "Sint Eustatius",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'SX',
-        text: "Sint Maarten"
+    'SX': {
+        text: "Sint Maarten",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'SK',
-        text: "Slovakia"
+    'SK': {
+        text: "Slovakia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SI',
-        text: "Slovenia"
+    'SI': {
+        text: "Slovenia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SB',
-        text: "Solomon Islands"
+    'SB': {
+        text: "Solomon Islands",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SO',
-        text: "Somalia"
+    'SO': {
+        text: "Somalia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ZA',
-        text: "South Africa"
+    'ZA': {
+        text: "South Africa",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'KR',
-        text: "South Korea"
+    'KR': {
+        text: "South Korea",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SS',
-        text: "South Sudan"
+    'SS': {
+        text: "South Sudan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ES',
-        text: "Spain"
+    'ES': {
+        text: "Spain",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'LK',
-        text: "Sri Lanka"
+    'LK': {
+        text: "Sri Lanka",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SD',
-        text: "Sudan"
+    'SD': {
+        text: "Sudan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SR',
-        text: "Suriname"
+    'SR': {
+        text: "Suriname",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'SZ',
-        text: "Swaziland"
+    'SZ': {
+        text: "Swaziland",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SE',
-        text: "Sweden"
+    'SE': {
+        text: "Sweden",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'CH',
-        text: "Switzerland"
+    'CH': {
+        text: "Switzerland",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'SY',
-        text: "Syria"
+    'SY': {
+        text: "Syria",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TW',
-        text: "Taiwan"
+    'TW': {
+        text: "Taiwan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TJ',
-        text: "Tajikistan"
+    'TJ': {
+        text: "Tajikistan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TZ',
-        text: "Tanzania"
+    'TZ': {
+        text: "Tanzania",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TH',
-        text: "Thailand"
+    'TH': {
+        text: "Thailand",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TL',
-        text: "Timor-Leste"
+    'TL': {
+        text: "Timor-Leste",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TG',
-        text: "Togo"
+    'TG': {
+        text: "Togo",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TO',
-        text: "Tonga"
+    'TO': {
+        text: "Tonga",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'TT',
-        text: "Trinidad and Tobago"
+    'TT': {
+        text: "Trinidad and Tobago",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'TN',
-        text: "Tunisia"
+    'TN': {
+        text: "Tunisia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TR',
-        text: "Turkey"
+    'TR': {
+        text: "Turkey",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TM',
-        text: "Turkmenistan"
+    'TM': {
+        text: "Turkmenistan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'TV',
-        text: "Tuvalu"
+    'TV': {
+        text: "Tuvalu",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'VI',
-        text: "U.S. Virgin Islands"
+    'VI': {
+        text: "U.S. Virgin Islands",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'UG',
-        text: "Uganda"
+    'UG': {
+        text: "Uganda",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'UA',
-        text: "Ukraine"
+    'UA': {
+        text: "Ukraine",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'AE',
-        text: "United Arab Emirates (UAE)"
+    'AE': {
+        text: "United Arab Emirates (UAE)",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'GB',
-        text: "United Kingdom (UK)"
+    'GB': {
+        text: "United Kingdom (UK)",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'UY',
-        text: "Uruguay"
+    'UY': {
+        text: "Uruguay",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'UZ',
-        text: "Uzbekistan"
+    'UZ': {
+        text: "Uzbekistan",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'VU',
-        text: "Vanuatu"
+    'VU': {
+        text: "Vanuatu",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'VE',
-        text: "Venezuela"
+    'VE': {
+        text: "Venezuela",
+        riskCategory: RiskCategory.ZIKA
     },
-    {
-        id: 'VN',
-        text: "Vietnam"
+    'VN': {
+        text: "Vietnam",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'YE',
-        text: "Yemen"
+    'YE': {
+        text: "Yemen",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ZM',
-        text: "Zambia"
+    'ZM': {
+        text: "Zambia",
+        riskCategory: RiskCategory.NONE
     },
-    {
-        id: 'ZW',
-        text: "Zimbabwe"
+    'ZW': {
+        text: "Zimbabwe",
+        riskCategory: RiskCategory.NONE
     }
-]
-
+}
