@@ -246,7 +246,8 @@ function loadEndPoint(number){
     clearMainPanel();
     cdcMetrics.trackEvent("Endpoint Reached", number);
     endpointText.load("endpoints.html #endpoint" +number);
-    $.each(userAnswers, function(){
+    endpointDisclaimer.load("disclaimers.html #oldDisclaimer")
+    /*$.each(userAnswers, function(){
         var questionObject = getQuestion(this.question);
         if(questionObject.hasOwnProperty("getDisclaimer")) {
             var disclaimer = questionObject.getDisclaimer(this);
@@ -261,7 +262,7 @@ function loadEndPoint(number){
             }
         }
     });
-
+*/
 
     endpointContent.show();
     resizeWidget();
@@ -609,7 +610,7 @@ var questions = {
             return this.answers;
         },
         getDisclaimer: function(input){
-            return questions.decisionLogic.getDisclaimer(input);
+            return questions.decisionLogic.disclaimerBasedOnCountryZikaRisk(input);
         }
     },
     3: {
