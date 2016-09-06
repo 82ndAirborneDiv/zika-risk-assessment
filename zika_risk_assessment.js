@@ -29,41 +29,61 @@ var back = $("#back");
 var restart = $("#restart");
 var nextButton = $("#next");
 
-/*array to store answers
-Each index of userAnswers stores a UserAnswer object
-*/
-var userAnswers = [];
+var debug = true;
 
-//UserAnswer stores the question and answer
+/*array to store answers
+Each index of nodeHistory stores a NodeHistory object
+*/
+var nodeHistory = [];
+
+//NodeHistory stores the question and answer
 //for each node in the decision tree.
 // The question will be a number.
 //Answers will be either a number, string, or array of strings
 //for radio, singleSelect, or multiSelect types, respectively.
-function UserAnswer(question, answer){
-    this.question = question;
+function NodeHistory(nodeName, answer){
+    this.node = nodeName;
     this.answer = answer;
+}
+
+function logNodeHistory(){
+    console.log(nodeHistory);
 }
 
 var currentQuestionNumber;
 
-//return Question object from questions array
-function getQuestion(number){
-    return questions["" +number];
+//return Question object from nodes array
+function getNode(nodeName){
+    return nodes["" +nodeName];
 }
 
 //return previous user answer, if there is one
-function getPreviousUserAnswer(){
-    var numUserAnswers = userAnswers.length;
+function getPreviousNode(){
+    var numUserAnswers = nodeHistory.length;
     if(numUserAnswers > 0) {
-        return userAnswers[numUserAnswers - 1];
+        return nodeHistory[numUserAnswers - 1];
     }
 }
 
 //return userAnswer by index, if it exists
 function getUserAnswerByIndex(number){
-    var numUserAnswers = userAnswers.length;
+    var numUserAnswers = nodeHistory.length;
     if(numUserAnswers > 0 && number >= 0 && number < numUserAnswers) {
-        return userAnswers[number];
+        return nodeHistory[number];
+    }
+}
+
+function loadNode(nodeName){
+    //set global question number to nextNode
+    currentQuestionNumber = "" +nodeName;
+    var node = getNode(nodeName);
+    switch(node.nodeType){
+        case NodeType.QUESTION:
+            loadQuestion(nodeName);
+            break;
+        case NodeType.ENDPOINT:
+            loadEndPoint(nodeName);
+            break;
     }
 }
 
@@ -72,15 +92,18 @@ $(document).ready(function(){
         cdcMetrics.trackEvent("ButtonClicked", "Start");
         introPanel.hide();
         mainPanel.show();
-        loadNextQuestion("1");
+        loadNode("1");
     });
 
     back.click(function(){
         cdcMetrics.trackEvent("ButtonClicked", "Back");
 
-        var size = userAnswers.length;
+        var size = nodeHistory.length;
         if(size > 0){
-            loadNextQuestion(getPreviousUserAnswer().question);
+            loadNode(getPreviousNode().node);
+            if(debug){
+                logNodeHistory();
+            }
         }
         else{
             //back should restart the app when on question 1
@@ -134,7 +157,7 @@ function noSelectionAlert(){
     resizeWidget();
 }
 function triggerRestart(){
-    userAnswers = [];
+    nodeHistory = [];
     clearMainPanel();
     introPanel.show().focus();
     mainPanel.hide();
@@ -142,33 +165,32 @@ function triggerRestart(){
 
     $('.scrollable').animate({ scrollTop: 0 }, 0);
 }
-function loadNextQuestion(nextQuestionNumber){
-    //unbind next button behavior. Next button behavior is specified in a switch below based on Question type.
-    //nextButton.unbind();
-
-    //set global question number to next question
-    currentQuestionNumber = nextQuestionNumber;
-
+function loadQuestion(nextQuestionNumber){
     clearMainPanel();
     nextButton.show();
     questionContent.show();
 
-    var nextQuestionObject = getQuestion(nextQuestionNumber);
+    var nextQuestionObject = getNode(nextQuestionNumber);
     var nextQuestionText = nextQuestionObject.text;
+    if(debug){
+        nextQuestionText = "Node number: " +nextQuestionNumber;
+        nextQuestionText += "<br />";
+        nextQuestionText += nextQuestionObject.text;
+    }
     var nextQuestionAnswers = nextQuestionObject.getValuesForAnswers();
 
     var previouslyVisited = false;
     var previousAnswerObject;
-    if(userAnswers.length > 0 && getPreviousUserAnswer().question === nextQuestionNumber){
+    if(nodeHistory.length > 0 && getPreviousNode().node === nextQuestionNumber){
         previouslyVisited = true;
-        previousAnswerObject = getPreviousUserAnswer();
+        previousAnswerObject = getPreviousNode();
     }
 
     //Build question based on next question's answerType
     switch (nextQuestionObject.answerType){
         case AnswerType.NONE:
             if(previouslyVisited){
-                userAnswers.pop();
+                nodeHistory.pop();
             }
             questionText.html('<strong>' +nextQuestionText +'</strong>');
             break;
@@ -177,7 +199,7 @@ function loadNextQuestion(nextQuestionNumber){
             populateSingleSelectList(nextQuestionObject.getValuesForAnswers());
             if(previouslyVisited){
                 singleSelectList.val(previousAnswerObject.answer).trigger("change");
-                userAnswers.pop();
+                nodeHistory.pop();
             }
             singleSelectLabel.html(nextQuestionText);
 
@@ -193,7 +215,7 @@ function loadNextQuestion(nextQuestionNumber){
                     var answerChecked = previousAnswerObject.answer.indexOf($(this).val());
                     $(this).prop('checked', answerChecked >= 0);
                 });
-                userAnswers.pop();
+                nodeHistory.pop();
             }
             multiSelectLabel.html(nextQuestionText);
             multiSelectList.multiselect();
@@ -216,7 +238,7 @@ function loadNextQuestion(nextQuestionNumber){
                 if (previouslyVisited && previousAnswerObject.answer === key) {
                     radioButtonsHTML += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
                         + key + '" checked>';
-                    userAnswers.pop();
+                    nodeHistory.pop();
                     previouslyVisited = false;
                 }
                 else {
@@ -244,11 +266,22 @@ function loadNextQuestion(nextQuestionNumber){
 
 function loadEndPoint(number){
     clearMainPanel();
+    //if previously visited, pop last entry
+    if(nodeHistory.length > 0 && getPreviousNode().node === number){
+        nodeHistory.pop();
+    }
     cdcMetrics.trackEvent("Endpoint Reached", number);
-    endpointText.load("endpoints.html #endpoint" +number);
+    var nodeObject = getNode(number);
+
+    if(debug){
+        var nodeNumText = "Node number: " +number;
+        endpointText.html("<div>" +nodeNumText +"</div>");
+    }
+
+    endpointText.append($('<div>').load("endpoints.html #" +nodeObject.endpointName));
     endpointDisclaimer.load("disclaimers.html #oldDisclaimer")
-    /*$.each(userAnswers, function(){
-        var questionObject = getQuestion(this.question);
+    /*$.each(nodeHistory, function(){
+        var questionObject = getNode(this.question);
         if(questionObject.hasOwnProperty("getDisclaimer")) {
             var disclaimer = questionObject.getDisclaimer(this);
             if (disclaimer != null) {
@@ -272,7 +305,7 @@ function loadEndPoint(number){
 function nextButtonClicked(){
     var answerInput;
     var selection;
-    var currentQuestionObject = getQuestion(currentQuestionNumber);
+    var currentQuestionObject = getNode(currentQuestionNumber);
     var selectedAnswerObject;
 
     switch(currentQuestionObject.answerType) {
@@ -304,34 +337,17 @@ function nextButtonClicked(){
             if(currentQuestionNumber === 30) {
                 selection = "Accepted Disclaimer";
                 trackAnswer(selection);
-                //The disclaimer question object has no answers, if the user clicks next, they
-                //accept the disclaimer.
-                //Upon acceptance, they are presented the question based on their answer to
-                //question 1.
-                var question1 = getQuestion(1);
-                if (getRisk(getUserAnswerByIndex(0).answer) == RiskCategory.ZIKA) { //Zika country
-                    selectedAnswerObject = question1.answers["1"];
-                }
-                else { //non-Zika country
-                    selectedAnswerObject = question1.answers["2"];
-                }
             }
             break;
     }
-    userAnswers.push(new UserAnswer(currentQuestionNumber, selection));
+    nodeHistory.push(new NodeHistory(currentQuestionNumber, selection));
 
-    if(currentQuestionObject.answerType !== AnswerType.NONE) {
-        selectedAnswerObject = currentQuestionObject.decideChoice(currentQuestionNumber, selection);
-    }
-    if(selectedAnswerObject.isEndPoint){
-        loadEndPoint(selectedAnswerObject.nextChoice);
-    }
-    else {
-        loadNextQuestion(selectedAnswerObject.nextChoice);
+    if(debug){
+        logNodeHistory();
     }
 
-
-
+    selectedAnswerObject = currentQuestionObject.decideChoice(currentQuestionNumber, selection);
+    loadNode(selectedAnswerObject.nextNode);
 }
 
 function clearMainPanel(){
@@ -406,7 +422,10 @@ jQuery.fn.multiselect = function() {
 function trackAnswer(answer){
     cdcMetrics.trackEvent("Question " +currentQuestionNumber + " answered", answer);
 }
-
+var NodeType = {
+    QUESTION: "question",
+    ENDPOINT: "endpoint"
+}
 var AnswerType = {
     SINGLESELECT: "singleSelect",
     MULTISELECT: "multiSelect",
@@ -425,48 +444,11 @@ var AdditionalNotes = {
     FUTURE_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "futureTravelEndemicAndEpidemicPartner"
 }
 
-
-/*
-    The questions object was built from the powerpoint flow chart for the Zika Risk Assessment tool.
-    Question and answers are displayed via the loadNextQuestion method.
-    nextChoice refers to the next question number when "isEndPoint" is false or to the endPoint when true;
-
-    To add a question, create a new numbered question object below as follows:
-
-
-   32 : {
-        text: "This is a sample question. What is the maximum air speed velocity of an unladen Swallow?",
-        answers: {
-            //Answers include text to display, nextChoice (the number of the next question or endpoint), and isEndPoint,
-            //a boolean which is used to determine the type of the nextChoice, endpoint or question.
-            1 : {
-                text: "I don't know that",
-                nextChoice: 33,
-                isEndPoint: true
-            },
-        }
-        //Answer types are defined in AnswerType object. Defining a new AnswerType requires modifying the following:
-        //loadNextQuestion(), nextButtonClicked()
-        answerType: AnswerType.RADIO,
-        //decideChoice returns an answerObject based on question number and user selection.
-        //decisionLogic object defines common types of decisionLogic for question types that are repeated.
-        //Define a new decisionLogic type or use an existing one.
-        decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
-        },
-        //getValuesForAnswers specifies the answer choices for building the question. For list type questions(single,
-        //or multi select), generate a list object in global scope and return the list object. For radio type questions,
-        //return this.answers
-        getValuesForAnswers: function(){
-            return this.answers;
-        }
-   }
- */
-var questions = {
+var nodes = {
     decisionLogic: {
-        //Specific logic for multi select questions regarding potential Zika countries
+        //Specific logic for multi select nodes regarding potential Zika countries
         multiCountryCheckForZika : function(questionNumber, selections){
-            var questionObject = getQuestion(questionNumber);
+            var questionObject = getNode(questionNumber);
             var zika = false;
             for(var i = 0; i < selections.length; i++){
                 if(getRisk(selections[i]) == RiskCategory.ZIKA){
@@ -483,14 +465,14 @@ var questions = {
                 return questionObject.answers["2"];
             }
         },
-        //Specific logic for single select questions regarding potential Zika countries
+        //Specific logic for single select nodes regarding potential Zika countries
         singleCountryCheckForZika : function(questionNumber, selection){
-            var questionObject = getQuestion(questionNumber);
+            var questionObject = getNode(questionNumber);
             trackAnswer(selection);
 
             //question 1 requires disclaimer for non-US countries
             if(currentQuestionNumber === "1" && selection !== "US"){
-                questionObject = getQuestion(1);
+                questionObject = getNode(1);
                 return questionObject.answers["3"];
             }
             else{
@@ -504,20 +486,22 @@ var questions = {
         },
         //Generic logic for radio button answerType
         getRadioAnswer: function(questionNumber, selection){
-            var questionObject = getQuestion(questionNumber);
-            return questionObject.answers["" +selection];
+            var questionObject = getNode(questionNumber);
+            var answerObject = questionObject.answers["" +selection];
+            trackAnswer(answerObject.text);
+            return answerObject;
         },
         //disclaimer logic for country selections based on Zika risk
         disclaimerBasedOnCountryZikaRisk: function(userAnswer){
-            var questionObject = getQuestion(userAnswer.question);
+            var questionObject = getNode(userAnswer.question);
             var answerObject;
             switch(questionObject.answerType) {
                 case AnswerType.MULTISELECT:
-                    answerObject = questions.decisionLogic
+                    answerObject = nodes.decisionLogic
                         .multiCountryCheckForZika(userAnswer.question, userAnswer.answer);
                     break;
                 case AnswerType.SINGLESELECT:
-                    answerObject = questions.decisionLogic
+                    answerObject = nodes.decisionLogic
                         .singleCountryCheckForZika(userAnswer.question, userAnswer.answer);
                     break;
             }
@@ -529,15 +513,15 @@ var questions = {
         },
         //additionalNotes logic for country selections based on Zika risk
         additionalNotesBasedOnCountryZikaRisk: function(userAnswer){
-            var questionObject = getQuestion(userAnswer.question);
+            var questionObject = getNode(userAnswer.question);
             var answerObject;
             switch(questionObject.answerType) {
                 case AnswerType.MULTISELECT:
-                    answerObject = questions.decisionLogic
+                    answerObject = nodes.decisionLogic
                         .multiCountryCheckForZika(userAnswer.question, userAnswer.answer);
                     break;
                 case AnswerType.SINGLESELECT:
-                    answerObject = questions.decisionLogic
+                    answerObject = nodes.decisionLogic
                         .singleCountryCheckForZika(userAnswer.question, userAnswer.answer);
                     break;
             }
@@ -553,23 +537,21 @@ var questions = {
         answers: {
             1: {
                 text: "Zika Country",
-                nextChoice: 25,
-                isEndPoint: false,
+                nextNode: 25
             },
             2: {
                 text: "Non-Zika Country",
-                nextChoice: 2,
-                isEndPoint: false,
+                nextNode: 2
             },
             3: {
                 text: "Non-US",
-                nextChoice: 30,
-                isEndPoint: false,
+                nextNode: 30
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.SINGLESELECT,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.singleCountryCheckForZika(qNum, input);
+            return nodes.decisionLogic.singleCountryCheckForZika(qNum, input);
         },
         getValuesForAnswers: function(){
             return countries;
@@ -588,29 +570,27 @@ var questions = {
         answers: {
             1: {
                 text: "I plan to travel.",
-                nextChoice: 3,
-                isEndPoint: false
+                nextNode: 3
             },
             2: {
                 text: "I have traveled in the past 6 months.",
-                nextChoice: 7,
-                isEndPoint: false
+                nextNode: 7
             },
             3:{
                 text: "No, I have not traveled recently and am not planning travel.",
-                nextChoice: 31,
-                isEndPoint: false
+                nextNode: 31
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function(){
             return this.answers;
         },
         getDisclaimer: function(input){
-            return questions.decisionLogic.disclaimerBasedOnCountryZikaRisk(input);
+            return nodes.decisionLogic.disclaimerBasedOnCountryZikaRisk(input);
         }
     },
     3: {
@@ -618,24 +598,23 @@ var questions = {
         answers: {
             1: {
                 text: "Zika Country",
-                nextChoice: 4,
-                isEndPoint: false
+                nextNode: 4
             },
             2: {
                 text: "Non-Zika Country",
-                nextChoice: 1,
-                isEndPoint: true,
+                nextNode: 32
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.multiCountryCheckForZika(qNum, input);
+            return nodes.decisionLogic.multiCountryCheckForZika(qNum, input);
         },
         getValuesForAnswers: function(){
             return countries;
         },
         getAdditionalNotes: function(input){
-            return questions.decisionLogic.additionalNotesBasedOnCountryZikaRisk(input);
+            return nodes.decisionLogic.additionalNotesBasedOnCountryZikaRisk(input);
         }
     },
     4: {
@@ -643,18 +622,17 @@ var questions = {
         answers: {
             1: {
                 text: "Man",
-                nextChoice: 5,
-                isEndPoint: false
+                nextNode: 5
             },
             2: {
                 text: "Woman",
-                nextChoice: 6,
-                isEndPoint: false
+                nextNode: 6
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -665,33 +643,29 @@ var questions = {
         answers: {
             1: {
                 text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextChoice: 34,
-                isEndPoint: true
+                nextNode: 65
             },
             2: {
                 text: "I have a pregnant sex partner.",
-                nextChoice: 33,
-                isEndPoint: true
+                nextNode: 64
             },
             3: {
                 text: "I am sexually active with a female partner(s) who is not pregnant or considering pregnancy.",
-                nextChoice: 37,
-                isEndPoint: true
+                nextNode: 68
             },
             4: {
                 text: "I am sexually active and my partner(s) is male.",
-                nextChoice: 37,
-                isEndPoint: true
+                nextNode: 68
             },
             5: {
                 text: "My partner and I are considering pregnancy.",
-                nextChoice: 36,
-                isEndPoint: true
+                nextNode: 67
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -702,33 +676,29 @@ var questions = {
         answers: {
             1: {
                 text: "My sex partner(s) is female.",
-                nextChoice: 43,
-                isEndPoint: true
+                nextNode: 74
             },
             2: {
                 text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextChoice: 35,
-                isEndPoint: true
+                nextNode: 66
             },
             3: {
                 text: "I am pregnant.",
-                nextChoice: 38,
-                isEndPoint: true
+                nextNode: 69
             },
             4: {
                 text: "I am considering getting pregnant.",
-                nextChoice: 39,
-                isEndPoint: true
+                nextNode: 70
             },
             5: {
                 text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
-                nextChoice: 40,
-                isEndPoint: true
+                nextNode: 71
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -739,18 +709,17 @@ var questions = {
         answers: {
             1: {
                 text: "Zika Country",
-                nextChoice: 8,
-                isEndPoint: false
+                nextNode: 8
             },
             2: {
                 text: "Non-Zika Country",
-                nextChoice: 1,
-                isEndPoint: true,
+                nextNode: 32
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.multiCountryCheckForZika(qNum, input);
+            return nodes.decisionLogic.multiCountryCheckForZika(qNum, input);
         },
         getValuesForAnswers: function(){
             return countries;
@@ -761,18 +730,17 @@ var questions = {
         answers: {
             1: {
                 text: "Man",
-                nextChoice: 9,
-                isEndPoint: false
+                nextNode: 9
             },
             2: {
                 text: "Woman",
-                nextChoice: 12,
-                isEndPoint: false
+                nextNode: 12
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -783,33 +751,29 @@ var questions = {
         answers: {
             1: {
                 text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextChoice: 22,
-                isEndPoint: true
+                nextNode: 53
             },
             2: {
                 text: "I have a pregnant sex partner.",
-                nextChoice: 23,
-                isEndPoint: true
+                nextNode: 54
             },
             3: {
                 text: "I am sexually active with a female partner(s) who is not pregnant or considering pregnancy.",
-                nextChoice: 11,
-                isEndPoint: false
+                nextNode: 11
             },
             4: {
                 text: "I am sexually active and my partner(s) is male.",
-                nextChoice: 11,
-                isEndPoint: false
+                nextNode: 11
             },
             5: {
                 text: "My partner and I are considering pregnancy.",
-                nextChoice: 10,
-                isEndPoint: false
+                nextNode: 10
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -820,18 +784,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 25,
-                isEndPoint: true
+                nextNode: 56
             },
             2: {
                 text: "No",
-                nextChoice: 26,
-                isEndPoint: true
+                nextNode: 57
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -842,18 +805,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 27,
-                isEndPoint: true
+                nextNode: 58
             },
             2: {
                 text: "No",
-                nextChoice: 28,
-                isEndPoint: true
+                nextNode: 59
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -864,33 +826,29 @@ var questions = {
         answers: {
             1: {
                 text: "My sex partner(s) is female.",
-                nextChoice: 24,
-                isEndPoint: true
+                nextNode: 55
             },
             2: {
                 text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextChoice: 24,
-                isEndPoint: true
+                nextNode: 55
             },
             3: {
                 text: "I am pregnant.",
-                nextChoice: 13,
-                isEndPoint: false
+                nextNode: 13
             },
             4: {
                 text: "I am considering getting pregnant.",
-                nextChoice: 14,
-                isEndPoint: false
+                nextNode: 14
             },
             5: {
                 text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
-                nextChoice: 24,
-                isEndPoint: true
+                nextNode: 55
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -901,18 +859,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 29,
-                isEndPoint: true
+                nextNode: 60
             },
             2: {
                 text: "No",
-                nextChoice: 32,
-                isEndPoint: true
+                nextNode: 63
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -923,18 +880,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 30,
-                isEndPoint: true
+                nextNode: 61
             },
             2: {
                 text: "No",
-                nextChoice: 31,
-                isEndPoint: true
+                nextNode: 62
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -945,18 +901,17 @@ var questions = {
         answers: {
             1: {
                 text: "He has been in a foreign country.",
-                nextChoice: 16,
-                isEndPoint: false
+                nextNode: 16
             },
             2: {
                 text: "He is planning to travel.",
-                nextChoice: 22,
-                isEndPoint: false
+                nextNode: 22
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -967,18 +922,17 @@ var questions = {
         answers: {
             1: {
                 text: "Zika Country",
-                nextChoice: 17,
-                isEndPoint: false
+                nextNode: 17
             },
             2: {
                 text: "Non-Zika Country",
-                nextChoice: 1,
-                isEndPoint: true,
+                nextNode: 32
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.multiCountryCheckForZika(qNum, input);
+            return nodes.decisionLogic.multiCountryCheckForZika(qNum, input);
         },
         getValuesForAnswers: function(){
             return countries;
@@ -989,18 +943,17 @@ var questions = {
         answers: {
             1: {
                 text: "Man",
-                nextChoice: 18,
-                isEndPoint: false
+                nextNode: 18
             },
             2: {
                 text: "Woman",
-                nextChoice: 19,
-                isEndPoint: false
+                nextNode: 19
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1011,18 +964,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 10,
-                isEndPoint: true
+                nextNode: 41
             },
             2: {
                 text: "No",
-                nextChoice: 11,
-                isEndPoint: true
+                nextNode: 42
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1033,23 +985,21 @@ var questions = {
         answers: {
             1: {
                 text: "I am pregnant.",
-                nextChoice: 12,
-                isEndPoint: true
+                nextNode: 43
             },
             2: {
                 text: "I am considering getting pregnant.",
-                nextChoice: 20,
-                isEndPoint: false
+                nextNode: 20
             },
             3: {
                 text: "I am not pregnant or trying to become pregnant.",
-                nextChoice: 21,
-                isEndPoint: false
+                nextNode: 21
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1060,18 +1010,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 13,
-                isEndPoint: true
+                nextNode: 44
             },
             2: {
                 text: "No",
-                nextChoice: 14,
-                isEndPoint: true
+                nextNode: 45
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1082,18 +1031,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 15,
-                isEndPoint: true
+                nextNode: 46
             },
             2: {
                 text: "No",
-                nextChoice: 16,
-                isEndPoint: true
+                nextNode: 47
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1104,18 +1052,17 @@ var questions = {
         answers: {
             1: {
                 text: "Zika Country",
-                nextChoice: 23,
-                isEndPoint: false
+                nextNode: 23
             },
             2: {
                 text: "Non-Zika Country",
-                nextChoice: 1,
-                isEndPoint: true,
+                nextNode: 32
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.multiCountryCheckForZika(qNum, input);
+            return nodes.decisionLogic.multiCountryCheckForZika(qNum, input);
         },
         getValuesForAnswers: function(){
             return countries;
@@ -1126,45 +1073,43 @@ var questions = {
         answers: {
             1: {
                 text: "Man",
-                nextChoice: 18,
-                isEndPoint: true
+                nextNode: 49
             },
             2: {
                 text: "Woman",
-                nextChoice: 24,
-                isEndPoint: false
+                nextNode: 24
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
         }
     },
+    nodeType: NodeType.QUESTION,
     24: {
         text: "Which of these best describes you?",
         answers: {
             1: {
                 text: "I am pregnant.",
-                nextChoice: 19,
-                isEndPoint: true
+                nextNode: 50
             },
             2: {
                 text: "I am considering getting pregnant.",
-                nextChoice: 20,
-                isEndPoint: true
+                nextNode: 51
             },
             3: {
                 text: "I am not pregnant or trying to become pregnant.",
-                nextChoice: 21,
-                isEndPoint: true
+                nextNode: 52
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1175,18 +1120,17 @@ var questions = {
         answers: {
             1: {
                 text: "Man",
-                nextChoice: 26,
-                isEndPoint: false
+                nextNode: 26
             },
             2: {
                 text: "Woman",
-                nextChoice: 28,
-                isEndPoint: false
+                nextNode: 28
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1197,33 +1141,29 @@ var questions = {
         answers: {
             1: {
                 text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextChoice: 2,
-                isEndPoint: true
+                nextNode: 33
             },
             2: {
                 text: "I have a pregnant sex partner.",
-                nextChoice: 4,
-                isEndPoint: true
+                nextNode: 35
             },
             3: {
                 text: "I am sexually active with a female partner(s) who is not pregnant or considering pregnancy.",
-                nextChoice: 5,
-                isEndPoint: true
+                nextNode: 36
             },
             4: {
                 text: "I am sexually active and my partner(s) is male.",
-                nextChoice: 5,
-                isEndPoint: true
+                nextNode: 36
             },
             5: {
                 text: "My partner and I are considering pregnancy.",
-                nextChoice: 27,
-                isEndPoint: false
+                nextNode: 27
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1234,18 +1174,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 8,
-                isEndPoint: true
+                nextNode: 39
             },
             2: {
                 text: "No",
-                nextChoice: 9,
-                isEndPoint: true
+                nextNode: 40
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function(){
             return this.answers;
@@ -1256,33 +1195,29 @@ var questions = {
         answers: {
             1: {
                 text: "My sex partner(s) is female.",
-                nextChoice: 17,
-                isEndPoint: true
+                nextNode: 48
             },
             2: {
                 text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextChoice: 3,
-                isEndPoint: true
+                nextNode: 34
             },
             3: {
                 text: "I am pregnant.",
-                nextChoice: 6,
-                isEndPoint: true
+                nextNode: 37
             },
             4: {
                 text: "I am considering getting pregnant.",
-                nextChoice: 29,
-                isEndPoint: false
+                nextNode: 29
             },
             5: {
                 text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
-                nextChoice: 7,
-                isEndPoint: true
+                nextNode: 38
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1293,18 +1228,17 @@ var questions = {
         answers: {
             1: {
                 text: "Yes",
-                nextChoice: 41,
-                isEndPoint: true
+                nextNode: 72
             },
             2: {
                 text: "No",
-                nextChoice: 42,
-                isEndPoint: true
+                nextNode: 73
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1316,12 +1250,16 @@ var questions = {
         "evidence and local risk factors. If you would like to continue and receive CDC recommendations, click the "+
         "next button.",
         answers:{
-
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.NONE,
         getValuesForAnswers: function() {
             return this.answers;
-        }
+        },
+        decideChoice: function(qNum, input){
+            var answerToQuestionOne = getUserAnswerByIndex(0);
+            return nodes["1"].decideChoice(answerToQuestionOne.node, answerToQuestionOne.answer);
+        },
     },
     31:{
         text: "The travel history of your sex partner(s) can also affect your risk of Zika. Do you have a male partner " +
@@ -1329,32 +1267,201 @@ var questions = {
         answers:{
             1:{
                 text: "Yes, my male sex partner(s) has traveled, will travel, or lives abroad.",
-                nextChoice: 15,
-                isEndPoint: false
+                nextNode: 15
             },
             2:{
                 text: "No, my partner has not recently traveled and is not planning travel.",
-                nextChoice: 1,
-                isEndPoint: true
+                nextNode: 32
             },
             3:{
                 text: "No, my sex partner(s) is female.",
-                nextChoice: 1,
-                isEndPoint: true
+                nextNode: 32
             },
             4:{
                 text: "No, I'm not sexually active (I do not have vaginal, anal or oral sex).",
-                nextChoice: 1,
-                isEndPoint: true
+                nextNode: 32
             }
         },
+        nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         decideChoice: function(qNum, input){
-            return questions.decisionLogic.getRadioAnswer(qNum, input);
+            return nodes.decisionLogic.getRadioAnswer(qNum, input);
         },
         getValuesForAnswers: function() {
             return this.answers;
         }
+    },
+    32:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide11"
+    },
+    33:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide12"
+    },
+    34:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide13"
+    },
+    35:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide14"
+    },
+    36:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide15"
+    },
+    37:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide16"
+    },
+    38:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide17"
+    },
+    39:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide18"
+    },
+    40:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide19"
+    },
+    41:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide20"
+    },
+    42:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide21"
+    },
+    43:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide22"
+    },
+    44:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide23"
+    },
+    45:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide24"
+    },
+    46:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide25"
+    },
+    47:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide26"
+    },
+    48:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide27"
+    },
+    49:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide28"
+    },
+    50:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide29"
+    },
+    51:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide30"
+    },
+    52:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide31"
+    },
+    53:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide32"
+    },
+    54:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide33"
+    },
+    55:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide34"
+    },
+    56:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide35"
+    },
+    57:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide36"
+    },
+    58:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide37"
+    },
+    59:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide38"
+    },
+    60:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide39"
+    },
+    61:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide40"
+    },
+    62:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide41"
+    },
+    63:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide42"
+    },
+    64:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide43"
+    },
+    65:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide44"
+    },
+    66:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide45"
+    },
+    67:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide46"
+    },
+    68:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide47"
+    },
+    69:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide48"
+    },
+    70:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide49"
+    },
+    71:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide50"
+    },
+    72:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide52"
+    },
+    73:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide53"
+    },
+    74:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "slide54"
     }
 }
 
