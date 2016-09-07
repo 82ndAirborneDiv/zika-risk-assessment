@@ -1518,7 +1518,7 @@ var countries = {
     },
     'AG': {
         text: "Antigua and Barbuda",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'AR': {
         text: "Argentina",
@@ -1546,7 +1546,7 @@ var countries = {
     },
     'BS': {
         text: "Bahamas, The",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'BH': {
         text: "Bahrain",
@@ -1600,6 +1600,10 @@ var countries = {
         text: "Brazil",
         riskCategory: RiskCategory.ZIKA
     },
+    'VG' : {
+        text: "British Virgin Islands",
+        riskCategory: RiskCategory.ZIKA
+    },
     'BN': {
         text: "Brunei",
         riskCategory: RiskCategory.NONE
@@ -1634,6 +1638,10 @@ var countries = {
     },
     'CV': {
         text: "Cape Verde",
+        riskCategory: RiskCategory.ZIKA
+    },
+    'KY' :{
+        text: "Cayman Islands",
         riskCategory: RiskCategory.ZIKA
     },
     'CF': {
@@ -2174,7 +2182,7 @@ var countries = {
     },
     'SG': {
         text: "Singapore",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'BQ': {
         text: "Sint Eustatius",
@@ -2288,6 +2296,10 @@ var countries = {
         text: "Turkmenistan",
         riskCategory: RiskCategory.NONE
     },
+    'TC' : {
+        text: "Turks and Caicos",
+        riskCategory: RiskCategory.ZIKA
+    },
     'TV': {
         text: "Tuvalu",
         riskCategory: RiskCategory.NONE
@@ -2345,3 +2357,4 @@ var countries = {
         riskCategory: RiskCategory.NONE
     }
 }
+
