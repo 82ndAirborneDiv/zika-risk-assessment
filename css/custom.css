@@ -39,8 +39,6 @@ a {
 }
 
 @media only screen and (max-width: 500px) {
-
-	.zika-title {font-size:14px;}
 	.panel-body{
 		min-height: 375px;
 		max-height: 450px;
@@ -78,4 +76,17 @@ a {
 .multiselect-on {
 
 	background-color:#e5e5e5;
+}
+
+.float-left{
+	float: left;
+}
+.float-right{
+	float: right;
+}
+
+.img-in-endpoint-ol {
+	padding: 10px;
+	height: 100px;
+	width: 100px;
 }

@@ -20,20 +20,46 @@
         <div class="col-lg-12">
             <div class="panel panel-primary" id="zika-app-intro"  tabindex="0">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Zika Risk Assessment</h3>
+                    <h3 class="panel-title">Know Your Zika Risk</h3>
                 </div>
                 <div class="scrollable">
                     <div class="panel-body">
-                        <p>Zika virus is primarily spread by mosquitoes. A pregnant woman can pass Zika to her developing
-                            fetus. Zika can also be spread through sex (vaginal, anal, or oral) by a man with Zika to his
-                            female and male partners (even if he doesn't have symptoms). Where you live, your travel history,
-                            and the travel history of your sex partner(s) can affect your risk of Zika. This web app can
-                            help you learn more about Zika and how to protect yourself. </p>
+                        <p>Where you live, your travel history, and the travel history of your sex partner(s) can
+                            affect your chances of getting Zika. This website can help you learn more about Zika, why
+                            you might be at risk of getting it, and how to protect yourself and others.
+                            <br/><br/>
+                            Many people infected with Zika won’t have symptoms or will only have mild symptoms.
+                            However, a pregnant woman, even one without symptoms, can pass Zika to her developing fetus.
+                            <strong>Zika infection during pregnancy can cause
+                                <a target="_blank" href="http://www.cdc.gov/zika/healtheffects/birth_defects.html">
+                                    serious birth defects</a></strong>. Zika virus primarily spreads when a mosquito
+                            infected with Zika bites you. Zika also can spread through sex with a man or woman who has
+                            Zika. Sex includes vaginal, anal, or oral sex, and the sharing of sex toys. Zika can pass
+                            through sex even if the person does not have symptoms at the time.
+                            <br/><br/>
+                            Protect yourself and others – learn how you can help prevent the spread of Zika!
+                        </p>
+                        Terms of Use:
                         <ul>
-                            <li>Use this app for each traveler or resident in your household.</li>
-                            <li>If you traveled recently and also have future travel plans, please answer questions for both
-                                scenarios to get complete CDC recommendations.</li>
-                            <li>This app is not intended to replace the advice of a medical professional.</li>
+                            <li>This website focuses on Zika risks and travel to international destinations and US
+                                territories. If you are concerned about travel within the United States, you can visit
+                                the CDC website for more information about
+                                <a target="_blank" href="http://www.cdc.gov/zika/geo/united-states.html">Zika in the
+                                    United States</a>.</li>
+                            <li>This website may help you to determine the risk of Zika for each person in your
+                                household and assist you in making informed decisions about your health.</li>
+                            <li>If you traveled recently and also have future travel plans, please use the website for
+                                both situations to get complete CDC recommendations.</li>
+                            <li>The user acknowledges and agrees that this tool is only intended to be, and will be
+                                used only as a reference aid, and that the information contained in the product is not
+                                intended to be (nor should it be used as) a substitute for the advice of a medical
+                                professional.</li>
+                            <li>The website should not be used as a self-diagnosis tool.  Seek the advice of a medical
+                                professional if you are concerned that you are ill.</li>
+                            <li>This product is provided without warranties or representations of any kind, express or
+                                implied, and the user assumes any and all risk of any liability, loss, or damage caused
+                                by it or its content.</li>
+                            <li>By utilizing the website, you indicate your acceptance of these terms.</li>
                         </ul>
                     </div>
                 </div>
@@ -50,42 +76,42 @@
             <div class="panel panel-primary" id="zika-app-main" style="display: none">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6 pull-left">
-                            <h3 class="panel-title pull-left zika-title">Zika Risk Assessment</h3>
+                        <div class="col-lg-4 col-md-4 col-sm-4 pull-left">
+                            <h3 class="panel-title pull-left zika-title">Know Your Zika Risk</h3>
                         </div>
 
-                        <div class="col-lg-6 col-md-6 col-sm-6 pull-right" align="right">
+                        <div class="col-lg-8 col-md-8 col-sm-8 pull-right" align="right">
                             <button class="btn btn-default" id="restart">Restart</button>
                         </div>
                     </div>
                 </div>
                 <div class="scrollable">
                     <div class="panel-body" id="zika-app-question" tabindex="-1">
-                        <div id="question-text">
+                        <div class="row">
+                            <div class="col-lg-10 col-md-10">
+                                <div id="question-text">
 
-                        </div>
-                        <div id="question-answers">
+                                </div>
+                                <div id="question-answers">
 
-                        </div>
+                                </div>
+                                <div id="question-footnotes">
 
-                        <form role="form" id="singleSelectListDiv" class="form-group" style="display: none">
-                            <label id="singleSelectLabel" for="singleSelectList"></label>
-                            <select class="form-control" id="singleSelectList" name="select">
-                                <option></option>
-                            </select>
-                        </form>
-
-
-                        <div id="multiSelectListDiv" style="display:none">
-                            <label id="multiSelectLabel" for="multiSelectList"></label>
-                            <div role="group" aria-labelledby="multiSelectLabel" id="multiSelectList" class="multiselect">
-
+                                </div>
                             </div>
-                        </div>
+                            <div class ="col-lg-2 col-md-2">
+                                <div id="question-image"></div>
+                            </div>
 
+
+
+
+
+                        </div>
                         <div id="alert-area" style="padding-top: 10px">
 
                         </div>
+
                     </div>
 
                     <div class="panel-body" id="zika-app-endpoint" tabindex="-1">
