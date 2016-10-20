@@ -86,7 +86,11 @@ a {
 }
 
 .img-in-endpoint-ol {
-	padding: 10px;
+	margin: 10px;
 	height: 100px;
 	width: 100px;
+}
+
+.well {
+	margin-top: 20px;
 }

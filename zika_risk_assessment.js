@@ -301,27 +301,34 @@ function loadEndPoint(number){
                 $('#permethrin').addClass('hidden');
             }
         });
+        $('#mosquitoAvoidanceMaleResident').load('endpoints.html #mosquitoAvoidanceListMaleResident', function () {
+            if(checkForAreaInNodeHistory('PR')){
+                $('#permethrin').addClass('hidden');
+            }
+        });
+        $('#mosquitoAvoidanceFemaleResident').load('endpoints.html #mosquitoAvoidanceListFemaleResident', function () {
+            if(checkForAreaInNodeHistory('PR')){
+                $('#permethrin').addClass('hidden');
+            }
+        });
     }));
 
-    //endpointText.append($('</div>').load("endpoints.html #" +nodeObject.endpointName));
-    endpointDisclaimer.load("disclaimers.html #oldDisclaimer")
-
-    /*$.each(nodeHistory, function(){
-        var questionObject = getNode(this.question);
-        if(questionObject.hasOwnProperty("getDisclaimer")) {
-            var disclaimer = questionObject.getDisclaimer(this);
+    //endpointDisclaimer.load("disclaimers.html #oldDisclaimer")
+    $.each(nodeHistory, function(){
+        var nodeObject = getNode(this.node);
+        if(nodeObject.hasOwnProperty("getDisclaimer")) {
+            var disclaimer = nodeObject.getDisclaimer(this);
             if (disclaimer != null) {
                 endpointDisclaimer.append($('<div>').load("disclaimers.html #" + disclaimer));
             }
         }
-        if(questionObject.hasOwnProperty("getAdditionalNotes")){
-            var additionalNotes = questionObject.getAdditionalNotes(this);
+        if(nodeObject.hasOwnProperty("getAdditionalNotes")){
+            var additionalNotes = nodeObject.getAdditionalNotes(this);
             if(additionalNotes != null){
                 endpointAdditionalNotes.append($('<div>').load("additionalNotes.html #" +additionalNotes));
             }
         }
     });
-*/
 
 
     endpointContent.show();
@@ -330,58 +337,21 @@ function loadEndPoint(number){
     $('.panel-body').focus();
 }
 
-var testEndpoint = {
-    residentMaleNotSexuallyActive: '<div id="residentMaleNotSexuallyActive">'
-    +'<h4><strong>You are living in an area with a current Zika outbreak.</strong></h4>'
-    +'<p>'
-    +'You are not currently at risk of getting or passing Zika through sex. If you become sexually active, protect'
-+'yourself and your sex partner(s) by using'
-+'<a target="_blank" href="http://www.cdc.gov/condomeffectiveness/index.html">male or female condoms</a>. Couples'
-+'who do not want to get pregnant should talk with their doctor or other health care provider about ways to'
-+'<a target="_blank" href="http://www.cdc.gov/zika/pregnancy/preventing-pregnancy.html">prevent unintended'
-+'pregnancy</a>.'
-+'<br/><br/>'
-+'You are at risk of getting Zika from mosquito bites. To protect yourself from Zika,'
-+'<a target="_blank" href="http://www.cdc.gov/zika/prevention/prevent-mosquito-bites.html">avoid mosquito'
-+'bites</a>:'
-+'</p>'
-+'<div>'
-+'<ol>'
-+'<li>Use insect repellent (look for these ingredients: DEET, picaridin, IR3535, oil of lemon eucalyptus'
-+'or para-menthane-diol, or 2-undecanone). Always use as directed.</li>'
-+'<li>Wear long-sleeved shirts and long pants.</li>'
-+'<li id="permethrin" class="hidden">Use permethrin-treated clothing and gear (such as boots, pants, socks, and tents).</li>'
-+'<li>Sleep in places with air conditioning and window and door screens if possible.</li>'
-+'<li>Sleep under a bed net if outdoors or in a room that is not screened.</li>'
-+'<li><a target="_blank" href="http://www.cdc.gov/zika/prevention/controlling-mosquitoes-at-home.html">Control'
-+'mosquitoes around your home</a>. </li>'
-+'</ol>'
-+'See a health care provider if you have symptoms of Zika (fever, rash, joint pain, red eyes).'
-+'</div>'
-+'</div>'
-}
 function checkForAreaInNodeHistory(area){
-    console.log("checking node history for " +area);
     var areaFound = false;
     $.each(nodeHistory, function () {
         var thisAnswerType = getNode(this.node).answerType;
         if(thisAnswerType === AnswerType.SINGLESELECT) {
-            console.log("does " + this.answer + " === " + area + "?");
             if (this.answer === area) {
-                console.log("yes");
                 areaFound = true;
             } else {
                 areaFound = false;
-                console.log("no");
             }
         } else if(thisAnswerType === AnswerType.MULTISELECT) {
-            console.log("does " + this.answer + " include " + area + "?");
             if (this.answer.indexOf(area) >= 0) {
-                console.log("yes");
                 areaFound = true;
             } else {
                 areaFound = false;
-                console.log("no");
             }
         }
     })
@@ -522,11 +492,11 @@ var Disclaimers = {
     RESIDENCE_NON_US: "residenceDisclaimerNonUS"
 }
 var AdditionalNotes = {
-    RESIDENCE_ENDEMIC: "residenceEndemic",
-    RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_SELF: "recentTravelEndemicAndEpidemicSelf",
-    FUTURE_TRAVEL_ENDEMIC_AND_EPIDEMIC_SELF: "futureTravelEndemicAndEpidemicSelf",
-    RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "recentTravelEndemicAndEpidemicPartner",
-    FUTURE_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "futureTravelEndemicAndEpidemicPartner"
+    RESIDENCE_ENDEMIC: "noteForResidentsOfEndemicCountries",
+    RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC: "recentTravelToBothEndemicAndEpidemicCountries",
+    PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC: "planningTravelToBothEndemicAndEpidemicCountries",
+    RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerRecentTravelToBothEndemicAndEpidemicCountries",
+    PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerPlanningTravelToBothEndemicAndEpidemicCountries"
 }
 
 var nodes = {
@@ -575,46 +545,6 @@ var nodes = {
             var answerObject = questionObject.answers["" +selection];
             trackAnswer(answerObject.text);
             return answerObject;
-        },
-        //disclaimer logic for country selections based on Zika risk
-        disclaimerBasedOnCountryZikaRisk: function(userAnswer){
-            var questionObject = getNode(userAnswer.question);
-            var answerObject;
-            switch(questionObject.answerType) {
-                case AnswerType.MULTISELECT:
-                    answerObject = nodes.decisionLogic
-                        .multiCountryCheckForZika(userAnswer.question, userAnswer.answer);
-                    break;
-                case AnswerType.SINGLESELECT:
-                    answerObject = nodes.decisionLogic
-                        .singleCountryCheckForZika(userAnswer.question, userAnswer.answer);
-                    break;
-            }
-            if (answerObject.hasOwnProperty("disclaimer")) {
-                return answerObject.disclaimer;
-            } else {
-                return null;
-            }
-        },
-        //additionalNotes logic for country selections based on Zika risk
-        additionalNotesBasedOnCountryZikaRisk: function(userAnswer){
-            var questionObject = getNode(userAnswer.question);
-            var answerObject;
-            switch(questionObject.answerType) {
-                case AnswerType.MULTISELECT:
-                    answerObject = nodes.decisionLogic
-                        .multiCountryCheckForZika(userAnswer.question, userAnswer.answer);
-                    break;
-                case AnswerType.SINGLESELECT:
-                    answerObject = nodes.decisionLogic
-                        .singleCountryCheckForZika(userAnswer.question, userAnswer.answer);
-                    break;
-            }
-            if (answerObject.hasOwnProperty("additionalNotes")) {
-                return answerObject.additionalNotes;
-            } else {
-                return null;
-            }
         },
     },
     1: {
@@ -686,7 +616,7 @@ var nodes = {
             return this.answers;
         },
         getDisclaimer: function(input){
-            return nodes.decisionLogic.disclaimerBasedOnCountryZikaRisk(input);
+            //return nodes.decisionLogic.disclaimerBasedOnCountryZikaRisk(input);
         }
     },
     3: {
@@ -710,7 +640,7 @@ var nodes = {
             return countries;
         },
         getAdditionalNotes: function(input){
-            return nodes.decisionLogic.additionalNotesBasedOnCountryZikaRisk(input);
+            //return nodes.decisionLogic.additionalNotesBasedOnCountryZikaRisk(input);
         }
     },
     4: {
@@ -1534,35 +1464,35 @@ var nodes = {
     },
     64:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide43"
+        endpointName: "planningTravelPregnantPartner"
     },
     65:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide44"
+        endpointName: "planningTravelMaleNotSexuallyActive"
     },
     66:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide45"
+        endpointName: "planningTravelFemaleNotSexuallyActive"
     },
     67:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide46"
+        endpointName: "planningTravelMaleConsideringPregnancy"
     },
     68:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide47"
+        endpointName: "planningTravelMaleSexuallyActiveNotConsideringPregnancy"
     },
     69:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide48"
+        endpointName: "planningTravelFemalePregnant"
     },
     70:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide49"
+        endpointName: "planningTravelFemaleTryingToGetPregnant"
     },
     71:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide50"
+        endpointName: "planningTravelFemaleSexuallyActiveNotConsideringPregnancy"
     },
     72:{
         nodeType: NodeType.ENDPOINT,
