@@ -292,44 +292,43 @@ function loadEndPoint(number){
 
     endpointText.append($('<div>').load("endpoints.html #" +nodeObject.endpointName, function () {
         $('#mosquitoAvoidanceMale').load('endpoints.html #mosquitoAvoidanceListMale', function () {
-            if(checkForAreaInNodeHistory('PR')){
+            if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
         $('#mosquitoAvoidanceFemale').load('endpoints.html #mosquitoAvoidanceListFemale', function () {
-            if(checkForAreaInNodeHistory('PR')){
+            if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
         $('#mosquitoAvoidanceMaleResident').load('endpoints.html #mosquitoAvoidanceListMaleResident', function () {
-            if(checkForAreaInNodeHistory('PR')){
+            if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
         $('#mosquitoAvoidanceFemaleResident').load('endpoints.html #mosquitoAvoidanceListFemaleResident', function () {
-            if(checkForAreaInNodeHistory('PR')){
+            if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
     }));
 
-    //endpointDisclaimer.load("disclaimers.html #oldDisclaimer")
-    $.each(nodeHistory, function(){
-        var nodeObject = getNode(this.node);
-        if(nodeObject.hasOwnProperty("getDisclaimer")) {
-            var disclaimer = nodeObject.getDisclaimer(this);
+    for(var i = nodeHistory.length - 1; i >= 0; i--){
+        var nodeHistoryObject = nodeHistory[i];
+        var node = getNode(nodeHistoryObject.node);
+        if(node.hasOwnProperty("getDisclaimer")) {
+            var disclaimer = node.getDisclaimer(nodeHistoryObject);
             if (disclaimer != null) {
                 endpointDisclaimer.append($('<div>').load("disclaimers.html #" + disclaimer));
             }
         }
-        if(nodeObject.hasOwnProperty("getAdditionalNotes")){
-            var additionalNotes = nodeObject.getAdditionalNotes(this);
+        if(node.hasOwnProperty("getAdditionalNotes")){
+            var additionalNotes = node.getAdditionalNotes(nodeHistoryObject.answer);
             if(additionalNotes != null){
                 endpointAdditionalNotes.append($('<div>').load("additionalNotes.html #" +additionalNotes));
             }
         }
-    });
-
+    }
 
     endpointContent.show();
 
@@ -402,7 +401,7 @@ function nextButtonClicked(){
         logNodeHistory();
     }
 
-    selectedAnswerObject = currentQuestionObject.decideChoice(currentQuestionNumber, selection);
+    selectedAnswerObject = currentQuestionObject.decideChoice(nodeHistory[nodeHistory.length - 1]);
     loadNode(selectedAnswerObject.nextNode);
 }
 
@@ -502,41 +501,44 @@ var AdditionalNotes = {
 var nodes = {
     decisionLogic: {
         //Specific logic for multi select nodes regarding potential Zika countries
-        multiCountryCheckForZika : function(questionNumber, selections){
-            var questionObject = getNode(questionNumber);
-            var zika = false;
-            for(var i = 0; i < selections.length; i++){
-                if(getRisk(selections[i]) == RiskCategory.ZIKA){
-                    zika = true;
+        multiCountryCheckForZika : function(nodeHistoryObject){
+            var questionObject = getNode(nodeHistoryObject.node);
+            var answer = nodeHistoryObject.answer;
+            var epidemicZika = false;
+            var endemicZika = false;
+            var unitedStates = false;
+            for(var i = 0; i < answer.length; i++){
+                var currentAnswer = nodeHistoryObject.answer[i];
+                if(getRisk(currentAnswer) === RiskCategory.EPIDEMIC_ZIKA){
+                    epidemicZika = true;
                     break;
+                } else if(getRisk(currentAnswer) === RiskCategory.ENDEMIC_ZIKA){
+                    endemicZika = true;
+                    break;
+                } else if(currentAnswer === "UNITED_STATES"){
+                    unitedStates = true;
                 }
             }
-            if(zika){
-                trackAnswer("Answer set included Zika country(ies)");
+            if(epidemicZika){
+                if(endemicZika) {
+                    trackAnswer("Answer set included Epidemic and Endemic Zika country(ies)");
+                } else {
+                    trackAnswer("Answer set included Epidemic Zika country(ies)");
+                }
                 return questionObject.answers["1"];
             }
             else{
-                trackAnswer("Answer set did not include a Zika country");
-                return questionObject.answers["2"];
-            }
-        },
-        //Specific logic for single select nodes regarding potential Zika countries
-        singleCountryCheckForZika : function(questionNumber, selection){
-            var questionObject = getNode(questionNumber);
-            trackAnswer(selection);
-
-            //question 1 requires disclaimer for non-US countries
-            if(currentQuestionNumber === "1" && selection !== "US"){
-                questionObject = getNode(1);
-                return questionObject.answers["3"];
-            }
-            else{
-                if (getRisk(selection) == RiskCategory.ZIKA) { //Zika country
-                    return questionObject.answers["1"];
-                }
-                else { //non-Zika country
+                if(endemicZika){
+                    trackAnswer("Answer set included Endemic Zika country(ies)");
                     return questionObject.answers["2"];
+                } else {
+                    trackAnswer("Answer set did not include a Zika country");
+                    if(unitedStates){
+                        return questionObject.answers["4"];
+                    }
+                    return questionObject.answers["3"];
                 }
+
             }
         },
         //Generic logic for radio button answerType
@@ -551,11 +553,11 @@ var nodes = {
         text: "Where do you live?",
         answers: {
             1: {
-                text: "Zika Country",
+                text: "Epidemic Zika Country",
                 nextNode: 25
             },
             2: {
-                text: "Non-Zika Country",
+                text: "US, Endemic Zika, or Non-Zika Country",
                 nextNode: 2
             },
             3: {
@@ -569,26 +571,41 @@ var nodes = {
             url: '/img/globe.png',
             altText: 'globe'
         },
-        footnotes:{
-            text: ''
-        },
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.singleCountryCheckForZika(qNum, input);
+        decideChoice: function(nodeHistoryObject){
+            var questionObject = getNode(nodeHistoryObject.node);
+            trackAnswer(nodeHistoryObject.answer);
+
+            if(nodeHistoryObject.answer !== "UNITED_STATES"){
+                return questionObject.answers["3"];
+            }
+            else{
+                if (getRisk(nodeHistoryObject.answer) == RiskCategory.EPIDEMIC_ZIKA) { //Zika country
+                    return questionObject.answers["1"];
+                }
+                else { //non-Zika country
+                    return questionObject.answers["2"];
+                }
+            }
         },
         getValuesForAnswers: function(){
             return countries;
         },
         getDisclaimer: function(input) {
-            //implementing inline as q1 disclaimer is based on residence, US or Non US.
-            if (input.answer == "US") {
+            if (input.answer == "UNITED_STATES") {
                 return Disclaimers.RESIDENCE_US;
             } else {
                 return Disclaimers.RESIDENCE_NON_US;
             }
+        },
+        getAdditionalNotes: function(input){
+            if(getRisk(input)==RiskCategory.ENDEMIC_ZIKA){
+                return AdditionalNotes.RESIDENCE_ENDEMIC;
+            }
         }
     },
     2: {
-        text: "Have you recently traveled or do you plan to travel internationally?",
+        text: "Have you traveled in the past 6 months, or do you plan to travel in the future, to an international " +
+        "destination or US territory?",
         answers: {
             1: {
                 text: "I plan to travel.",
@@ -599,7 +616,7 @@ var nodes = {
                 nextNode: 7
             },
             3:{
-                text: "No, I have not traveled recently and am not planning travel.",
+                text: "No, I have not traveled in the past 6 months and am not planning travel.",
                 nextNode: 31
             }
         },
@@ -609,8 +626,8 @@ var nodes = {
             url: '/img/travel_plane-01.png',
             altText: 'plane'
         },
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function(){
             return this.answers;
@@ -623,24 +640,46 @@ var nodes = {
         text: "Where are you planning to travel?",
         answers: {
             1: {
-                text: "Zika Country",
+                text: "Epidemic Zika Country",
                 nextNode: 4
             },
             2: {
+                text: "Endemic Zika Country",
+                nextNode: 48
+            },
+            3: {
                 text: "Non-Zika Country",
-                nextNode: 32
+                nextNode: 74
+            },
+            4: {
+                text: "United States",
+                nextNode: 75
             }
+
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.multiCountryCheckForZika(qNum, input);
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
         },
         getValuesForAnswers: function(){
             return countries;
         },
         getAdditionalNotes: function(input){
-            //return nodes.decisionLogic.additionalNotesBasedOnCountryZikaRisk(input);
+            var zikaEpidemic = false;
+            var zikaEndemic = false;
+
+            for(var i = 0; i < input.length; i++){
+                if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
+                    zikaEpidemic = true;
+                }
+                if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
+                    zikaEndemic = true;
+                }
+            }
+            if(zikaEpidemic && zikaEndemic){
+                return AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC;
+            }
         }
     },
     4: {
@@ -661,8 +700,8 @@ var nodes = {
             url: '/img/man_and_woman_symbols.png',
             altText: 'man and woman symbols'
         },
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -684,7 +723,7 @@ var nodes = {
             },
             3: {
                 text: "I am sexually active with a male partner(s) or a female partner(s) who is not pregnant or " +
-                "trying to get pregnancy.",
+                "trying to get pregnant.",
                 nextNode: 68
             },
             4: {
@@ -696,13 +735,13 @@ var nodes = {
         answerType: AnswerType.RADIO,
         image:{
             url: '/img/thinking_male-01.png',
-            altText: 'thinking male'
+            altText: 'thinking man'
         },
         footnotes:{
-            text: '*Choose only one; if your partner is pregnant, please select \“I have a pregnant sex partner.\”'
+            text: '*Choose only one; if your partner is pregnant, please select “I have a pregnant sex partner”'
         },
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -715,30 +754,37 @@ var nodes = {
         "Which of these best describes you?*",
         answers: {
             1: {
-                text: "I have a pregnant sex partner.",
-                nextNode: 64
+                text: "I am not sexually active.",
+                nextNode: 66
             },
             2: {
-                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextNode: 66
+                text: "I have a pregnant sex partner.",
+                nextNode: 64
             },
             3: {
                 text: "I am pregnant.",
                 nextNode: 69
             },
             4: {
-                text: "I am considering getting pregnant.",
+                text: "I am trying to get pregnant.",
                 nextNode: 70
             },
             5: {
-                text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
+                text: "I am sexually active, and I am not pregnant or trying to get pregnant.",
                 nextNode: 71
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/thinking_female-01.png',
+            altText: 'thinking woman'
+        },
+        footnotes:{
+            text: '*Choose only one; if you are pregnant, please select "I am pregnant."'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -748,21 +794,49 @@ var nodes = {
         text: "Where have you traveled? (Answer for all destinations, including those you passed through.)",
         answers: {
             1: {
-                text: "Zika Country",
+                text: "Epidemic Zika Country",
                 nextNode: 8
             },
             2: {
+                text: "Endemic Zika Country",
+                nextNode: 77
+            },
+            3: {
                 text: "Non-Zika Country",
-                nextNode: 32
+                nextNode: 76
+            },
+            4: {
+                text: "United States",
+                nextNode: 75
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.multiCountryCheckForZika(qNum, input);
+        image: {
+            url: '/img/globe.png',
+            altText: 'globe'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
         },
         getValuesForAnswers: function(){
             return countries;
+        },
+        getAdditionalNotes: function(input){
+            var zikaEpidemic = false;
+            var zikaEndemic = false;
+
+            for(var i = 0; i < input.length; i++){
+                if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
+                    zikaEpidemic = true;
+                }
+                if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
+                    zikaEndemic = true;
+                }
+            }
+            if(zikaEpidemic && zikaEndemic){
+                return AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC;
+            }
         }
     },
     8: {
@@ -779,18 +853,25 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/man_and_woman_symbols.png',
+            altText: 'man and woman symbols'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
         }
     },
     9: {
-        text: "Which of these best describes you?",
+        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not your " +
+        "partner is pregnant or considering pregnancy is also important because the risk of Zika is of greatest " +
+        "concern for pregnant women.<br/><br/>" +
+        "Which of these best describes you?*",
         answers: {
             1: {
-                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
+                text: "I am not sexually active.",
                 nextNode: 53
             },
             2: {
@@ -798,22 +879,26 @@ var nodes = {
                 nextNode: 54
             },
             3: {
-                text: "I am sexually active with a female partner(s) who is not pregnant or considering pregnancy.",
+                text: "I am sexually active with a male partner(s) or a female partner(s) who is not pregnant or " +
+                "trying to get pregnant.",
                 nextNode: 11
             },
             4: {
-                text: "I am sexually active and my partner(s) is male.",
-                nextNode: 11
-            },
-            5: {
                 text: "My partner and I are considering pregnancy.",
                 nextNode: 10
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/thinking_male-01.png',
+            altText: 'thinking man'
+        },
+        footnotes:{
+            text: '*Choose only one; if your partner is pregnant, please select “I have a pregnant sex partner.”'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -833,8 +918,12 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -854,41 +943,55 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
         }
     },
     12: {
-        text: "Which of these best describes you?",
+        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not you " +
+        "are pregnant or considering pregnancy is also important because the risk of Zika is of greatest concern " +
+        "for pregnant women.<br/><br/>" +
+        "Which of these best describes you?*",
         answers: {
             1: {
-                text: "My sex partner(s) is female.",
-                nextNode: 55
+                text: "I am not sexually active.",
+                nextNode: 78
             },
             2: {
-                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextNode: 55
+                text: "I have a pregnant sex partner.",
+                nextNode: 54
             },
             3: {
                 text: "I am pregnant.",
                 nextNode: 13
             },
             4: {
-                text: "I am considering getting pregnant.",
+                text: "I am trying to get pregnant.",
                 nextNode: 14
             },
             5: {
-                text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
-                nextNode: 55
+                text: "I am sexually active, and I am not pregnant or trying to get pregnant.",
+                nextNode: 79
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/thinking_female-01.png',
+            altText: 'thinking woman'
+        },
+        footnotes:{
+            text: '*Choose only one; if you are pregnant, please select "I am pregnant."'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -908,8 +1011,12 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -929,29 +1036,46 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
         }
     },
     15: {
-        text: "Has your partner been in a foreign country (traveled or lived abroad) or is he planning travel?",
+        text: "When did your partner(s) travel or live outside the United States (internationally or in a US " +
+        "territory)?",
         answers: {
             1: {
-                text: "He has been in a foreign country.",
+                text: "My partner(s) has been outside the US in the past 6 months*",
                 nextNode: 16
             },
             2: {
-                text: "He is planning to travel.",
+                text: "My partner(s) is planning to travel outside the US.",
                 nextNode: 22
+            },
+            3: {
+                text: "My partner(s) was outside the US more than 6 months* ago",
+                nextNode: 32
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image: {
+            url: '/img/travel_plane-01.png',
+            altText: 'plane'
+        },
+        footnotes:{
+            text: "* If you are pregnant, please consider the travel history of sex partner(s) throughout your " +
+            "pregnancy."
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -961,21 +1085,49 @@ var nodes = {
         text: "Where has your partner traveled or lived?",
         answers: {
             1: {
-                text: "Zika Country",
+                text: "Epidemic Zika Country",
                 nextNode: 17
             },
             2: {
+                text: "Endemic Zika Country",
+                nextNode: 81
+            },
+            3: {
                 text: "Non-Zika Country",
                 nextNode: 32
+            },
+            4: {
+                text: "United States",
+                nextNode: 75
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.multiCountryCheckForZika(qNum, input);
+        image: {
+            url: '/img/globe.png',
+            altText: 'globe'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
         },
         getValuesForAnswers: function(){
             return countries;
+        },
+        getAdditionalNotes: function(input){
+            var zikaEpidemic = false;
+            var zikaEndemic = false;
+
+            for(var i = 0; i < input.length; i++){
+                if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
+                    zikaEpidemic = true;
+                }
+                if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
+                    zikaEndemic = true;
+                }
+            }
+            if(zikaEpidemic && zikaEndemic){
+                return AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER;
+            }
         }
     },
     17: {
@@ -992,8 +1144,12 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/man_and_woman_symbols.png',
+            altText: 'man and woman symbols'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1013,33 +1169,42 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
         }
     },
     19: {
-        text: "Which of these best describes you?",
+        text: "Whether or not you are pregnant or considering pregnancy affects your risk of Zika because the " +
+        "risk is of greatest concern for pregnant women. Which of these best describes you?",
         answers: {
             1: {
                 text: "I am pregnant.",
                 nextNode: 43
             },
             2: {
-                text: "I am considering getting pregnant.",
+                text: "I am trying to get pregnant.",
                 nextNode: 20
             },
             3: {
-                text: "I am not pregnant or trying to become pregnant.",
+                text: "I am not pregnant or trying to get pregnant.",
                 nextNode: 21
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/thinking_female-01.png',
+            altText: 'thinking woman'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1059,8 +1224,12 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1078,10 +1247,14 @@ var nodes = {
                 nextNode: 47
             }
         },
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1091,21 +1264,49 @@ var nodes = {
         text: "Where does your partner plan to travel?",
         answers: {
             1: {
-                text: "Zika Country",
+                text: "Epidemic Zika Country",
                 nextNode: 23
             },
             2: {
+                text: "Endemic Zika Country",
+                nextNode: 82
+            },
+            3: {
                 text: "Non-Zika Country",
                 nextNode: 32
+            },
+            4: {
+                text: "United States",
+                nextNode: 75
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.multiCountryCheckForZika(qNum, input);
+        image: {
+            url: '/img/globe.png',
+            altText: 'globe'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
         },
         getValuesForAnswers: function(){
             return countries;
+        },
+        getAdditionalNotes: function(input){
+            var zikaEpidemic = false;
+            var zikaEndemic = false;
+
+            for(var i = 0; i < input.length; i++){
+                if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
+                    zikaEpidemic = true;
+                }
+                if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
+                    zikaEndemic = true;
+                }
+            }
+            if(zikaEpidemic && zikaEndemic){
+                return AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER;
+            }
         }
     },
     23: {
@@ -1122,8 +1323,12 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/man_and_woman_symbols.png',
+            altText: 'man and woman symbols'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1131,25 +1336,30 @@ var nodes = {
     },
     nodeType: NodeType.QUESTION,
     24: {
-        text: "Which of these best describes you?",
+        text: "Whether or not you are pregnant or considering pregnancy affects your risk of Zika because the " +
+        "risk is of greatest concern for pregnant women. Which of these best describes you?",
         answers: {
             1: {
                 text: "I am pregnant.",
                 nextNode: 50
             },
             2: {
-                text: "I am considering getting pregnant.",
+                text: "I am trying to get pregnant.",
                 nextNode: 51
             },
             3: {
-                text: "I am not pregnant or trying to become pregnant.",
+                text: "I am not pregnant or trying to get pregnant.",
                 nextNode: 52
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/thinking_female-01.png',
+            altText: 'thinking woman'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1169,18 +1379,24 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/man_and_woman_symbols.png',
+            altText: 'man and woman symbols'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
         }
     },
     26: {
-        text: "Which of these best describes you?",
+        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not " +
+        "your partner is pregnant or considering pregnancy is also important, because the risk of Zika is of " +
+        "greatest concern for pregnant women. Which of these best describes you?*",
         answers: {
             1: {
-                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
+                text: "I have not been sexually active in the past 6 months.",
                 nextNode: 33
             },
             2: {
@@ -1188,22 +1404,26 @@ var nodes = {
                 nextNode: 35
             },
             3: {
-                text: "I am sexually active with a female partner(s) who is not pregnant or considering pregnancy.",
+                text: "I am sexually active with a male partner(s) or a female partner(s) who is not pregnant or " +
+                "trying to get pregnant. ",
                 nextNode: 36
             },
             4: {
-                text: "I am sexually active and my partner(s) is male.",
-                nextNode: 36
-            },
-            5: {
                 text: "My partner and I are considering pregnancy.",
                 nextNode: 27
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/thinking_male-01.png',
+            altText: 'thinking man'
+        },
+        footnotes:{
+            text: '*Choose only one; if your partner is pregnant, please select “I have a pregnant sex partner.”'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1223,41 +1443,54 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function(){
             return this.answers;
         }
     },
     28: {
-        text: "Which of these best describes you?",
+        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not " +
+        "you are pregnant or considering pregnancy is also important because the risk of Zika is of greatest " +
+        "concern for pregnant women. Which of these best describes you?*",
         answers: {
             1: {
-                text: "My sex partner(s) is female.",
-                nextNode: 48
+                text: "I have not been sexually active in the past 6 months.",
+                nextNode: 34
             },
             2: {
-                text: "I am not sexually active (I do not have vaginal, anal, or oral sex).",
-                nextNode: 34
+                text: "I have a pregnant sex partner.",
+                nextNode: 35
             },
             3: {
                 text: "I am pregnant.",
                 nextNode: 37
             },
             4: {
-                text: "I am considering getting pregnant.",
+                text: "I am trying to get pregnant.",
                 nextNode: 29
             },
             5: {
-                text: "I am sexually active with a male partner(s) but not pregnant or trying to become pregnant.",
+                text: "I am sexually active, and I am not pregnant or trying to get pregnant.",
                 nextNode: 38
             }
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/thinking_female-01.png',
+            altText: 'thinking woman'
+        },
+        footnotes:{
+            text: '*Choose only one; if you are pregnant, please select "I am pregnant."'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1277,8 +1510,12 @@ var nodes = {
         },
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1296,10 +1533,14 @@ var nodes = {
         getValuesForAnswers: function() {
             return this.answers;
         },
-        decideChoice: function(qNum, input){
-            var answerToQuestionOne = getUserAnswerByIndex(0);
-            return nodes["1"].decideChoice(answerToQuestionOne.node, answerToQuestionOne.answer);
-        },
+        decideChoice: function(nodeHistoryObject){
+            if (getRisk(getUserAnswerByIndex(0).answer) == RiskCategory.EPIDEMIC_ZIKA) { //Zika country
+                return getNode('1').answers["1"];
+            }
+            else { //non-Zika country
+                return getNode('1').answers["2"];
+            }
+        }
     },
     31:{
         text: "The travel history of your sex partner(s) can also affect your risk of Zika. Do you have a partner who "
@@ -1327,8 +1568,8 @@ var nodes = {
         footnotes: {
             text: '* If you are pregnant, please consider the travel history of sex partner(s) throughout your pregnancy.'
         },
-        decideChoice: function(qNum, input){
-            return nodes.decisionLogic.getRadioAnswer(qNum, input);
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
         },
         getValuesForAnswers: function() {
             return this.answers;
@@ -1400,7 +1641,7 @@ var nodes = {
     },
     48:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide27"
+        endpointName: "planningTravelToEndemicDestination"
     },
     49:{
         nodeType: NodeType.ENDPOINT,
@@ -1504,22 +1745,68 @@ var nodes = {
     },
     74:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide54"
+        endpointName: "noRiskPlanningTravelRedirect"
     },
     75:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: "slide55"
+        endpointName: "travelToUS"
     },
     76:{
         nodeType: NodeType.ENDPOINT,
-        endpointName: ""
+        endpointName: "noRiskRecentTravelRedirect"
+    },
+    77:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "recentTravelToEndemicDestination"
+    },
+    78:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "recentTravelFemaleNotSexuallyActive"
+    },
+    79:{
+        text: "Have you had Zika symptoms (fever, rash, joint pain, red eyes) or diagnosis?",
+        answers: {
+            1: {
+                text: "Yes",
+                nextNode: 80
+            },
+            2: {
+                text: "No",
+                nextNode: 55
+            }
+        },
+        nodeType: NodeType.QUESTION,
+        answerType: AnswerType.RADIO,
+        image:{
+            url: '/img/symptoms_diagram.png',
+            altText: 'symptoms diagram'
+        },
+        decideChoice: function(nodeHistoryObject){
+            return nodes.decisionLogic.getRadioAnswer(nodeHistoryObject.node, nodeHistoryObject.answer);
+        },
+        getValuesForAnswers: function() {
+            return this.answers;
+        }
+    },
+    80:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "recentTravelFemaleSexuallyActiveNotConsideringPregnancySymptomatic"
+    },
+    81:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "partnerRecentTravelToEndemicDestination"
+    },
+    82:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "partnerPlanningTravelToEndemicDestination"
     }
 
 }
 
 var RiskCategory = {
     NONE : "none",
-    ZIKA: "zika"
+    EPIDEMIC_ZIKA: "epidemicZika",
+    ENDEMIC_ZIKA: "endemicZika"
 }
 
 function getCountryById(name){
