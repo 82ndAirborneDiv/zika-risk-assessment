@@ -568,7 +568,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.SINGLESELECT,
         image: {
-            url: '/img/globe.png',
+            url: 'img/globe.png',
             altText: 'globe'
         },
         decideChoice: function(nodeHistoryObject){
@@ -623,7 +623,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image: {
-            url: '/img/travel_plane-01.png',
+            url: 'img/travel_plane-01.png',
             altText: 'plane'
         },
         decideChoice: function(nodeHistoryObject){
@@ -697,7 +697,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/man_and_woman_symbols.png',
+            url: 'img/man_and_woman_symbols.png',
             altText: 'man and woman symbols'
         },
         decideChoice: function(nodeHistoryObject){
@@ -734,7 +734,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/thinking_male-01.png',
+            url: 'img/thinking_male-01.png',
             altText: 'thinking man'
         },
         footnotes:{
@@ -777,7 +777,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/thinking_female-01.png',
+            url: 'img/thinking_female-01.png',
             altText: 'thinking woman'
         },
         footnotes:{
@@ -813,7 +813,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
         image: {
-            url: '/img/globe.png',
+            url: 'img/globe.png',
             altText: 'globe'
         },
         decideChoice: function(nodeHistoryObject){
@@ -854,7 +854,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/man_and_woman_symbols.png',
+            url: 'img/man_and_woman_symbols.png',
             altText: 'man and woman symbols'
         },
         decideChoice: function(nodeHistoryObject){
@@ -891,7 +891,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/thinking_male-01.png',
+            url: 'img/thinking_male-01.png',
             altText: 'thinking man'
         },
         footnotes:{
@@ -919,7 +919,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
@@ -944,7 +944,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
@@ -984,7 +984,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/thinking_female-01.png',
+            url: 'img/thinking_female-01.png',
             altText: 'thinking woman'
         },
         footnotes:{
@@ -1012,7 +1012,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1037,7 +1037,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1067,7 +1067,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image: {
-            url: '/img/travel_plane-01.png',
+            url: 'img/travel_plane-01.png',
             altText: 'plane'
         },
         footnotes:{
@@ -1104,7 +1104,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
         image: {
-            url: '/img/globe.png',
+            url: 'img/globe.png',
             altText: 'globe'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1145,7 +1145,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/man_and_woman_symbols.png',
+            url: 'img/man_and_woman_symbols.png',
             altText: 'man and woman symbols'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1170,7 +1170,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1200,7 +1200,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/thinking_female-01.png',
+            url: 'img/thinking_female-01.png',
             altText: 'thinking woman'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1225,7 +1225,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1248,7 +1248,7 @@ var nodes = {
             }
         },
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         nodeType: NodeType.QUESTION,
@@ -1283,7 +1283,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
         image: {
-            url: '/img/globe.png',
+            url: 'img/globe.png',
             altText: 'globe'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1324,7 +1324,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/man_and_woman_symbols.png',
+            url: 'img/man_and_woman_symbols.png',
             altText: 'man and woman symbols'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1355,7 +1355,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/thinking_female-01.png',
+            url: 'img/thinking_female-01.png',
             altText: 'thinking woman'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1380,7 +1380,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/man_and_woman_symbols.png',
+            url: 'img/man_and_woman_symbols.png',
             altText: 'man and woman symbols'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1416,7 +1416,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/thinking_male-01.png',
+            url: 'img/thinking_male-01.png',
             altText: 'thinking man'
         },
         footnotes:{
@@ -1444,7 +1444,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1483,7 +1483,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/thinking_female-01.png',
+            url: 'img/thinking_female-01.png',
             altText: 'thinking woman'
         },
         footnotes:{
@@ -1511,7 +1511,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
@@ -1562,7 +1562,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/travel_suitcases-01.png',
+            url: 'img/travel_suitcases-01.png',
             altText: 'suitcases'
         },
         footnotes: {
@@ -1778,7 +1778,7 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.RADIO,
         image:{
-            url: '/img/symptoms_diagram.png',
+            url: 'img/symptoms_diagram.png',
             altText: 'symptoms diagram'
         },
         decideChoice: function(nodeHistoryObject){
