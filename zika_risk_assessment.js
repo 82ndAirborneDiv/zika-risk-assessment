@@ -197,7 +197,7 @@ function loadQuestion(nextQuestionNumber){
 
     var nextQuestionObject = getNode(nextQuestionNumber);
     if(debug){
-        var nodeText = "Node number: " +nextQuestionNumber;
+        var nodeText = "Screen number: " +nextQuestionNumber;
         nodeText += "<br />";
         questionText.html(nodeText);
         //nextQuestionText += nextQuestionObject.text;
@@ -286,7 +286,7 @@ function loadEndPoint(number){
     var nodeObject = getNode(number);
 
     if(debug){
-        var nodeNumText = "Node number: " +number;
+        var nodeNumText = "Screen number: " +number;
         endpointText.html("<div>" +nodeNumText +"</div>");
     }
 
