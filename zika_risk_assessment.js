@@ -511,7 +511,6 @@ var nodes = {
                     break;
                 } else if(getRisk(currentAnswer) === RiskCategory.ENDEMIC_ZIKA){
                     endemicZika = true;
-                    break;
                 } else if(currentAnswer === "UNITED_STATES"){
                     unitedStates = true;
                 }
