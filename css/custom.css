@@ -91,6 +91,7 @@ a {
 	width: 100px;
 }
 
-.well {
-	margin-top: 20px;
+.row-margin {
+	margin-left: 15px;
+	margin-right: 15px;
 }

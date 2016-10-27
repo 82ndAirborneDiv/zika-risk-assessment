@@ -316,12 +316,7 @@ function loadEndPoint(number){
     for(var i = nodeHistory.length - 1; i >= 0; i--){
         var nodeHistoryObject = nodeHistory[i];
         var node = getNode(nodeHistoryObject.node);
-        if(node.hasOwnProperty("getDisclaimer")) {
-            var disclaimer = node.getDisclaimer(nodeHistoryObject);
-            if (disclaimer != null) {
-                endpointDisclaimer.append($('<div>').load("disclaimers.html #" + disclaimer));
-            }
-        }
+
         if(node.hasOwnProperty("getAdditionalNotes")){
             var additionalNotes = node.getAdditionalNotes(nodeHistoryObject.answer);
             if(additionalNotes != null){
@@ -329,6 +324,8 @@ function loadEndPoint(number){
             }
         }
     }
+
+    endpointDisclaimer.append($('<div>').load("disclaimers.html #residenceDisclaimer"));
 
     endpointContent.show();
 
@@ -590,13 +587,6 @@ var nodes = {
         getValuesForAnswers: function(){
             return countries;
         },
-        getDisclaimer: function(input) {
-            if (input.answer == "UNITED_STATES") {
-                return Disclaimers.RESIDENCE_US;
-            } else {
-                return Disclaimers.RESIDENCE_NON_US;
-            }
-        },
         getAdditionalNotes: function(input){
             if(getRisk(input)==RiskCategory.ENDEMIC_ZIKA){
                 return AdditionalNotes.RESIDENCE_ENDEMIC;
@@ -631,9 +621,6 @@ var nodes = {
         },
         getValuesForAnswers: function(){
             return this.answers;
-        },
-        getDisclaimer: function(input){
-            //return nodes.decisionLogic.disclaimerBasedOnCountryZikaRisk(input);
         }
     },
     3: {
