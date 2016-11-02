@@ -25,24 +25,8 @@ a {
 	text-decoration: underline;
 }
 
-.panel-body{
-	min-height: 375px;
-	max-height: 450px;
-}
-
 @media only screen and (max-width: 350px) {
-
 	.zika-title {font-size:14px;}
-	.panel-body{
-		height: 375px;
-	}
-}
-
-@media only screen and (max-width: 500px) {
-	.panel-body{
-		min-height: 375px;
-		height: 450px;
-	}
 }
 
 .panel-primary>.panel-heading {
@@ -56,6 +40,8 @@ a {
 	border-color: #075290;
 }
 .scrollable{
+	min-height: 375px;
+	max-height: 450px;
 	overflow:auto;
 }
 .widget-wrapper{
