@@ -129,7 +129,7 @@ var populateSingleSelectList = function(questionObject) {
     });
     listHTML += '</select></form>';
     return listHTML;
-}
+};
 //populate multiSelect list
 var populateMultiSelectList = function(questionObject) {
     var nextQuestionObject = questionObject;
@@ -145,7 +145,7 @@ var populateMultiSelectList = function(questionObject) {
     });
     listHTML += '</div></div>';
     return listHTML;
-}
+};
 var populateRadioList = function(questionObject){
     var nextQuestionObject = questionObject;
     var radioButtonsHTML = '';
@@ -163,7 +163,7 @@ var populateRadioList = function(questionObject){
     });
     radioButtonsHTML += '</div>';
     return radioButtonsHTML;
-}
+};
 function noSelectionAlert(){
     var alert = '<div id="noSelectionAlert" class="alert alert-warning fade in" role="alert">';
     alert += '<a href="#" class="close" id="close-alert" style="text-decoration: none;"data-dismiss="alert"' +
@@ -1533,7 +1533,7 @@ var nodes = {
         +"has traveled, will travel, or lives outside the United States?",
         answers:{
             1:{
-                text: "Yes, my sex partner(s) has traveled in last 6 months, will travel, or lives outside the United States.",
+                text: "Yes, my sex partner(s) has traveled in the last 6 months, will travel, or lives outside the United States.",
                 nextNode: 15
             },
             2:{

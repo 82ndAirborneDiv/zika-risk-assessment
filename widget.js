@@ -72,7 +72,7 @@
         // INIT METRICS
         cdcMetrics.init({
             c32 : "widget-130",
-            pageName : "zikaRiskAssessment",
+            pageName : "knowYourZikaRisk",
             useMetrics : 'true'
         });
 
@@ -93,10 +93,7 @@
          // HTML INLINE SCRIPT CALL (NOT SUGGESTED AS BEST PRACTICE - EVENT BINDING PREFERRED)
          <a href="#" onclick="cdcMetrics.trackEvent('Your-Custom-Event','Your-Custom-Event-Data')">Your Link</a>
          */
-        cdcCommon.loadScript('./js/controllers.js', function(){
-            '&lt;script type="text/javascript" src="zika_risk_assessment.js"&gt;&lt;/script&lt;';
-
-        })
+        cdcCommon.loadScript('zika_risk_assessment.js');
     };
     window.CDC.Widget.syndicatedLoad = function (cdcCommon) {
 
