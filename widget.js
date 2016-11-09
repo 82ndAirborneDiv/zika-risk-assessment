@@ -93,7 +93,6 @@
          // HTML INLINE SCRIPT CALL (NOT SUGGESTED AS BEST PRACTICE - EVENT BINDING PREFERRED)
          <a href="#" onclick="cdcMetrics.trackEvent('Your-Custom-Event','Your-Custom-Event-Data')">Your Link</a>
          */
-        cdcCommon.loadScript('zika_risk_assessment.js');
     };
     window.CDC.Widget.syndicatedLoad = function (cdcCommon) {
 

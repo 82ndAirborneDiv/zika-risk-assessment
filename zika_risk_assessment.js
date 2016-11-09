@@ -1,87 +1,5 @@
-/**
- * Created by jason on 6/8/16.
- */
-
 //load necessary scripts
-$.getScript('countries.js');
-
-//panels
-var introPanel = $("#zika-app-intro");
-var mainPanel = $("#zika-app-main");
-
-//panel content
-var endpointContent = $("#zika-app-endpoint");
-var endpointText = $("#zika-app-endpoint-text");
-var endpointAdditionalNotes = $("#zika-app-endpoint-additional-notes");
-var endpointDisclaimer = $("#zika-app-endpoint-disclaimer");
-var questionContent = $("#zika-app-question");
-var questionText = $("#question-text");
-var questionAnswers = $("#question-answers");
-var alertArea = $("#alert-area");
-
-//Nav buttons
-var start = $("#start");
-var back = $("#back");
-var restart = $("#restart");
-var nextButton = $("#next");
-
-var debug = true;
-
-/*array to store answers
-Each index of nodeHistory stores a NodeHistory object
-*/
-var nodeHistory = [];
-
-//NodeHistory stores the question and answer
-//for each node in the decision tree.
-// The question will be a number.
-//Answers will be either a number, string, or array of strings
-//for radio, singleSelect, or multiSelect types, respectively.
-function NodeHistory(nodeName, answer){
-    this.node = nodeName;
-    this.answer = answer;
-}
-
-function logNodeHistory(){
-    console.log(nodeHistory);
-}
-
-var currentQuestionNumber;
-
-//return Question object from nodes array
-function getNode(nodeName){
-    return nodes["" +nodeName];
-}
-
-//return previous user answer, if there is one
-function getPreviousNode(){
-    var numUserAnswers = nodeHistory.length;
-    if(numUserAnswers > 0) {
-        return nodeHistory[numUserAnswers - 1];
-    }
-}
-
-//return userAnswer by index, if it exists
-function getUserAnswerByIndex(number){
-    var numUserAnswers = nodeHistory.length;
-    if(numUserAnswers > 0 && number >= 0 && number < numUserAnswers) {
-        return nodeHistory[number];
-    }
-}
-
-function loadNode(nodeName){
-    //set global question number to nextNode
-    currentQuestionNumber = "" +nodeName;
-    var node = getNode(nodeName);
-    switch(node.nodeType){
-        case NodeType.QUESTION:
-            loadQuestion(nodeName);
-            break;
-        case NodeType.ENDPOINT:
-            loadEndPoint(nodeName);
-            break;
-    }
-}
+$.getScript('js/countries.js');
 
 $(document).ready(function(){
     start.click(function() {
@@ -115,81 +33,104 @@ $(document).ready(function(){
     });
 });
 
-//populate singleSelect list
-var populateSingleSelectList = function(questionObject) {
-    var nextQuestionObject = questionObject;
-    var listHTML = '';
-    listHTML += '<form id="singleSelectListDiv" role="form" class="form-group">';
-    listHTML += '<label id="singleSelectLabel" for="singleSelectList">';
-    listHTML += nextQuestionObject.text;
-    listHTML += '</label>';
-    listHTML += '<select id="singleSelectList" class="form-control"><option></option>';
-    $.each(nextQuestionObject.getValuesForAnswers(), function (key, value) {
-        listHTML += '<option value=' + key + '>' + value.text + '</option>';
-    });
-    listHTML += '</select></form>';
-    return listHTML;
-};
-//populate multiSelect list
-var populateMultiSelectList = function(questionObject) {
-    var nextQuestionObject = questionObject;
-    var listHTML = "";
-    listHTML += '<div id="multiSelectListDiv">';
-    listHTML += '<label id="multiSelectLabel" for="multiSelectList">';
-    listHTML += nextQuestionObject.text;
-    listHTML += '</label>';
-    listHTML +='<div role="group" aria-labelledby="multiSelectLabel" id="multiSelectList" class="multiselect">';
-    $.each(nextQuestionObject.getValuesForAnswers(), function (key, value) {
-       listHTML += '<label><input class="checkboxListItem" style="margin-left: 10px; margin-right: 10px"' +
-            ' type="checkbox" name="option[]" value="' + key + '">' + value.text + '</label>';
-    });
-    listHTML += '</div></div>';
-    return listHTML;
-};
-var populateRadioList = function(questionObject){
-    var nextQuestionObject = questionObject;
-    var radioButtonsHTML = '';
-    radioButtonsHTML += '<div id="radio_label">' +nextQuestionObject.text +'</div>';
-    radioButtonsHTML += '<div role="radiogroup" aria-labelledby="' +"radio_label" +'">';
+//panels
+var introPanel = $("#zika-app-intro");
+var mainPanel = $("#zika-app-main");
 
-    $.each(nextQuestionObject.getValuesForAnswers(), function (key, value) {
-        radioButtonsHTML += '<div class="radio z-risk-rad">';
-        radioButtonsHTML += '<label>';
-        radioButtonsHTML += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
-            + key + '">';
-        radioButtonsHTML += value.text;
-        radioButtonsHTML += '</label>';
-        radioButtonsHTML += '</div>';
-    });
-    radioButtonsHTML += '</div>';
-    return radioButtonsHTML;
-};
-function noSelectionAlert(){
-    var alert = '<div id="noSelectionAlert" class="alert alert-warning fade in" role="alert">';
-    alert += '<a href="#" class="close" id="close-alert" style="text-decoration: none;"data-dismiss="alert"' +
-        ' role="button" aria-label="close">&times;</a>';
-    alert += '<strong>Please make a selection.</strong>';
-    alert += '</div>';
-    alertArea.html(alert);
+//panel content
+var endpointContent = $("#zika-app-endpoint");
+var endpointText = $("#zika-app-endpoint-text");
+var endpointAdditionalNotes = $("#zika-app-endpoint-additional-notes");
+var endpointDisclaimer = $("#zika-app-endpoint-disclaimer");
+var questionContent = $("#zika-app-question");
+var questionText = $("#question-text");
+var questionAnswers = $("#question-answers");
+var alertArea = $("#alert-area");
 
-    //return focus to Next button when close alert button is clicked
-    $('#noSelectionAlert').on('closed.bs.alert', function(){
-        nextButton.focus();
-    });
+//Nav buttons
+var start = $("#start");
+var back = $("#back");
+var restart = $("#restart");
+var nextButton = $("#next");
 
-    //focus on close alert button when noSelectionAlert is displayed
-    $('#close-alert').focus();
-    resizeWidget();
+var debug = true;
+var currentQuestionNumber;
+
+/**
+ * NodeHistory stores the question and answer
+ * for each node in the decision tree following a user interaction.
+ * @param nodeName The name of the node the user interacted with.
+ * @param answer The answer the user selected.
+ * Answer will be either a number, string, or array of strings
+ * for radio, singleSelect, or multiSelect types, respectively.
+ * @constructor
+ */
+function NodeHistory(nodeName, answer){
+    this.node = nodeName;
+    this.answer = answer;
 }
-function triggerRestart(){
-    nodeHistory = [];
-    clearMainPanel();
-    introPanel.show().focus();
-    mainPanel.hide();
-    $('.panel-body').focus();
 
-    $('.scrollable').animate({ scrollTop: 0 }, 0);
+/**
+ * array to store answers
+ * Each index of nodeHistory stores a NodeHistory object
+ */
+var nodeHistory = [];
+
+function logNodeHistory(){
+    console.log(nodeHistory);
 }
+
+/**
+ *
+ * @param nodeName the name of the node to be returned
+ * @returns node object from nodes object
+ */
+function getNode(nodeName){
+    return nodes["" +nodeName];
+}
+
+/**
+ * returns the last NodeHistory object in the nodeHistory[], if there is one
+ */
+function getPreviousNode(){
+    var numUserAnswers = nodeHistory.length;
+    if(numUserAnswers > 0) {
+        return nodeHistory[numUserAnswers - 1];
+    }
+}
+
+/**
+ *  Returns a specific NodeHistory object from nodeHistory[]
+ * @param {Number} number The number of the nodeHistory[] index to load
+ * @returns {NodeHistory}
+ */
+function getNodeHistoryByIndex(number){
+    var numUserAnswers = nodeHistory.length;
+    if(numUserAnswers > 0 && number >= 0 && number < numUserAnswers) {
+        return nodeHistory[number];
+    }
+}
+
+/**
+ * Starting point for loading each node.
+ * This method will call the loadQuestion or loadEndpoint
+ * methods based on nodeType property set for each node object in the nodes object.
+ * @param nodeName The name of the node to load
+ */
+function loadNode(nodeName){
+    //set global question number to nodeName
+    currentQuestionNumber = "" +nodeName;
+    var node = getNode(nodeName);
+    switch(node.nodeType){
+        case NodeType.QUESTION:
+            loadQuestion(nodeName);
+            break;
+        case NodeType.ENDPOINT:
+            loadEndPoint(nodeName);
+            break;
+    }
+}
+
 function loadQuestion(nextQuestionNumber){
     clearMainPanel();
     nextButton.show();
@@ -200,7 +141,6 @@ function loadQuestion(nextQuestionNumber){
         var nodeText = "Screen number: " +nextQuestionNumber;
         nodeText += "<br />";
         questionText.html(nodeText);
-        //nextQuestionText += nextQuestionObject.text;
     }
 
     var previouslyVisited = false;
@@ -273,7 +213,7 @@ function loadQuestion(nextQuestionNumber){
 
     $('.panel-body').focus();
 
-    resizeWidget();
+    //resizeWidget();
 }
 
 function loadEndPoint(number){
@@ -290,23 +230,23 @@ function loadEndPoint(number){
         endpointText.html("<div>" +nodeNumText +"</div>");
     }
 
-    endpointText.append($('<div>').load("endpoints.html #" +nodeObject.endpointName, function () {
-        $('#mosquitoAvoidanceMale').load('endpoints.html #mosquitoAvoidanceListMale', function () {
+    endpointText.append($('<div>').load("html/endpoints.html #" +nodeObject.endpointName, function () {
+        $('#mosquitoAvoidanceMale').load('html/endpoints.html #mosquitoAvoidanceListMale', function () {
             if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
-        $('#mosquitoAvoidanceFemale').load('endpoints.html #mosquitoAvoidanceListFemale', function () {
+        $('#mosquitoAvoidanceFemale').load('html/endpoints.html #mosquitoAvoidanceListFemale', function () {
             if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
-        $('#mosquitoAvoidanceMaleResident').load('endpoints.html #mosquitoAvoidanceListMaleResident', function () {
+        $('#mosquitoAvoidanceMaleResident').load('html/endpoints.html #mosquitoAvoidanceListMaleResident', function () {
             if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
-        $('#mosquitoAvoidanceFemaleResident').load('endpoints.html #mosquitoAvoidanceListFemaleResident', function () {
+        $('#mosquitoAvoidanceFemaleResident').load('html/endpoints.html #mosquitoAvoidanceListFemaleResident', function () {
             if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
@@ -320,16 +260,18 @@ function loadEndPoint(number){
         if(node.hasOwnProperty("getAdditionalNotes")){
             var additionalNotes = node.getAdditionalNotes(nodeHistoryObject.answer);
             if(additionalNotes != null){
-                endpointAdditionalNotes.append($('<div>').load("additionalNotes.html #" +additionalNotes));
+                $.each(additionalNotes, function () {
+                    endpointAdditionalNotes.append($('<div>').load("html/additionalNotes.html #" +this));
+                });
             }
         }
     }
 
-    endpointDisclaimer.append($('<div>').load("disclaimers.html #residenceDisclaimer"));
+    endpointDisclaimer.append($('<div>').load("html/disclaimers.html #residenceDisclaimer"));
 
     endpointContent.show();
 
-    resizeWidget();
+    //resizeWidget();
     $('.panel-body').focus();
 }
 
@@ -352,6 +294,112 @@ function checkForAreaInNodeHistory(area){
         }
     })
     return areaFound;
+}
+/**
+ * This function is called before any content change happens.
+ */
+function clearMainPanel(){
+    //endpoint
+    endpointText.html("");
+    endpointAdditionalNotes.html("");
+    endpointDisclaimer.html("");
+    endpointContent.hide();
+
+    //reset question area
+    questionText.html("");
+    questionContent.hide();
+    questionAnswers.html("");
+    questionAnswers.hide();
+    $("#question-footnotes").html("");
+    $("#question-image").html("");
+
+    //hide next button
+    nextButton.hide();
+
+    //reset alert area
+    alertArea.html("");
+
+    //resizeWidget();
+}
+
+/**
+ *
+ * @param questionObject
+ * @returns {string}
+ */
+var populateSingleSelectList = function(questionObject) {
+    var nextQuestionObject = questionObject;
+    var listHTML = '';
+    listHTML += '<form id="singleSelectListDiv" role="form" class="form-group">';
+    listHTML += '<label id="singleSelectLabel" for="singleSelectList">';
+    listHTML += nextQuestionObject.text;
+    listHTML += '</label>';
+    listHTML += '<select id="singleSelectList" class="form-control"><option></option>';
+    $.each(nextQuestionObject.getValuesForAnswers(), function (key, value) {
+        listHTML += '<option value=' + key + '>' + value.text + '</option>';
+    });
+    listHTML += '</select></form>';
+    return listHTML;
+};
+//populate multiSelect list
+var populateMultiSelectList = function(questionObject) {
+    var nextQuestionObject = questionObject;
+    var listHTML = "";
+    listHTML += '<div id="multiSelectListDiv">';
+    listHTML += '<label id="multiSelectLabel" for="multiSelectList">';
+    listHTML += nextQuestionObject.text;
+    listHTML += '</label>';
+    listHTML +='<div role="group" aria-labelledby="multiSelectLabel" id="multiSelectList" class="multiselect">';
+    $.each(nextQuestionObject.getValuesForAnswers(), function (key, value) {
+       listHTML += '<label><input class="checkboxListItem" style="margin-left: 10px; margin-right: 10px"' +
+            ' type="checkbox" name="option[]" value="' + key + '">' + value.text + '</label>';
+    });
+    listHTML += '</div></div>';
+    return listHTML;
+};
+var populateRadioList = function(questionObject){
+    var nextQuestionObject = questionObject;
+    var radioButtonsHTML = '';
+    radioButtonsHTML += '<div id="radio_label">' +nextQuestionObject.text +'</div>';
+    radioButtonsHTML += '<div role="radiogroup" aria-labelledby="' +"radio_label" +'">';
+
+    $.each(nextQuestionObject.getValuesForAnswers(), function (key, value) {
+        radioButtonsHTML += '<div class="radio z-risk-rad">';
+        radioButtonsHTML += '<label>';
+        radioButtonsHTML += '<input type="radio" class="radioAnswer" name="optionsRadios" value="'
+            + key + '">';
+        radioButtonsHTML += value.text;
+        radioButtonsHTML += '</label>';
+        radioButtonsHTML += '</div>';
+    });
+    radioButtonsHTML += '</div>';
+    return radioButtonsHTML;
+};
+function noSelectionAlert(){
+    var alert = '<div id="noSelectionAlert" class="alert alert-warning fade in" role="alert">';
+    alert += '<a href="#" class="close" id="close-alert" style="text-decoration: none;"data-dismiss="alert"' +
+        ' role="button" aria-label="close">&times;</a>';
+    alert += '<strong>Please make a selection.</strong>';
+    alert += '</div>';
+    alertArea.html(alert);
+
+    //return focus to Next button when close alert button is clicked
+    $('#noSelectionAlert').on('closed.bs.alert', function(){
+        nextButton.focus();
+    });
+
+    //focus on close alert button when noSelectionAlert is displayed
+    $('#close-alert').focus();
+    //resizeWidget();
+}
+function triggerRestart(){
+    nodeHistory = [];
+    clearMainPanel();
+    introPanel.show().focus();
+    mainPanel.hide();
+    $('.panel-body').focus();
+
+    $('.scrollable').animate({ scrollTop: 0 }, 0);
 }
 
 function nextButtonClicked(){
@@ -402,37 +450,6 @@ function nextButtonClicked(){
     loadNode(selectedAnswerObject.nextNode);
 }
 
-function clearMainPanel(){
-    //endpoint
-    endpointText.html("");
-    endpointAdditionalNotes.html("");
-    endpointDisclaimer.html("");
-    endpointContent.hide();
-
-    //reset question area
-    questionText.html("");
-    questionContent.hide();
-    questionAnswers.html("");
-    questionAnswers.hide();
-    $("#question-footnotes").html("");
-    $("#singleSelectList").html("");
-    $("#question-image").html("");
-    $("#multiSelectList").html("");
-
-    //Remove checked state and css from all checkboxes
-    $("input:checkbox").prop("checked", false).parent().removeClass("multiselect-on");
-    //Reset selection on single country list to null
-    $("#singleSelectList").val(null).trigger("change");
-
-    //hide next button
-    nextButton.hide();
-
-    //reset alert area
-    alertArea.html("");
-
-    resizeWidget();
-}
-
 //Used to resize widget when content changes.
 //Set parentIFrame size to height of widget-wrapper.
 function resizeWidget (intMsDelay) {
@@ -469,14 +486,27 @@ jQuery.fn.multiselect = function() {
         });
     });
 };
-
+/**
+ * This function calls the cdcMetrics.trackEvent loaded function which is used for
+ * SiteCatalyst user interaction tracking.
+ * @param answer The answer to track
+ */
 function trackAnswer(answer){
     cdcMetrics.trackEvent("Question " +currentQuestionNumber + " answered", answer);
 }
+/**
+ * Defines NodeTypes. These are used in each node object in the nodes object.
+ * @type {{QUESTION: string, ENDPOINT: string}}
+ */
 var NodeType = {
     QUESTION: "question",
     ENDPOINT: "endpoint"
 }
+/**
+ * Defines AnswerTypes. These are used in each Question type node object in the
+ * nodes object to define what type of answers the Question will use.
+ * @type {{SINGLESELECT: string, MULTISELECT: string, RADIO: string, NONE: string}}
+ */
 var AnswerType = {
     SINGLESELECT: "singleSelect",
     MULTISELECT: "multiSelect",
@@ -484,15 +514,53 @@ var AnswerType = {
     NONE: "none"
 }
 var Disclaimers = {
-    RESIDENCE_US: "residenceDisclaimerUS",
-    RESIDENCE_NON_US: "residenceDisclaimerNonUS"
+
 }
+/**
+ * Defines AdditionalNotes types. These are tags which are div ids in the
+ * html/additionalNotes.html and are loaded conditionally with Endpoint node types.
+ * @type {{RESIDENCE_ENDEMIC: string, RESIDENCE_SOUTHEAST_ASIA: string, RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC: string, RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC: string, PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC: string, PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC: string, RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: string, RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER: string, PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: string, PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER: string}}
+ */
 var AdditionalNotes = {
     RESIDENCE_ENDEMIC: "noteForResidentsOfEndemicCountries",
+    RESIDENCE_SOUTHEAST_ASIA: "noteForResidentsOfCountriesInSoutheastAsia",
     RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC: "recentTravelToBothEndemicAndEpidemicCountries",
+    RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC: "recentTravelToBothSEAsianAndEpidemicCountries",
     PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC: "planningTravelToBothEndemicAndEpidemicCountries",
+    PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC: "planningTravelToBothSEAsianAndEpidemicCountries",
     RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerRecentTravelToBothEndemicAndEpidemicCountries",
-    PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerPlanningTravelToBothEndemicAndEpidemicCountries"
+    RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER: "partnerRecentTravelToBothSEAsianAndEpidemicCountries",
+    PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerPlanningTravelToBothEndemicAndEpidemicCountries",
+    PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER: "partnerPlanningTravelToBothSEAsianAndEpidemicCountries",
+
+}
+/**
+ * Defines RiskCategory types. These types are used for logical decisions.
+ * Country objects in js/countries.js are tagged with one of these categories
+ * as a riskCategory property.
+ * @type {{NONE: string, EPIDEMIC_ZIKA: string, ENDEMIC_ZIKA: string, SOUTHEAST_ASIA: string}}
+ */
+var RiskCategory = {
+    NONE : "none",
+    EPIDEMIC_ZIKA: "epidemicZika",
+    ENDEMIC_ZIKA: "endemicZika",
+    SOUTHEAST_ASIA: "southeastAsia"
+}
+/**
+ * @param {string} name The name of the country object to retrieve
+ * @return country object from countries object in js/countries.js
+ */
+function getCountryById(name){
+    return countries[name];
+}
+/**
+ * This method returns the riskCategory property from a country object
+ * retrieved from countries object in js/countries.js
+ * @param country The name of the country
+ * @returns riskCategory
+ */
+function getRisk(country){
+    return getCountryById(country).riskCategory;
 }
 
 var nodes = {
@@ -504,37 +572,46 @@ var nodes = {
             var epidemicZika = false;
             var endemicZika = false;
             var unitedStates = false;
+            var southeastAsia = false;
             for(var i = 0; i < answer.length; i++){
                 var currentAnswer = nodeHistoryObject.answer[i];
                 if(getRisk(currentAnswer) === RiskCategory.EPIDEMIC_ZIKA){
                     epidemicZika = true;
-                    break;
                 } else if(getRisk(currentAnswer) === RiskCategory.ENDEMIC_ZIKA){
                     endemicZika = true;
                 } else if(currentAnswer === "UNITED_STATES"){
                     unitedStates = true;
+                } else if(getRisk(currentAnswer) === RiskCategory.SOUTHEAST_ASIA){
+                    southeastAsia = true;
                 }
             }
             if(epidemicZika){
-                if(endemicZika) {
-                    trackAnswer("Answer set included Epidemic and Endemic Zika country(ies)");
+                if(endemicZika && southeastAsia){
+                    trackAnswer("Answer set included epidemic Zika, endemic Zika, and Southeast Asian countries");
+                } else if(endemicZika) {
+                    trackAnswer("Answer set included epidemic Zika and endemic Zika countries");
+                } else if(southeastAsia){
+                    trackAnswer("Answer set included epidemic Zika and Southeast Asian countries");
                 } else {
-                    trackAnswer("Answer set included Epidemic Zika country(ies)");
+                    trackAnswer("Answer set included epidemic Zika country(ies)");
                 }
                 return questionObject.answers["1"];
-            }
-            else{
-                if(endemicZika){
-                    trackAnswer("Answer set included Endemic Zika country(ies)");
-                    return questionObject.answers["2"];
+            } else if(endemicZika) {
+                if (southeastAsia) {
+                    trackAnswer("Answer set included endemic Zika and Southeast Asian countries");
                 } else {
-                    trackAnswer("Answer set did not include a Zika country");
-                    if(unitedStates){
-                        return questionObject.answers["4"];
-                    }
-                    return questionObject.answers["3"];
+                    trackAnswer("Answer set included endemic Zika country(ies)");
                 }
-
+                return questionObject.answers["2"];
+            } else if(southeastAsia) {
+                trackAnswer("Answer set included a Southeast Asian country(ies)");
+                return questionObject.answers["5"];
+            } else if(unitedStates){
+                trackAnswer("Answer set included the United States");
+                return questionObject.answers["4"];
+            } else {
+                trackAnswer("Answer set did not include a country from any risk category");
+                return questionObject.answers["3"];
             }
         },
         //Generic logic for radio button answerType
@@ -587,9 +664,16 @@ var nodes = {
             return countries;
         },
         getAdditionalNotes: function(input){
-            if(getRisk(input)==RiskCategory.ENDEMIC_ZIKA){
-                return AdditionalNotes.RESIDENCE_ENDEMIC;
+            var additionalNotes = [];
+            switch (getRisk(input)){
+                case RiskCategory.ENDEMIC_ZIKA:
+                    additionalNotes.push(AdditionalNotes.RESIDENCE_ENDEMIC);
+                    break;
+                case RiskCategory.SOUTHEAST_ASIA:
+                    additionalNotes.push(AdditionalNotes.RESIDENCE_SOUTHEAST_ASIA);
+                    break;
             }
+            return additionalNotes;
         }
     },
     2: {
@@ -640,6 +724,10 @@ var nodes = {
             4: {
                 text: "United States",
                 nextNode: 75
+            },
+            5: {
+                text: "Southeast Asia",
+                nextNode: 86
             }
 
         },
@@ -654,7 +742,9 @@ var nodes = {
         getAdditionalNotes: function(input){
             var zikaEpidemic = false;
             var zikaEndemic = false;
+            var southeastAsia = false;
 
+            var additionalNotes = [];
             for(var i = 0; i < input.length; i++){
                 if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
                     zikaEpidemic = true;
@@ -662,10 +752,22 @@ var nodes = {
                 if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
                     zikaEndemic = true;
                 }
+                if(getRisk(input[i]) === RiskCategory.SOUTHEAST_ASIA){
+                    southeastAsia = true;
+                }
             }
-            if(zikaEpidemic && zikaEndemic){
-                return AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC;
+            if(zikaEpidemic){
+                if(zikaEndemic){
+                    additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC);
+                }
+                if(southeastAsia){
+                    additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC)
+                }
+            } else if(zikaEndemic && southeastAsia){
+                additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC)
             }
+
+            return additionalNotes;
         }
     },
     4: {
@@ -794,6 +896,10 @@ var nodes = {
             4: {
                 text: "United States",
                 nextNode: 75
+            },
+            5: {
+                text: "Southeast Asia",
+                nextNode: 85
             }
         },
         nodeType: NodeType.QUESTION,
@@ -811,7 +917,9 @@ var nodes = {
         getAdditionalNotes: function(input){
             var zikaEpidemic = false;
             var zikaEndemic = false;
+            var southeastAsia = false;
 
+            var additionalNotes = [];
             for(var i = 0; i < input.length; i++){
                 if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
                     zikaEpidemic = true;
@@ -819,10 +927,22 @@ var nodes = {
                 if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
                     zikaEndemic = true;
                 }
+                if(getRisk(input[i]) === RiskCategory.SOUTHEAST_ASIA){
+                    southeastAsia = true;
+                }
             }
-            if(zikaEpidemic && zikaEndemic){
-                return AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC;
+            if(zikaEpidemic){
+                if(zikaEndemic){
+                    additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC);
+                }
+                if(southeastAsia){
+                    additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC)
+                }
+            } else if(zikaEndemic && southeastAsia){
+                additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC)
             }
+
+            return additionalNotes;
         }
     },
     8: {
@@ -1085,6 +1205,10 @@ var nodes = {
             4: {
                 text: "United States",
                 nextNode: 75
+            },
+            5: {
+                text: "Southeast Asia",
+                nextNode: 83
             }
         },
         nodeType: NodeType.QUESTION,
@@ -1102,7 +1226,9 @@ var nodes = {
         getAdditionalNotes: function(input){
             var zikaEpidemic = false;
             var zikaEndemic = false;
+            var southeastAsia = false;
 
+            var additionalNotes = [];
             for(var i = 0; i < input.length; i++){
                 if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
                     zikaEpidemic = true;
@@ -1110,10 +1236,22 @@ var nodes = {
                 if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
                     zikaEndemic = true;
                 }
+                if(getRisk(input[i]) === RiskCategory.SOUTHEAST_ASIA){
+                    southeastAsia = true;
+                }
             }
-            if(zikaEpidemic && zikaEndemic){
-                return AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER;
+            if(zikaEpidemic){
+                if(zikaEndemic){
+                    additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER);
+                }
+                if(southeastAsia){
+                    additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER);
+                }
+            } else if(zikaEndemic && southeastAsia){
+                additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER);
             }
+
+            return additionalNotes;
         }
     },
     17: {
@@ -1264,6 +1402,10 @@ var nodes = {
             4: {
                 text: "United States",
                 nextNode: 75
+            },
+            5: {
+                text: "Southeast Asia",
+                nextNode: 84
             }
         },
         nodeType: NodeType.QUESTION,
@@ -1281,7 +1423,9 @@ var nodes = {
         getAdditionalNotes: function(input){
             var zikaEpidemic = false;
             var zikaEndemic = false;
+            var southeastAsia = false;
 
+            var additionalNotes = [];
             for(var i = 0; i < input.length; i++){
                 if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
                     zikaEpidemic = true;
@@ -1289,10 +1433,22 @@ var nodes = {
                 if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
                     zikaEndemic = true;
                 }
+                if(getRisk(input[i]) === RiskCategory.SOUTHEAST_ASIA){
+                    southeastAsia = true;
+                }
             }
-            if(zikaEpidemic && zikaEndemic){
-                return AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER;
+            if(zikaEpidemic){
+                if(zikaEndemic){
+                    additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER);
+                }
+                if(southeastAsia){
+                    additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER);
+                }
+            } else if(zikaEndemic && southeastAsia){
+                additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER);
             }
+
+            return additionalNotes;
         }
     },
     23: {
@@ -1520,7 +1676,7 @@ var nodes = {
             return this.answers;
         },
         decideChoice: function(nodeHistoryObject){
-            if (getRisk(getUserAnswerByIndex(0).answer) == RiskCategory.EPIDEMIC_ZIKA) { //Zika country
+            if (getRisk(getNodeHistoryByIndex(0).answer) == RiskCategory.EPIDEMIC_ZIKA) { //Zika country
                 return getNode('1').answers["1"];
             }
             else { //non-Zika country
@@ -1785,24 +1941,23 @@ var nodes = {
     82:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "partnerPlanningTravelToEndemicDestination"
+    },
+    83:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "partnerRecentTravelToSoutheastAsia"
+    },
+    84:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "partnerPlanningTravelToSoutheastAsia"
+    },
+    85:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "recentTravelToSoutheastAsia"
+    },
+    86:{
+        nodeType: NodeType.ENDPOINT,
+        endpointName: "planningTravelToSoutheastAsia"
     }
 
 }
-
-var RiskCategory = {
-    NONE : "none",
-    EPIDEMIC_ZIKA: "epidemicZika",
-    ENDEMIC_ZIKA: "endemicZika"
-}
-
-function getCountryById(name){
-    return countries[name];
-}
-
-
-//Returns riskCategory of country
-function getRisk(country){
-    return getCountryById(country).riskCategory;
-}
-
 
