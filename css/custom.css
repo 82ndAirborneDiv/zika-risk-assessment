@@ -27,7 +27,6 @@ a {
 
 @media only screen and (max-width: 350px) {
 	.zika-title {font-size:14px;}
-	.scrollable{height: 300px;}
 }
 
 .panel-primary>.panel-heading {
@@ -41,15 +40,12 @@ a {
 	border-color: #075290;
 }
 .scrollable{
-	min-height: 375px;
-	max-height: 450px;
+	height: 350px;
 	overflow:auto;
 }
 .widget-wrapper{
 	min-width: 274px;
 	max-height:755px;
-	margin-left: 15px;
-	margin-right: 15px;
 }
 
 .multiselect {
@@ -81,7 +77,6 @@ a {
 	width: 100px;
 }
 
-.row-margin {
-	margin-left: 15px;
-	margin-right: 15px;
+html, body {
+	-webkit-overflow-scrolling: touch;
 }

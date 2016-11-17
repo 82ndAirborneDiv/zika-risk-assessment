@@ -183,10 +183,6 @@ var countries = {
         text: "Colombia",
         riskCategory: RiskCategory.EPIDEMIC_ZIKA
     },
-    'COMMONWEALTH_OF_PUERTO_RICO': {
-        text: "Commonwealth of Puerto Rico",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
-    },
     'CONGO_DEMOCRATIC_REPUBLIC': {
         text: "Congo, Democratic Republic of the",
         riskCategory: RiskCategory.NONE
@@ -630,6 +626,10 @@ var countries = {
     'PORTUGAL': {
         text: "Portugal",
         riskCategory: RiskCategory.NONE
+    },
+    'PUERTO_RICO': {
+        text: "Puerto Rico",
+        riskCategory: RiskCategory.EPIDEMIC_ZIKA
     },
     'QATAR': {
         text: "Qatar",

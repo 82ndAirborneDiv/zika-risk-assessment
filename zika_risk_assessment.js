@@ -53,7 +53,7 @@ var back = $("#back");
 var restart = $("#restart");
 var nextButton = $("#next");
 
-var debug = true;
+var debug = false;
 var currentQuestionNumber;
 
 /**
@@ -127,6 +127,9 @@ function loadNode(nodeName){
             break;
         case NodeType.ENDPOINT:
             loadEndPoint(nodeName);
+            break;
+        case NodeType.APP_INFO:
+            loadAppInfo(nodeName);
             break;
     }
 }
@@ -211,9 +214,11 @@ function loadQuestion(nextQuestionNumber){
             break;
     }
 
-    $('.panel-body').focus();
+    if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 
-    //resizeWidget();
+    } else {
+        $('.panel-body').focus();
+    }
 }
 
 function loadEndPoint(number){
@@ -232,22 +237,22 @@ function loadEndPoint(number){
 
     endpointText.append($('<div>').load("html/endpoints.html #" +nodeObject.endpointName, function () {
         $('#mosquitoAvoidanceMale').load('html/endpoints.html #mosquitoAvoidanceListMale', function () {
-            if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
+            if(checkForAreaInNodeHistory("PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
         $('#mosquitoAvoidanceFemale').load('html/endpoints.html #mosquitoAvoidanceListFemale', function () {
-            if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
+            if(checkForAreaInNodeHistory("PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
         $('#mosquitoAvoidanceMaleResident').load('html/endpoints.html #mosquitoAvoidanceListMaleResident', function () {
-            if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
+            if(checkForAreaInNodeHistory("PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
         $('#mosquitoAvoidanceFemaleResident').load('html/endpoints.html #mosquitoAvoidanceListFemaleResident', function () {
-            if(checkForAreaInNodeHistory("COMMONWEALTH_OF_PUERTO_RICO")){
+            if(checkForAreaInNodeHistory("PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
@@ -271,8 +276,11 @@ function loadEndPoint(number){
 
     endpointContent.show();
 
-    //resizeWidget();
-    $('.panel-body').focus();
+    if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+
+    } else {
+        $('.panel-body').focus();
+    }
 }
 
 function checkForAreaInNodeHistory(area){
@@ -295,10 +303,31 @@ function checkForAreaInNodeHistory(area){
     })
     return areaFound;
 }
+
+function loadAppInfo(number) {
+    introPanel.hide();
+    mainPanel.show();
+    clearMainPanel();
+    var nodeObject = getNode(number);
+    if(number === 88 ){
+        $("#zika-app-info").load("/TemplatePackage/contrib/ssi/cdc-privacy-policy-eng.html");
+    } else {
+        $("#zika-app-info").append($('<div>').load("html/endpoints.html #" + nodeObject.endpointName));
+    }
+    $("#zika-app-info").show();
+
+    if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+
+    } else {
+        $('.panel-body').focus();
+    }
+}
+
 /**
  * This function is called before any content change happens.
  */
 function clearMainPanel(){
+    $('.scrollable').animate({ scrollTop: 0 }, 0);
     //endpoint
     endpointText.html("");
     endpointAdditionalNotes.html("");
@@ -313,13 +342,15 @@ function clearMainPanel(){
     $("#question-footnotes").html("");
     $("#question-image").html("");
 
+    //reset app info area
+    $("#zika-app-info").html("");
+    $("#zika-app-info").hide();
+
     //hide next button
     nextButton.hide();
 
     //reset alert area
     alertArea.html("");
-
-    //resizeWidget();
 }
 
 /**
@@ -384,22 +415,31 @@ function noSelectionAlert(){
     alertArea.html(alert);
 
     //return focus to Next button when close alert button is clicked
-    $('#noSelectionAlert').on('closed.bs.alert', function(){
-        nextButton.focus();
-    });
+    if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 
-    //focus on close alert button when noSelectionAlert is displayed
-    $('#close-alert').focus();
-    //resizeWidget();
+    } else {
+
+        $('#noSelectionAlert').on('closed.bs.alert', function () {
+
+            $('#next').focus();
+        });
+
+        //focus on close alert button when noSelectionAlert is displayed
+        $('#close-alert').focus();
+    }
+    $('.scrollable').animate({ scrollTop: 0 }, 0);
 }
 function triggerRestart(){
     nodeHistory = [];
     clearMainPanel();
     introPanel.show().focus();
     mainPanel.hide();
-    $('.panel-body').focus();
-
     $('.scrollable').animate({ scrollTop: 0 }, 0);
+    if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+
+    } else {
+        $('.panel-body').focus();
+    }
 }
 
 function nextButtonClicked(){
@@ -496,11 +536,12 @@ function trackAnswer(answer){
 }
 /**
  * Defines NodeTypes. These are used in each node object in the nodes object.
- * @type {{QUESTION: string, ENDPOINT: string}}
+ * @type {{QUESTION: string, ENDPOINT: string, APP_INFO: string}}
  */
 var NodeType = {
     QUESTION: "question",
-    ENDPOINT: "endpoint"
+    ENDPOINT: "endpoint",
+    APP_INFO: "app info"
 }
 /**
  * Defines AnswerTypes. These are used in each Question type node object in the
@@ -771,14 +812,14 @@ var nodes = {
         }
     },
     4: {
-        text: "Are you a man or a woman?",
+        text: "Are you male or female?",
         answers: {
             1: {
-                text: "Man",
+                text: "Male",
                 nextNode: 5
             },
             2: {
-                text: "Woman",
+                text: "Female",
                 nextNode: 6
             }
         },
@@ -796,7 +837,7 @@ var nodes = {
         }
     },
     5: {
-        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not your " +
+        text: "Zika can pass <a target='_blank' href='http://www.cdc.gov/zika/transmission/sexual-transmission.html'>through sex</a>, so your sexual activity can affect your risk of Zika. Whether or not your " +
         "partner is pregnant or considering pregnancy is also important because the risk of Zika is of greatest " +
         "concern for pregnant women.<br/><br/>" +
         "Which of these best describes you?*",
@@ -836,7 +877,7 @@ var nodes = {
         }
     },
     6: {
-        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not you " +
+        text: "Zika can pass <a target='_blank' href='http://www.cdc.gov/zika/transmission/sexual-transmission.html'>through sex</a>, so your sexual activity can affect your risk of Zika. Whether or not you " +
         "are pregnant or considering pregnancy is also important because the risk of Zika is of greatest concern " +
         "for pregnant women.<br/><br/>" +
         "Which of these best describes you?*",
@@ -946,14 +987,14 @@ var nodes = {
         }
     },
     8: {
-        text: "Are you a man or a woman?",
+        text: "Are you male or female?",
         answers: {
             1: {
-                text: "Man",
+                text: "Male",
                 nextNode: 9
             },
             2: {
-                text: "Woman",
+                text: "Female",
                 nextNode: 12
             }
         },
@@ -971,7 +1012,7 @@ var nodes = {
         }
     },
     9: {
-        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not your " +
+        text: "Zika can pass <a target='_blank' href='http://www.cdc.gov/zika/transmission/sexual-transmission.html'>through sex</a>, so your sexual activity can affect your risk of Zika. Whether or not your " +
         "partner is pregnant or considering pregnancy is also important because the risk of Zika is of greatest " +
         "concern for pregnant women.<br/><br/>" +
         "Which of these best describes you?*",
@@ -1061,7 +1102,7 @@ var nodes = {
         }
     },
     12: {
-        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not you " +
+        text: "Zika can pass <a target='_blank' href='http://www.cdc.gov/zika/transmission/sexual-transmission.html'>through sex</a>, so your sexual activity can affect your risk of Zika. Whether or not you " +
         "are pregnant or considering pregnancy is also important because the risk of Zika is of greatest concern " +
         "for pregnant women.<br/><br/>" +
         "Which of these best describes you?*",
@@ -1255,14 +1296,14 @@ var nodes = {
         }
     },
     17: {
-        text: "Are you a man or a woman?",
+        text: "Are you male or female?",
         answers: {
             1: {
-                text: "Man",
+                text: "Male",
                 nextNode: 18
             },
             2: {
-                text: "Woman",
+                text: "Female",
                 nextNode: 19
             }
         },
@@ -1452,14 +1493,14 @@ var nodes = {
         }
     },
     23: {
-        text: "Are you a man or a woman?",
+        text: "Are you male or female?",
         answers: {
             1: {
-                text: "Man",
+                text: "Male",
                 nextNode: 49
             },
             2: {
-                text: "Woman",
+                text: "Female",
                 nextNode: 24
             }
         },
@@ -1508,14 +1549,14 @@ var nodes = {
         }
     },
     25: {
-        text: "Are you a man or a woman?",
+        text: "Are you male or female?",
         answers: {
             1: {
-                text: "Man",
+                text: "Male",
                 nextNode: 26
             },
             2: {
-                text: "Woman",
+                text: "Female",
                 nextNode: 28
             }
         },
@@ -1533,7 +1574,7 @@ var nodes = {
         }
     },
     26: {
-        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not " +
+        text: "Zika can pass <a target='_blank' href='http://www.cdc.gov/zika/transmission/sexual-transmission.html'>through sex</a>, so your sexual activity can affect your risk of Zika. Whether or not " +
         "your partner is pregnant or considering pregnancy is also important, because the risk of Zika is of " +
         "greatest concern for pregnant women. Which of these best describes you?*",
         answers: {
@@ -1597,7 +1638,7 @@ var nodes = {
         }
     },
     28: {
-        text: "Zika can pass through sex, so your sexual activity can affect your risk of Zika. Whether or not " +
+        text: "Zika can pass <a target='_blank' href='http://www.cdc.gov/zika/transmission/sexual-transmission.html'>through sex</a>, so your sexual activity can affect your risk of Zika. Whether or not " +
         "you are pregnant or considering pregnancy is also important because the risk of Zika is of greatest " +
         "concern for pregnant women. Which of these best describes you?*",
         answers: {
@@ -1689,7 +1730,7 @@ var nodes = {
         +"has traveled, will travel, or lives outside the United States?",
         answers:{
             1:{
-                text: "Yes, my sex partner(s) has traveled in the last 6 months, will travel, or lives outside the United States.",
+                text: "Yes, my sex partner(s) has traveled in the past 6 months, will travel, or lives outside the United States.",
                 nextNode: 15
             },
             2:{
@@ -1957,7 +1998,14 @@ var nodes = {
     86:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "planningTravelToSoutheastAsia"
+    },
+    87:{
+        nodeType: NodeType.APP_INFO,
+        endpointName: "share"
+    },
+    88:{
+        nodeType: NodeType.APP_INFO,
+        endpointName: "privacy"
     }
-
 }
 
