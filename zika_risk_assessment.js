@@ -432,7 +432,7 @@ function noSelectionAlert(){
 function triggerRestart(){
     nodeHistory = [];
     clearMainPanel();
-    introPanel.show().focus();
+    introPanel.show();
     mainPanel.hide();
     $('.scrollable').animate({ scrollTop: 0 }, 0);
     if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
