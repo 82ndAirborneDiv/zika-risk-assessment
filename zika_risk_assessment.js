@@ -6,7 +6,7 @@ $(document).ready(function(){
         cdcMetrics.trackEvent("ButtonClicked", "Start");
         introPanel.hide();
         mainPanel.show();
-        loadNode("1");
+        loadNode("89");
     });
 
     back.click(function(){
@@ -166,7 +166,7 @@ function loadQuestion(nextQuestionNumber){
             if(previouslyVisited){
                 nodeHistory.pop();
             }
-            questionText.append('<strong>' +nextQuestionObject.text +'</strong>');
+            questionText.append(nextQuestionObject.text);
             break;
         case AnswerType.SINGLESELECT:
             questionAnswers.html(populateSingleSelectList(nextQuestionObject)).show();
@@ -1705,10 +1705,10 @@ var nodes = {
         }
     },
     30: {
-        text: "The following are US government recommendations for US residents. Some national governments may make " +
+        text: "<strong>The following are US government recommendations for US residents. Some national governments may make " +
         "public health and travel recommendations to their own populations, based on their assessment of the available " +
         "evidence and local risk factors. If you would like to continue and receive CDC recommendations, click the "+
-        "\"Next\" button.",
+        "\"Next\" button.</strong>",
         answers:{
         },
         nodeType: NodeType.QUESTION,
@@ -2006,6 +2006,50 @@ var nodes = {
     88:{
         nodeType: NodeType.APP_INFO,
         endpointName: "privacy"
+    },
+    89:{
+        text:
+            '<div>'
+                +'<h4>Terms of Use:</h4>'
+                +'<ul>'
+                    +'<li>The guidance that follows focuses on Zika risks and travel to international destinations and '
+                    +'US territories. If you are concerned about travel within the United States, you can visit '
+                    +'the CDC website for more information about '
+                    +'<a target="_blank" href="http://www.cdc.gov/zika/geo/united-states.html">Zika in the '
+                    +'United States</a>.'
+                    +'</li>'
+                    +'<li>This website may help you to determine the risk of Zika for each person in your '
+                    +'household and assist you in making informed decisions about your health.'
+                    +'</li>'
+                    +'<li>If you traveled recently and also have future travel plans, please use the website for '
+                    +'both situations to get complete CDC recommendations.'
+                    +'</li>'
+                    +'<li>The user acknowledges and agrees that this tool is only intended to be, and will be '
+                    +'used only as a reference aid, and that the information contained in the product is not '
+                    +'intended to be (nor should it be used as) a substitute for the advice of a medical '
+                    +'professional.'
+                    +'</li>'
+                    +'<li>The website should not be used as a self-diagnosis tool.  Seek the advice of a medical '
+                    +'professional if you are concerned that you are ill.'
+                    +'</li>'
+                    +'<li>This product is provided without warranties or representations of any kind, express or '
+                    +'implied, and the user assumes any and all risk of any liability, loss, or damage caused '
+                    +'by it or its content.'
+                    +'</li>'
+                    +'<li>By utilizing the website, you indicate your acceptance of these terms.</li>'
+                +'</ul>'
+            +'</div>',
+        answers: {
+            0:{
+                nextNode: 1
+            }
+        },
+        nodeType: NodeType.QUESTION,
+        answerType: AnswerType.NONE,
+        decideChoice: function(nodeHistoryObject){
+            return this.answers[0];
+        }
+
     }
 }
 
