@@ -110,7 +110,20 @@ function getNodeHistoryByIndex(number){
         return nodeHistory[number];
     }
 }
-
+/**
+ * Traverses nodeHistory[] and checks for and returns a NodeHistory object
+ * where NodeHistory.node = number.
+ * @param number
+ * @returns {*}
+ */
+function getNodeHistoryByNodeNumber(number){
+    var i;
+    for(i=0; i < nodeHistory.length; i++){
+        if(nodeHistory[i].node == number){
+            return nodeHistory[number];
+        }
+    }
+}
 /**
  * Starting point for loading each node.
  * This method will call the loadQuestion or loadEndpoint
@@ -664,6 +677,11 @@ var nodes = {
         },
     },
     1: {
+        /**
+         * Node 30 is dependent on the answer from node 1. If the name of node 1 changes,
+         * or if the answer names of node 1 are changed, node 30's decideChoice function
+         * must be updated.
+         */
         text: "Where do you live?",
         answers: {
             1: {
@@ -1705,6 +1723,11 @@ var nodes = {
         }
     },
     30: {
+        /**
+         * Node 30 is dependent on the answer from node 1. If the name of node 1 changes,
+         * or if the answer names of node 1 are changed, node 30's decideChoice function
+         * must be updated.
+         */
         text: "<strong>The following are US government recommendations for US residents. Some national governments may make " +
         "public health and travel recommendations to their own populations, based on their assessment of the available " +
         "evidence and local risk factors. If you would like to continue and receive CDC recommendations, click the "+
@@ -1717,7 +1740,7 @@ var nodes = {
             return this.answers;
         },
         decideChoice: function(nodeHistoryObject){
-            if (getRisk(getNodeHistoryByIndex(0).answer) == RiskCategory.EPIDEMIC_ZIKA) { //Zika country
+            if (getRisk(getNodeHistoryByNodeNumber(1).answer) == RiskCategory.EPIDEMIC_ZIKA) { //Zika country
                 return getNode('1').answers["1"];
             }
             else { //non-Zika country
