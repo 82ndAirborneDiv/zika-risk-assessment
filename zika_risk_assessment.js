@@ -150,7 +150,6 @@ function loadNode(nodeName){
 function loadQuestion(nextQuestionNumber){
     clearMainPanel();
     nextButton.show();
-    questionContent.show();
 
     var nextQuestionObject = getNode(nextQuestionNumber);
     if(debug){
@@ -227,10 +226,12 @@ function loadQuestion(nextQuestionNumber){
             break;
     }
 
+    questionContent.show();
+
     if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 
     } else {
-        $('.panel-body').focus();
+        $('.scrollable').focus();
     }
 }
 
@@ -248,23 +249,38 @@ function loadEndPoint(number){
         endpointText.html("<div>" +nodeNumText +"</div>");
     }
 
+    /**
+     * Append applicable endpoint div to endpointText div in mainPanel.
+     */
     endpointText.append($('<div>').load("html/endpoints.html #" +nodeObject.endpointName, function () {
+        //Callback function loads a reusable list of guidance for mosquito avoidance text.
         $('#mosquitoAvoidanceMale').load('html/endpoints.html #mosquitoAvoidanceListMale', function () {
+            //Callback function hides permethrin guidance if Puerto Rico was selected because it was
+            //decided that permethrin is not effective in Puerto Rico.
             if(checkForAreaInNodeHistory("PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
+        //Callback function loads a reusable list of guidance for mosquito avoidance text.
         $('#mosquitoAvoidanceFemale').load('html/endpoints.html #mosquitoAvoidanceListFemale', function () {
+            //Callback function hides permethrin guidance if Puerto Rico was selected because it was
+            //decided that permethrin is not effective in Puerto Rico.
             if(checkForAreaInNodeHistory("PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
+        //Callback function loads a reusable list of guidance for mosquito avoidance text.
         $('#mosquitoAvoidanceMaleResident').load('html/endpoints.html #mosquitoAvoidanceListMaleResident', function () {
+            //Callback function hides permethrin guidance if Puerto Rico was selected because it was
+            //decided that permethrin is not effective in Puerto Rico.
             if(checkForAreaInNodeHistory("PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
         });
+        //Callback function loads a reusable list of guidance for mosquito avoidance text.
         $('#mosquitoAvoidanceFemaleResident').load('html/endpoints.html #mosquitoAvoidanceListFemaleResident', function () {
+            //Callback function hides permethrin guidance if Puerto Rico was selected because it was
+            //decided that permethrin is not effective in Puerto Rico.
             if(checkForAreaInNodeHistory("PUERTO_RICO")){
                 $('#permethrin').addClass('hidden');
             }
@@ -275,6 +291,9 @@ function loadEndPoint(number){
         var nodeHistoryObject = nodeHistory[i];
         var node = getNode(nodeHistoryObject.node);
 
+        /**
+         * Check nodeHistory[] for nodes which contain additional notes.
+         */
         if(node.hasOwnProperty("getAdditionalNotes")){
             var additionalNotes = node.getAdditionalNotes(nodeHistoryObject.answer);
             if(additionalNotes != null){
@@ -292,7 +311,7 @@ function loadEndPoint(number){
     if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 
     } else {
-        $('.panel-body').focus();
+        $('.scrollable').focus();
     }
 }
 
@@ -332,7 +351,7 @@ function loadAppInfo(number) {
     if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 
     } else {
-        $('.panel-body').focus();
+        $('.scrollable').focus();
     }
 }
 
@@ -354,6 +373,7 @@ function clearMainPanel(){
     questionAnswers.hide();
     $("#question-footnotes").html("");
     $("#question-image").html("");
+    questionContent.hide();
 
     //reset app info area
     $("#zika-app-info").html("");
@@ -451,7 +471,7 @@ function triggerRestart(){
     if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 
     } else {
-        $('.panel-body').focus();
+        $('.scrollable').focus();
     }
 }
 
