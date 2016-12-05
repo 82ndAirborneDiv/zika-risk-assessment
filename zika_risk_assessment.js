@@ -593,32 +593,26 @@ var Disclaimers = {
 /**
  * Defines AdditionalNotes types. These are tags which are div ids in the
  * html/additionalNotes.html and are loaded conditionally with Endpoint node types.
- * @type {{RESIDENCE_ENDEMIC: string, RESIDENCE_SOUTHEAST_ASIA: string, RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC: string, RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC: string, PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC: string, PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC: string, RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: string, RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER: string, PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: string, PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER: string}}
+ * @type {{RESIDENCE_ENDEMIC: string, RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC: string, PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC: string, RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: string, PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: string}}
  */
 var AdditionalNotes = {
     RESIDENCE_ENDEMIC: "noteForResidentsOfEndemicCountries",
-    RESIDENCE_SOUTHEAST_ASIA: "noteForResidentsOfCountriesInSoutheastAsia",
     RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC: "recentTravelToBothEndemicAndEpidemicCountries",
-    RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC: "recentTravelToBothSEAsianAndEpidemicCountries",
     PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC: "planningTravelToBothEndemicAndEpidemicCountries",
-    PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC: "planningTravelToBothSEAsianAndEpidemicCountries",
     RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerRecentTravelToBothEndemicAndEpidemicCountries",
-    RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER: "partnerRecentTravelToBothSEAsianAndEpidemicCountries",
     PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerPlanningTravelToBothEndemicAndEpidemicCountries",
-    PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER: "partnerPlanningTravelToBothSEAsianAndEpidemicCountries",
 
 }
 /**
  * Defines RiskCategory types. These types are used for logical decisions.
  * Country objects in js/countries.js are tagged with one of these categories
  * as a riskCategory property.
- * @type {{NONE: string, EPIDEMIC_ZIKA: string, ENDEMIC_ZIKA: string, SOUTHEAST_ASIA: string}}
+ * @type {{NONE: string, EPIDEMIC_ZIKA: string, ENDEMIC_ZIKA: string}}
  */
 var RiskCategory = {
     NONE : "none",
     EPIDEMIC_ZIKA: "epidemicZika",
-    ENDEMIC_ZIKA: "endemicZika",
-    SOUTHEAST_ASIA: "southeastAsia"
+    ENDEMIC_ZIKA: "endemicZika"
 }
 /**
  * @param {string} name The name of the country object to retrieve
@@ -646,7 +640,6 @@ var nodes = {
             var epidemicZika = false;
             var endemicZika = false;
             var unitedStates = false;
-            var southeastAsia = false;
             for(var i = 0; i < answer.length; i++){
                 var currentAnswer = nodeHistoryObject.answer[i];
                 if(getRisk(currentAnswer) === RiskCategory.EPIDEMIC_ZIKA){
@@ -655,31 +648,18 @@ var nodes = {
                     endemicZika = true;
                 } else if(currentAnswer === "UNITED_STATES"){
                     unitedStates = true;
-                } else if(getRisk(currentAnswer) === RiskCategory.SOUTHEAST_ASIA){
-                    southeastAsia = true;
                 }
             }
             if(epidemicZika){
-                if(endemicZika && southeastAsia){
-                    trackAnswer("Answer set included epidemic Zika, endemic Zika, and Southeast Asian countries");
-                } else if(endemicZika) {
+                if(endemicZika) {
                     trackAnswer("Answer set included epidemic Zika and endemic Zika countries");
-                } else if(southeastAsia){
-                    trackAnswer("Answer set included epidemic Zika and Southeast Asian countries");
                 } else {
                     trackAnswer("Answer set included epidemic Zika country(ies)");
                 }
                 return questionObject.answers["1"];
             } else if(endemicZika) {
-                if (southeastAsia) {
-                    trackAnswer("Answer set included endemic Zika and Southeast Asian countries");
-                } else {
-                    trackAnswer("Answer set included endemic Zika country(ies)");
-                }
+                trackAnswer("Answer set included endemic Zika country(ies)");
                 return questionObject.answers["2"];
-            } else if(southeastAsia) {
-                trackAnswer("Answer set included a Southeast Asian country(ies)");
-                return questionObject.answers["5"];
             } else if(unitedStates){
                 trackAnswer("Answer set included the United States");
                 return questionObject.answers["4"];
@@ -748,9 +728,6 @@ var nodes = {
                 case RiskCategory.ENDEMIC_ZIKA:
                     additionalNotes.push(AdditionalNotes.RESIDENCE_ENDEMIC);
                     break;
-                case RiskCategory.SOUTHEAST_ASIA:
-                    additionalNotes.push(AdditionalNotes.RESIDENCE_SOUTHEAST_ASIA);
-                    break;
             }
             return additionalNotes;
         }
@@ -803,10 +780,6 @@ var nodes = {
             4: {
                 text: "United States",
                 nextNode: 75
-            },
-            5: {
-                text: "Southeast Asia",
-                nextNode: 86
             }
 
         },
@@ -821,7 +794,6 @@ var nodes = {
         getAdditionalNotes: function(input){
             var zikaEpidemic = false;
             var zikaEndemic = false;
-            var southeastAsia = false;
 
             var additionalNotes = [];
             for(var i = 0; i < input.length; i++){
@@ -831,19 +803,9 @@ var nodes = {
                 if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
                     zikaEndemic = true;
                 }
-                if(getRisk(input[i]) === RiskCategory.SOUTHEAST_ASIA){
-                    southeastAsia = true;
-                }
             }
-            if(zikaEpidemic){
-                if(zikaEndemic){
-                    additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC);
-                }
-                if(southeastAsia){
-                    additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC)
-                }
-            } else if(zikaEndemic && southeastAsia){
-                additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC)
+            if(zikaEpidemic && zikaEndemic){
+                additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC);
             }
 
             return additionalNotes;
@@ -975,10 +937,6 @@ var nodes = {
             4: {
                 text: "United States",
                 nextNode: 75
-            },
-            5: {
-                text: "Southeast Asia",
-                nextNode: 85
             }
         },
         nodeType: NodeType.QUESTION,
@@ -996,7 +954,6 @@ var nodes = {
         getAdditionalNotes: function(input){
             var zikaEpidemic = false;
             var zikaEndemic = false;
-            var southeastAsia = false;
 
             var additionalNotes = [];
             for(var i = 0; i < input.length; i++){
@@ -1006,19 +963,9 @@ var nodes = {
                 if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
                     zikaEndemic = true;
                 }
-                if(getRisk(input[i]) === RiskCategory.SOUTHEAST_ASIA){
-                    southeastAsia = true;
-                }
             }
-            if(zikaEpidemic){
-                if(zikaEndemic){
-                    additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC);
-                }
-                if(southeastAsia){
-                    additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC)
-                }
-            } else if(zikaEndemic && southeastAsia){
-                additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC)
+            if(zikaEpidemic && zikaEndemic){
+                additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC);
             }
 
             return additionalNotes;
@@ -1284,10 +1231,6 @@ var nodes = {
             4: {
                 text: "United States",
                 nextNode: 75
-            },
-            5: {
-                text: "Southeast Asia",
-                nextNode: 83
             }
         },
         nodeType: NodeType.QUESTION,
@@ -1305,7 +1248,6 @@ var nodes = {
         getAdditionalNotes: function(input){
             var zikaEpidemic = false;
             var zikaEndemic = false;
-            var southeastAsia = false;
 
             var additionalNotes = [];
             for(var i = 0; i < input.length; i++){
@@ -1315,19 +1257,9 @@ var nodes = {
                 if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
                     zikaEndemic = true;
                 }
-                if(getRisk(input[i]) === RiskCategory.SOUTHEAST_ASIA){
-                    southeastAsia = true;
-                }
             }
-            if(zikaEpidemic){
-                if(zikaEndemic){
-                    additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER);
-                }
-                if(southeastAsia){
-                    additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER);
-                }
-            } else if(zikaEndemic && southeastAsia){
-                additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER);
+            if(zikaEpidemic && zikaEndemic){
+                additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER);
             }
 
             return additionalNotes;
@@ -1481,10 +1413,6 @@ var nodes = {
             4: {
                 text: "United States",
                 nextNode: 75
-            },
-            5: {
-                text: "Southeast Asia",
-                nextNode: 84
             }
         },
         nodeType: NodeType.QUESTION,
@@ -1502,7 +1430,6 @@ var nodes = {
         getAdditionalNotes: function(input){
             var zikaEpidemic = false;
             var zikaEndemic = false;
-            var southeastAsia = false;
 
             var additionalNotes = [];
             for(var i = 0; i < input.length; i++){
@@ -1512,19 +1439,9 @@ var nodes = {
                 if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
                     zikaEndemic = true;
                 }
-                if(getRisk(input[i]) === RiskCategory.SOUTHEAST_ASIA){
-                    southeastAsia = true;
-                }
             }
-            if(zikaEpidemic){
-                if(zikaEndemic){
-                    additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER);
-                }
-                if(southeastAsia){
-                    additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER);
-                }
-            } else if(zikaEndemic && southeastAsia){
-                additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_SE_ASIAN_AND_EPIDEMIC_PARTNER);
+            if(zikaEpidemic && zikaEndemic){
+                additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER);
             }
 
             return additionalNotes;
@@ -2025,22 +1942,6 @@ var nodes = {
     82:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "partnerPlanningTravelToEndemicDestination"
-    },
-    83:{
-        nodeType: NodeType.ENDPOINT,
-        endpointName: "partnerRecentTravelToSoutheastAsia"
-    },
-    84:{
-        nodeType: NodeType.ENDPOINT,
-        endpointName: "partnerPlanningTravelToSoutheastAsia"
-    },
-    85:{
-        nodeType: NodeType.ENDPOINT,
-        endpointName: "recentTravelToSoutheastAsia"
-    },
-    86:{
-        nodeType: NodeType.ENDPOINT,
-        endpointName: "planningTravelToSoutheastAsia"
     },
     87:{
         nodeType: NodeType.APP_INFO,

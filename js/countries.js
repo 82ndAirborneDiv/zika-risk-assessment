@@ -125,7 +125,7 @@ var countries = {
     },
     'BRUNEI': {
         text: "Brunei",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'BULGARIA': {
         text: "Bulgaria",
@@ -137,7 +137,7 @@ var countries = {
     },
     'BURMA': {
         text: "Burma",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'BURUNDI': {
         text: "Burundi",
@@ -145,7 +145,7 @@ var countries = {
     },
     'CAMBODIA': {
         text: "Cambodia",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'CAMEROON': {
         text: "Cameroon",
@@ -361,7 +361,7 @@ var countries = {
     },
     'INDONESIA': {
         text: "Indonesia",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'IRAN': {
         text: "Iran",
@@ -425,7 +425,7 @@ var countries = {
     },
     'LAOS': {
         text: "Laos",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'LATVIA': {
         text: "Latvia",
@@ -477,11 +477,11 @@ var countries = {
     },
     'MALAYSIA': {
         text: "Malaysia",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'MALDIVES': {
         text: "Maldives",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'MALI': {
         text: "Mali",
@@ -617,7 +617,7 @@ var countries = {
     },
     'PHILIPPINES': {
         text: "Philippines",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'POLAND': {
         text: "Poland",
@@ -789,11 +789,11 @@ var countries = {
     },
     'THAILAND': {
         text: "Thailand",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'TIMOR_LESTE': {
         text: "Timor-Leste",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'TOGO': {
         text: "Togo",
@@ -865,7 +865,7 @@ var countries = {
     },
     'VIETNAM': {
         text: "Vietnam",
-        riskCategory: RiskCategory.SOUTHEAST_ASIA
+        riskCategory: RiskCategory.NONE
     },
     'YEMEN': {
         text: "Yemen",
