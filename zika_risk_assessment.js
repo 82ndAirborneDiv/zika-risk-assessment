@@ -596,23 +596,24 @@ var Disclaimers = {
  * @type {{RESIDENCE_ENDEMIC: string, RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC: string, PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC: string, RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: string, PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: string}}
  */
 var AdditionalNotes = {
+    /*
+    These notes are not being used as of 12/9/16 due to guidance changes
     RESIDENCE_ENDEMIC: "noteForResidentsOfEndemicCountries",
     RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC: "recentTravelToBothEndemicAndEpidemicCountries",
     PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC: "planningTravelToBothEndemicAndEpidemicCountries",
     RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerRecentTravelToBothEndemicAndEpidemicCountries",
     PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER: "partnerPlanningTravelToBothEndemicAndEpidemicCountries",
-
+    */
 }
 /**
  * Defines RiskCategory types. These types are used for logical decisions.
  * Country objects in js/countries.js are tagged with one of these categories
  * as a riskCategory property.
- * @type {{NONE: string, EPIDEMIC_ZIKA: string, ENDEMIC_ZIKA: string}}
+ * @type {{NONE: string, ZIKA: string}}
  */
 var RiskCategory = {
     NONE : "none",
-    EPIDEMIC_ZIKA: "epidemicZika",
-    ENDEMIC_ZIKA: "endemicZika"
+    ZIKA: "zika"
 }
 /**
  * @param {string} name The name of the country object to retrieve
@@ -635,38 +636,21 @@ var nodes = {
     decisionLogic: {
         //Specific logic for multi select nodes regarding potential Zika countries
         multiCountryCheckForZika : function(nodeHistoryObject){
-            var questionObject = getNode(nodeHistoryObject.node);
             var answer = nodeHistoryObject.answer;
-            var epidemicZika = false;
-            var endemicZika = false;
-            var unitedStates = false;
+            var riskCategoriesFound = {
+                zika: false,
+                unitedStates: false
+            }
+
             for(var i = 0; i < answer.length; i++){
                 var currentAnswer = nodeHistoryObject.answer[i];
-                if(getRisk(currentAnswer) === RiskCategory.EPIDEMIC_ZIKA){
-                    epidemicZika = true;
-                } else if(getRisk(currentAnswer) === RiskCategory.ENDEMIC_ZIKA){
-                    endemicZika = true;
+                if(getRisk(currentAnswer) === RiskCategory.ZIKA){
+                    riskCategoriesFound.zika = true;
                 } else if(currentAnswer === "UNITED_STATES"){
-                    unitedStates = true;
+                    riskCategoriesFound.unitedStates = true;
                 }
             }
-            if(epidemicZika){
-                if(endemicZika) {
-                    trackAnswer("Answer set included epidemic Zika and endemic Zika countries");
-                } else {
-                    trackAnswer("Answer set included epidemic Zika country(ies)");
-                }
-                return questionObject.answers["1"];
-            } else if(endemicZika) {
-                trackAnswer("Answer set included endemic Zika country(ies)");
-                return questionObject.answers["2"];
-            } else if(unitedStates){
-                trackAnswer("Answer set included the United States");
-                return questionObject.answers["4"];
-            } else {
-                trackAnswer("Answer set did not include a country from any risk category");
-                return questionObject.answers["3"];
-            }
+            return riskCategoriesFound;
         },
         //Generic logic for radio button answerType
         getRadioAnswer: function(questionNumber, selection){
@@ -685,11 +669,11 @@ var nodes = {
         text: "Where do you live?",
         answers: {
             1: {
-                text: "Epidemic Zika Country",
+                text: "Zika Country",
                 nextNode: 25
             },
             2: {
-                text: "US, Endemic Zika, or Non-Zika Country",
+                text: "US or Non-Zika Country",
                 nextNode: 2
             },
             3: {
@@ -711,7 +695,7 @@ var nodes = {
                 return questionObject.answers["3"];
             }
             else{
-                if (getRisk(nodeHistoryObject.answer) == RiskCategory.EPIDEMIC_ZIKA) { //Zika country
+                if (getRisk(nodeHistoryObject.answer) == RiskCategory.ZIKA) { //Zika country
                     return questionObject.answers["1"];
                 }
                 else { //non-Zika country
@@ -724,11 +708,7 @@ var nodes = {
         },
         getAdditionalNotes: function(input){
             var additionalNotes = [];
-            switch (getRisk(input)){
-                case RiskCategory.ENDEMIC_ZIKA:
-                    additionalNotes.push(AdditionalNotes.RESIDENCE_ENDEMIC);
-                    break;
-            }
+
             return additionalNotes;
         }
     },
@@ -766,13 +746,15 @@ var nodes = {
         text: "Where are you planning to travel?",
         answers: {
             1: {
-                text: "Epidemic Zika Country",
+                text: "Zika Country",
                 nextNode: 4
             },
+            /* This node is not being used as of 12/9/16 due to guidance changes
             2: {
                 text: "Endemic Zika Country",
                 nextNode: 48
             },
+            */
             3: {
                 text: "Non-Zika Country",
                 nextNode: 74
@@ -786,27 +768,23 @@ var nodes = {
         nodeType: NodeType.QUESTION,
         answerType: AnswerType.MULTISELECT,
         decideChoice: function(nodeHistoryObject){
-            return nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
+            var riskCategoriesFound = nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
+            if(riskCategoriesFound.zika){
+                trackAnswer("Answer set included at least one Zika country");
+                return this.answers["1"];
+            } else if(riskCategoriesFound.unitedStates){
+                trackAnswer("United States");
+                return this.answers["4"];
+            } else {
+                trackAnswer("Answer set did not include a country from any risk category");
+                return this.answers["3"];
+            }
         },
         getValuesForAnswers: function(){
             return countries;
         },
         getAdditionalNotes: function(input){
-            var zikaEpidemic = false;
-            var zikaEndemic = false;
-
             var additionalNotes = [];
-            for(var i = 0; i < input.length; i++){
-                if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
-                    zikaEpidemic = true;
-                }
-                if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
-                    zikaEndemic = true;
-                }
-            }
-            if(zikaEpidemic && zikaEndemic){
-                additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC);
-            }
 
             return additionalNotes;
         }
@@ -923,13 +901,15 @@ var nodes = {
         text: "Where have you traveled? (Answer for all destinations, including those you passed through.)",
         answers: {
             1: {
-                text: "Epidemic Zika Country",
+                text: "Zika Country",
                 nextNode: 8
             },
+            /* This node is not being used as of 12/9/16 due to guidance changes
             2: {
                 text: "Endemic Zika Country",
                 nextNode: 77
             },
+            */
             3: {
                 text: "Non-Zika Country",
                 nextNode: 76
@@ -946,27 +926,23 @@ var nodes = {
             altText: 'globe'
         },
         decideChoice: function(nodeHistoryObject){
-            return nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
+            var riskCategoriesFound = nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
+            if(riskCategoriesFound.zika){
+                trackAnswer("Answer set included at least one Zika country");
+                return this.answers["1"];
+            } else if(riskCategoriesFound.unitedStates){
+                trackAnswer("United States");
+                return this.answers["4"];
+            } else {
+                trackAnswer("Answer set did not include a country from any risk category");
+                return this.answers["3"];
+            }
         },
         getValuesForAnswers: function(){
             return countries;
         },
         getAdditionalNotes: function(input){
-            var zikaEpidemic = false;
-            var zikaEndemic = false;
-
             var additionalNotes = [];
-            for(var i = 0; i < input.length; i++){
-                if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
-                    zikaEpidemic = true;
-                }
-                if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
-                    zikaEndemic = true;
-                }
-            }
-            if(zikaEpidemic && zikaEndemic){
-                additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC);
-            }
 
             return additionalNotes;
         }
@@ -1217,13 +1193,15 @@ var nodes = {
         text: "Where has your partner traveled or lived?",
         answers: {
             1: {
-                text: "Epidemic Zika Country",
+                text: "Zika Country",
                 nextNode: 17
             },
+            /* This node is not being used as of 12/9/16 due to guidance changes
             2: {
                 text: "Endemic Zika Country",
                 nextNode: 81
             },
+            */
             3: {
                 text: "Non-Zika Country",
                 nextNode: 32
@@ -1240,27 +1218,23 @@ var nodes = {
             altText: 'globe'
         },
         decideChoice: function(nodeHistoryObject){
-            return nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
+            var riskCategoriesFound = nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
+            if(riskCategoriesFound.zika){
+                trackAnswer("Answer set included at least one Zika country");
+                return this.answers["1"];
+            } else if(riskCategoriesFound.unitedStates){
+                trackAnswer("United States");
+                return this.answers["4"];
+            } else {
+                trackAnswer("Answer set did not include a country from any risk category");
+                return this.answers["3"];
+            }
         },
         getValuesForAnswers: function(){
             return countries;
         },
         getAdditionalNotes: function(input){
-            var zikaEpidemic = false;
-            var zikaEndemic = false;
-
             var additionalNotes = [];
-            for(var i = 0; i < input.length; i++){
-                if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
-                    zikaEpidemic = true;
-                }
-                if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
-                    zikaEndemic = true;
-                }
-            }
-            if(zikaEpidemic && zikaEndemic){
-                additionalNotes.push(AdditionalNotes.RECENT_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER);
-            }
 
             return additionalNotes;
         }
@@ -1399,13 +1373,15 @@ var nodes = {
         text: "Where does your partner plan to travel?",
         answers: {
             1: {
-                text: "Epidemic Zika Country",
+                text: "Zika Country",
                 nextNode: 23
             },
+            /* This node is not being used as of 12/9/16 due to guidance changes
             2: {
                 text: "Endemic Zika Country",
                 nextNode: 82
             },
+            */
             3: {
                 text: "Non-Zika Country",
                 nextNode: 32
@@ -1422,27 +1398,23 @@ var nodes = {
             altText: 'globe'
         },
         decideChoice: function(nodeHistoryObject){
-            return nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
+            var riskCategoriesFound = nodes.decisionLogic.multiCountryCheckForZika(nodeHistoryObject);
+            if(riskCategoriesFound.zika){
+                trackAnswer("Answer set included at least one Zika country");
+                return this.answers["1"];
+            } else if(riskCategoriesFound.unitedStates){
+                trackAnswer("United States");
+                return this.answers["4"];
+            } else {
+                trackAnswer("Answer set did not include a country from any risk category");
+                return this.answers["3"];
+            }
         },
         getValuesForAnswers: function(){
             return countries;
         },
         getAdditionalNotes: function(input){
-            var zikaEpidemic = false;
-            var zikaEndemic = false;
-
             var additionalNotes = [];
-            for(var i = 0; i < input.length; i++){
-                if(getRisk(input[i]) === RiskCategory.EPIDEMIC_ZIKA){
-                    zikaEpidemic = true;
-                }
-                if(getRisk(input[i]) === RiskCategory.ENDEMIC_ZIKA){
-                    zikaEndemic = true;
-                }
-            }
-            if(zikaEpidemic && zikaEndemic){
-                additionalNotes.push(AdditionalNotes.PLANNING_TRAVEL_ENDEMIC_AND_EPIDEMIC_PARTNER);
-            }
 
             return additionalNotes;
         }
@@ -1677,7 +1649,7 @@ var nodes = {
             return this.answers;
         },
         decideChoice: function(nodeHistoryObject){
-            if (getRisk(getNodeHistoryByNodeNumber(1).answer) == RiskCategory.EPIDEMIC_ZIKA) { //Zika country
+            if (getRisk(getNodeHistoryByNodeNumber(1).answer) == RiskCategory.ZIKA) { //Zika country
                 return getNode('1').answers["1"];
             }
             else { //non-Zika country
@@ -1782,10 +1754,12 @@ var nodes = {
         nodeType: NodeType.ENDPOINT,
         endpointName: "partnerHasTraveledFemaleNotConsideringPregnancyPartnerWasAsymptomatic"
     },
+    /* This node is not being used as of 12/9/16 due to guidance changes
     48:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "planningTravelToEndemicDestination"
     },
+    */
     49:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "partnerWillTravelMale"
@@ -1898,10 +1872,12 @@ var nodes = {
         nodeType: NodeType.ENDPOINT,
         endpointName: "noRiskRecentTravelRedirect"
     },
+/* This node is not being used as of 12/9/16 due to guidance changes
     77:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "recentTravelToEndemicDestination"
     },
+    */
     78:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "recentTravelFemaleNotSexuallyActive"
@@ -1935,14 +1911,18 @@ var nodes = {
         nodeType: NodeType.ENDPOINT,
         endpointName: "recentTravelFemaleSexuallyActiveNotConsideringPregnancySymptomatic"
     },
+    /* This node is not being used as of 12/9/16 due to guidance changes
     81:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "partnerRecentTravelToEndemicDestination"
     },
+    */
+    /* This node is not being used as of 12/9/16 due to guidance changes
     82:{
         nodeType: NodeType.ENDPOINT,
         endpointName: "partnerPlanningTravelToEndemicDestination"
     },
+    */
     87:{
         nodeType: NodeType.APP_INFO,
         endpointName: "share"

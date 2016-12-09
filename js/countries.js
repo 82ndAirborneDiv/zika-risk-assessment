@@ -19,9 +19,9 @@ var countries = {
         text: "Algeria",
         riskCategory: RiskCategory.NONE
     },
-    'AMERICAN_SOMOA': {
+    'AMERICAN_SAMOA': {
         text: "American Samoa",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'ANDORRA': {
         text: "Andorra",
@@ -29,19 +29,19 @@ var countries = {
     },
     'ANGOLA': {
         text: "Angola",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'ANGUILLA': {
         text: "Anguilla",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'ANTIGUA_AND_BARBUDA': {
         text: "Antigua and Barbuda",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'ARGENTINA': {
         text: "Argentina",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'ARMENIA': {
         text: "Armenia",
@@ -49,7 +49,7 @@ var countries = {
     },
     'ARUBA': {
         text: "Aruba",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'AUSTRALIA': {
         text: "Australia",
@@ -65,7 +65,7 @@ var countries = {
     },
     'BAHAMAS': {
         text: "Bahamas, The",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BAHRAIN': {
         text: "Bahrain",
@@ -73,11 +73,11 @@ var countries = {
     },
     'BANGLADESH': {
         text: "Bangladesh",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BARBADOS': {
         text: "Barbados",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BELARUS': {
         text: "Belarus",
@@ -89,11 +89,11 @@ var countries = {
     },
     'BELIZE': {
         text: "Belize",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BENIN': {
         text: "Benin",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BHUTAN': {
         text: "Bhutan",
@@ -101,11 +101,11 @@ var countries = {
     },
     'BOLIVIA': {
         text: "Bolivia",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BONAIRE': {
         text: "Bonaire",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BOSNIA_AND_HERZEGOVINA': {
         text: "Bosnia and Herzegovina",
@@ -117,15 +117,15 @@ var countries = {
     },
     'BRAZIL': {
         text: "Brazil",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BRITISH_VIRGIN_ISLANDS' : {
         text: "British Virgin Islands",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BRUNEI': {
         text: "Brunei",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'BULGARIA': {
         text: "Bulgaria",
@@ -133,11 +133,11 @@ var countries = {
     },
     'BURKINA_FASO': {
         text: "Burkina Faso",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'BURMA': {
         text: "Burma",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'BURUNDI': {
         text: "Burundi",
@@ -145,11 +145,11 @@ var countries = {
     },
     'CAMBODIA': {
         text: "Cambodia",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'CAMEROON': {
         text: "Cameroon",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'CANADA': {
         text: "Canada",
@@ -157,15 +157,15 @@ var countries = {
     },
     'CAPE_VERDE': {
         text: "Cape Verde",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'CAYMAN_ISLANDS': {
         text: "Cayman Islands",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'CENTRAL_AFRICAN_REPUBLIC': {
         text: "Central African Republic",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'CHAD': {
         text: "Chad",
@@ -181,7 +181,7 @@ var countries = {
     },
     'COLOMBIA': {
         text: "Colombia",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'CONGO_DEMOCRATIC_REPUBLIC': {
         text: "Congo, Democratic Republic of the",
@@ -193,11 +193,11 @@ var countries = {
     },
     'COSTA_RICA': {
         text: "Costa Rica",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'COTE_D_IVOIRE': {
         text: "Cote d'Ivoire",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'CROATIA': {
         text: "Croatia",
@@ -205,11 +205,11 @@ var countries = {
     },
     'CUBA': {
         text: "Cuba",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'CURACAO': {
         text: "Curacao",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'CYPRUS': {
         text: "Cyprus",
@@ -229,27 +229,27 @@ var countries = {
     },
     'DOMINICA': {
         text: "Dominica",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'DOMINICAN_REPUBLIC': {
         text: "Dominican Republic",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'EASTER_ISLAND':{
         text: "Easter Island",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'ECUADOR': {
         text: "Ecuador",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'EGYPT': {
         text: "Egypt",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'EL_SALVADOR': {
         text: "El Salvador",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'EQUATORIAL_GUINEA': {
         text: "Equatorial Guinea",
@@ -265,11 +265,11 @@ var countries = {
     },
     'ETHIOPIA': {
         text: "Ethiopia",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'FIJI': {
         text: "Fiji",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'FINLAND': {
         text: "Finland",
@@ -281,11 +281,11 @@ var countries = {
     },
     'FRENCH_GUIANA': {
         text: "French Guiana",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'GABON': {
         text: "Gabon",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'GAMBIA': {
         text: "Gambia, The",
@@ -309,15 +309,15 @@ var countries = {
     },
     'GRENADA': {
         text: "Grenada",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'GUADELOUPE': {
         text: "Guadeloupe",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'GUATEMALA': {
         text: "Guatemala",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'GUINEA': {
         text: "Guinea",
@@ -325,15 +325,15 @@ var countries = {
     },
     'GUINEA-BISSAU': {
         text: "Guinea-Bissau",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'GUYANA': {
         text: "Guyana",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'HAITI': {
         text: "Haiti",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'HOLY_SEE': {
         text: "Holy See",
@@ -341,7 +341,7 @@ var countries = {
     },
     'HONDURAS': {
         text: "Honduras",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'HONG_KONG': {
         text: "Hong Kong",
@@ -357,11 +357,11 @@ var countries = {
     },
     'INDIA': {
         text: "India",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'INDONESIA': {
         text: "Indonesia",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'IRAN': {
         text: "Iran",
@@ -385,7 +385,7 @@ var countries = {
     },
     'JAMAICA': {
         text: "Jamaica",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'JAPAN': {
         text: "Japan",
@@ -401,7 +401,7 @@ var countries = {
     },
     'KENYA': {
         text: "Kenya",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'KIRIBATI': {
         text: "Kiribati",
@@ -409,7 +409,7 @@ var countries = {
     },
     'KOSRAE_FEDERATED_STATES_OF_MICRONESIA': {
         text: "Kosrae, Federated States of Micronesia",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'KOSOVO': {
         text: "Kosovo",
@@ -425,7 +425,7 @@ var countries = {
     },
     'LAOS': {
         text: "Laos",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'LATVIA': {
         text: "Latvia",
@@ -441,7 +441,7 @@ var countries = {
     },
     'LIBERIA': {
         text: "Liberia",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'LIBYA': {
         text: "Libya",
@@ -477,15 +477,15 @@ var countries = {
     },
     'MALAYSIA': {
         text: "Malaysia",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'MALDIVES': {
         text: "Maldives",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'MALI': {
         text: "Mali",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'MALTA': {
         text: "Malta",
@@ -493,11 +493,11 @@ var countries = {
     },
     'MARSHALL_ISLANDS': {
         text: "Marshall Islands",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'MARTINIQUE': {
         text: "Martinique",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'MAURITANIA': {
         text: "Mauritania",
@@ -509,7 +509,7 @@ var countries = {
     },
     'MEXICO': {
         text: "Mexico",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'MOLDOVA': {
         text: "Moldova",
@@ -527,13 +527,17 @@ var countries = {
         text: "Montenegro",
         riskCategory: RiskCategory.NONE
     },
+    'MONTSERRAT':{
+        text: "Montserrat",
+        riskCategorty: RiskCategory.ZIKA
+    },
     'MOROCCO': {
         text: "Morocco",
         riskCategory: RiskCategory.NONE
     },
     'MOZAMBIQUE': {
         text: "Mozambique",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'NAMIBIA': {
         text: "Namibia",
@@ -557,7 +561,7 @@ var countries = {
     },
     'NEW_CALEDONIA': {
         text: "New Caledonia",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'NEW_ZEALAND': {
         text: "New Zealand",
@@ -565,15 +569,15 @@ var countries = {
     },
     'NICARAGUA': {
         text: "Nicaragua",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'NIGER': {
         text: "Niger",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'NIGERIA': {
         text: "Nigeria",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'NORTH_KOREA': {
         text: "North Korea",
@@ -589,11 +593,11 @@ var countries = {
     },
     'PAKISTAN': {
         text: "Pakistan",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'PALAU': {
         text: "Palau",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'PALESTINIAN_TERRITORIES': {
         text: "Palestinian Territories",
@@ -601,23 +605,23 @@ var countries = {
     },
     'PANAMA': {
         text: "Panama",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'PAPUA_NEW_GUINEA': {
         text: "Papua New Guinea",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'PARAGUAY': {
         text: "Paraguay",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'PERU': {
         text: "Peru",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'PHILIPPINES': {
         text: "Philippines",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'POLAND': {
         text: "Poland",
@@ -629,7 +633,7 @@ var countries = {
     },
     'PUERTO_RICO': {
         text: "Puerto Rico",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'QATAR': {
         text: "Qatar",
@@ -649,31 +653,31 @@ var countries = {
     },
     'SABA': {
         text: "Saba",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SAINT_BARTHELEMY': {
         text: "Saint Barthelemy",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SAINT_KITTS_AND_NEVIS': {
         text: "Saint Kitts and Nevis",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SAINT_LUCIA': {
         text: "Saint Lucia",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SAINT_MARTIN': {
         text: "Saint Martin",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SAINT_VINCENT_GRENADINES': {
         text: "Saint Vincent and the Grenadines",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SAMOA': {
         text: "Samoa",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SAN_MARINO': {
         text: "San Marino",
@@ -689,7 +693,7 @@ var countries = {
     },
     'SENEGAL': {
         text: "Senegal",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SERBIA': {
         text: "Serbia",
@@ -701,19 +705,19 @@ var countries = {
     },
     'SIERRA_LEONE': {
         text: "Sierra Leone",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SINGAPORE': {
         text: "Singapore",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SINT_EUSTATIUS': {
         text: "Sint Eustatius",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SINT_MAARTEN': {
         text: "Sint Maarten",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SLOVAKIA': {
         text: "Slovakia",
@@ -729,7 +733,7 @@ var countries = {
     },
     'SOMALIA': {
         text: "Somalia",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SOUTH_AFRICA': {
         text: "South Africa",
@@ -757,7 +761,7 @@ var countries = {
     },
     'SURINAME': {
         text: "Suriname",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'SWAZILAND': {
         text: "Swaziland",
@@ -785,27 +789,27 @@ var countries = {
     },
     'TANZANIA': {
         text: "Tanzania",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'THAILAND': {
         text: "Thailand",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'TIMOR_LESTE': {
         text: "Timor-Leste",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'TOGO': {
         text: "Togo",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'TONGA': {
         text: "Tonga",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'TRINIDAD_TOBAGO': {
         text: "Trinidad and Tobago",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'TUNISIA': {
         text: "Tunisia",
@@ -821,7 +825,7 @@ var countries = {
     },
     'TURKS_CAICOS' : {
         text: "Turks and Caicos",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'TUVALU': {
         text: "Tuvalu",
@@ -829,11 +833,11 @@ var countries = {
     },
     'US_VIRGIN_ISLANDS': {
         text: "U.S. Virgin Islands",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'UGANDA': {
         text: "Uganda",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'UKRAINE': {
         text: "Ukraine",
@@ -857,15 +861,15 @@ var countries = {
     },
     'VANUATU': {
         text: "Vanuatu",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'VENEZUELA': {
         text: "Venezuela",
-        riskCategory: RiskCategory.EPIDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'VIETNAM': {
         text: "Vietnam",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'YEMEN': {
         text: "Yemen",
@@ -873,7 +877,7 @@ var countries = {
     },
     'ZAMBIA': {
         text: "Zambia",
-        riskCategory: RiskCategory.ENDEMIC_ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'ZIMBABWE': {
         text: "Zimbabwe",
