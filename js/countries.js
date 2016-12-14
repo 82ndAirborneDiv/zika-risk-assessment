@@ -529,7 +529,7 @@ var countries = {
     },
     'MONTSERRAT':{
         text: "Montserrat",
-        riskCategorty: RiskCategory.ZIKA
+        riskCategory: RiskCategory.ZIKA
     },
     'MOROCCO': {
         text: "Morocco",
