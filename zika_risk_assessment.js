@@ -203,6 +203,12 @@ function loadQuestion(nextQuestionNumber){
             }
             $("#multiSelectList").multiselect();
 
+            $("#multiSelectList").keyup(function (event) {
+                if(event.keyCode == 27){
+                    $('#back').focus();
+                }
+            });
+
             //clear alerts on checkbox checked
             $("input:checkbox").change(function(){
                 alertArea.html("");
