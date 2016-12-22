@@ -1934,7 +1934,7 @@ var nodes = {
     */
     87:{
         nodeType: NodeType.APP_INFO,
-        endpointName: "share"
+        endpointName: "embed"
     },
     88:{
         nodeType: NodeType.APP_INFO,
