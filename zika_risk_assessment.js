@@ -347,8 +347,16 @@ function loadAppInfo(number) {
     mainPanel.show();
     clearMainPanel();
     var nodeObject = getNode(number);
-    if(number === 88 ){
+    if (number === 88) {
         $("#zika-app-info").load("/TemplatePackage/contrib/ssi/cdc-privacy-policy-eng.html");
+    } else if (number === 87){
+        $("#zika-app-info").html(
+            '<h4>Embed code</h4>'
+            +'Copy the code below and paste it into your webpage.<br/><br/>'
+            +'<div contenteditable="true">'
+            +cdcCommon.runtime.embedCode
+            +'</div>'
+        );
     } else {
         $("#zika-app-info").append($('<div>').load("html/endpoints.html #" + nodeObject.endpointName));
     }
@@ -419,6 +427,7 @@ var populateMultiSelectList = function(questionObject) {
     listHTML += '<label id="multiSelectLabel" for="multiSelectList">';
     listHTML += nextQuestionObject.text;
     listHTML += '</label>';
+    listHTML += '<div tabindex="0" class="keyboard-only">Press tab to access the answer list for this question. At any time, press escape to exit the list.</div>'
     listHTML +='<div role="group" aria-labelledby="multiSelectLabel" id="multiSelectList" class="multiselect">';
     $.each(nextQuestionObject.getValuesForAnswers(), function (key, value) {
        listHTML += '<label><input class="checkboxListItem" style="margin-left: 10px; margin-right: 10px"' +
@@ -457,12 +466,6 @@ function noSelectionAlert(){
     if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 
     } else {
-
-        $('#noSelectionAlert').on('closed.bs.alert', function () {
-
-            $('#next').focus();
-        });
-
         //focus on close alert button when noSelectionAlert is displayed
         $('#close-alert').focus();
     }

@@ -80,3 +80,26 @@ a {
 html, body {
 	-webkit-overflow-scrolling: touch;
 }
+
+.keyboard-only{
+	position:absolute;
+	top:-1000px;
+	left:-1000px;
+	height:1px;
+	width:1px;
+	text-align:left;
+	overflow:hidden
+}
+.keyboard-only:active, .keyboard-only:focus, .keyboard-only:hover{
+	top:0;
+	left:0;
+	font-size:1em;
+	font-weight:700;
+	color:#000;
+	background-color:#fff;
+	height:auto;
+	overflow:auto;
+	width:99%;
+	padding:5px;
+	z-index:100
+}
