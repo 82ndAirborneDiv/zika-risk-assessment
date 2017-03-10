@@ -561,7 +561,7 @@ var countries = {
     },
     'NEW_CALEDONIA': {
         text: "New Caledonia",
-        riskCategory: RiskCategory.ZIKA
+        riskCategory: RiskCategory.NONE
     },
     'NEW_ZEALAND': {
         text: "New Zealand",
@@ -729,7 +729,7 @@ var countries = {
     },
     'SOLOMON_ISLANDS': {
         text: "Solomon Islands",
-        riskCategory: RiskCategory.NONE
+        riskCategory: RiskCategory.ZIKA
     },
     'SOMALIA': {
         text: "Somalia",
