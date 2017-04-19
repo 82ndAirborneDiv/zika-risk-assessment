@@ -21,7 +21,7 @@ var countries = {
     },
     'AMERICAN_SAMOA': {
         text: "American Samoa",
-        riskCategory: RiskCategory.ZIKA
+        riskCategory: RiskCategory.NONE
     },
     'ANDORRA': {
         text: "Andorra",
