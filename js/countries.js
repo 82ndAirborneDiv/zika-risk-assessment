@@ -657,7 +657,7 @@ var countries = {
     },
     'SAINT_BARTHELEMY': {
         text: "Saint Barthelemy",
-        riskCategory: RiskCategory.ZIKA
+        riskCategory: RiskCategory.NONE
     },
     'SAINT_KITTS_AND_NEVIS': {
         text: "Saint Kitts and Nevis",
