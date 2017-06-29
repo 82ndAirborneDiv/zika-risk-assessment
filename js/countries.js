@@ -313,7 +313,7 @@ var countries = {
     },
     'GUADELOUPE': {
         text: "Guadeloupe",
-        riskCategory: RiskCategory.ZIKA
+        riskCategory: RiskCategory.NONE
     },
     'GUATEMALA': {
         text: "Guatemala",
@@ -497,7 +497,7 @@ var countries = {
     },
     'MARTINIQUE': {
         text: "Martinique",
-        riskCategory: RiskCategory.ZIKA
+        riskCategory: RiskCategory.NONE
     },
     'MAURITANIA': {
         text: "Mauritania",
