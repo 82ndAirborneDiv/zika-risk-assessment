@@ -161,7 +161,7 @@ var countries = {
     },
     'CAYMAN_ISLANDS': {
         text: "Cayman Islands",
-        riskCategory: RiskCategory.ZIKA
+        riskCategory: RiskCategory.NONE
     },
     'CENTRAL_AFRICAN_REPUBLIC': {
         text: "Central African Republic",
