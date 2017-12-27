@@ -493,7 +493,7 @@ var countries = {
     },
     'MARSHALL_ISLANDS': {
         text: "Marshall Islands",
-        riskCategory: RiskCategory.ZIKA
+        riskCategory: RiskCategory.NONE
     },
     'MARTINIQUE': {
         text: "Martinique",
