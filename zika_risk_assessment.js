@@ -2050,7 +2050,7 @@ var countries = {
     },
     'BAHAMAS': {
         text: "Bahamas, The",
-        riskCategory: RiskCategory.ZIKA
+        riskCategory: RiskCategory.NONE
     },
     'BAHRAIN': {
         text: "Bahrain",
